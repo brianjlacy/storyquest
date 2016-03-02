@@ -1,0 +1,79 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
+
+    signingConfigs {
+        release {
+            storeFile file(System.getenv("KEYSTORE")?:"../debug.keystore")
+            storePassword System.getenv("STORE_PASSWORD")?System.getenv("STORE_PASSWORD"):"debugKeystore"
+            keyAlias System.getenv("KEY_ALIAS")?System.getenv("KEY_ALIAS"):"debug"
+            keyPassword System.getenv("KEY_PASSWORD")?System.getenv("KEY_PASSWORD"):"debugKeystore"
+        }
+    }
+    defaultConfig {
+        manifestPlaceholders = [
+                activityLabel: project.APP_LABEL,
+                googlePlayServicesId: project.GOOGLE_SERVICES_ID,
+        ]
+        applicationId project.APP_ID
+        versionCode project.APP_VERSION_CODE ? project.APP_VERSION_CODE.toInteger() : 0
+        versionName project.APP_VERSION_NAME
+        minSdkVersion 19
+        targetSdkVersion 23
+        signingConfig signingConfigs.release
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.android.support:design:23.1.1'
+    compile 'com.google.android.gms:play-services:8.4.0'
+}
+
+// copy icon from properties location to drawables
+def filesToCopy = copySpec {
+    from project.STORYQUEST_ICON_PATH
+    rename { fileName ->
+        'ic_launcher.png'
+    }
+}
+task addStoryQuestIcon << {
+    [
+            'src/main/res/drawable-hdpi',
+            'src/main/res/drawable-mdpi',
+            'src/main/res/drawable-xhdpi',
+            'src/main/res/drawable-xxhdpi',
+            'src/main/res/drawable'
+    ].each { dest ->
+        copy {
+            with filesToCopy
+            into dest
+        }
+    }
+}
+preBuild.dependsOn addStoryQuestIcon
+
+// merge-copy the html assets from template and project
+task mergeStoryQuestResources(type: Copy) {
+    from project.STORYQUEST_TEMPLATE_PATH
+    from project.STORYQUEST_PROJECT_PATH
+    into 'src/main/assets'
+}
+preBuild.dependsOn mergeStoryQuestResources
+
+// if cleaned, also clean assets
+task cleanStoryQuestResources(type: Delete) {
+    delete 'src/main/assets'
+}
+cleanStoryQuestResources.outputs.upToDateWhen { false }
+clean.dependsOn cleanStoryQuestResources
