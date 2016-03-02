@@ -1,0 +1,165 @@
+<!doctype html>
+<html class="no-js">
+
+<%= grunt.file.read('frontend/header.ejs') %>
+
+<body ng-app="StoryQuestEditorApp" ng-controller="coreController" ng-cloak class="skin-blue">
+
+    <%= grunt.file.read('frontend/modals.html') %>
+
+    <header class="header">
+        <a href="#" class="logo"><img src="/images/devlogo.png" class="icon main-logo"></a>
+        <nav role="navigation" class="navbar navbar-static-top">
+            <a href="#" data-toggle="offcanvas" role="button" class="navbar-btn sidebar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <div class="navbar-right">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown user notifications-menu">
+                        <a href="" data-toggle="dropdown" class="dropdown-toggle">
+                            <i class="glyphicon glyphicon-book"></i>
+                            <span><span>{{ project.data.name }}</span><i class="caret"></i></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="header">Switch to other project</li>
+                            <li>
+                                <ul class="menu">
+                                    <li ng-repeat="p in user.data.projectInfos">
+                                        <a ng-click="loadProject(p.id)">
+                                            <i class="ion ion-android-book bg-blue"></i>
+                                            <span>{{p.name}}</span></a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="footer"><a href="#/projects">Projects Dashboard</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown user user-menu">
+                        <a href="" data-toggle="dropdown" class="dropdown-toggle">
+                            <i class="glyphicon glyphicon-user"></i>
+                            <span><span>{{ user.data.name }}</span><i class="caret"></i></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="user-header bg-light-blue">
+                                <img src="images/admin/avatar.png" alt="User Image" class="img-circle">
+                                <p>
+                                    <span>{{ user.data.name }}</span>
+                                    <small>Author</small>
+                                </p>
+                            </li>
+                            <li class="user-footer">
+                                <div class="pull-left">
+                                    <a onclick="$('#modalPassword').modal()" class="btn btn-default btn-flat">Change Password</a>
+                                </div>
+                                <div class="pull-right">
+                                    <a ng-click="logout()" class="btn btn-default btn-flat">Sign out</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown user help-menu">
+                        <a href="" data-toggle="dropdown" class="dropdown-toggle">
+                            <i class="glyphicon glyphicon-question-sign"></i>
+                            <span><span>Help</span><i class="caret"></i></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <ul class="menu">
+                                    <li>
+                                        <a style="color: #72afd2;" href="https://haven.storyquest.de/client#/dashboard">
+                                            <i class="ion ion-help-circled success"></i>
+                                            <span>Documentation</span></a>
+                                    </li>
+                                    <li>
+                                        <a style="color: #72afd2;" href="https://storyquest.zendesk.com/forums">
+                                            <i class="ion ion-person-stalker bg-yellow"></i>
+                                            <span>Community Forums</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a style="color: #72afd2;" href="https://storyquest.zendesk.com/anonymous_requests/new">
+                                            <i class="ion ion-medkit fail"></i>
+                                            <span>Request Support</span></a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <div class="wrapper row-offcanvas row-offcanvas-left">
+        <aside class="left-side sidebar-offcanvas">
+            <section class="sidebar">
+                <div class="user-panel">
+                    <div class="pull-left image">
+                        <img src="images/admin/avatar.png" alt="User Image" class="img-circle">
+                    </div>
+                    <div class="pull-left info">
+                        <p>Hello, {{ user.data.name | firstname }}</p>
+                        <a href="#">
+                            <i id="onlineindicatoricon" style="color:green" class="fa fa-circle"></i>
+                            <span id="onlineindicator">Online</span>
+                        </a>
+                    </div>
+                </div>
+                <ul class="sidebar-menu">
+                    <li><a href="#/dashboard"><i class="fa fa-dashboard"></i><span>Dashboard</span></a></li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-check-circle-o"></i>
+                            <span>Edit</span><i class="fa fa-angle-left pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="#/edit"><i class="fa fa-angle-double-right"></i><span>Top-Down</span></a></li>
+                            <li><a href="#/editGraphical"><i class="fa fa-angle-double-right"></i><span>Graphical</span></a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#/layout"><i class="fa fa-wrench"></i><span>Layout</span></a></li>
+                    <li><a href="#/media"><i class="fa fa-picture-o"></i><span>Media</span></a></li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-check-circle-o"></i>
+                            <span>Test</span><i class="fa fa-angle-left pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="#/preview"><i class="fa fa-angle-double-right"></i><span>Preview</span></a></li>
+                            <li><a href="#/beta"><i class="fa fa-angle-double-right"></i><span>Betatest</span></a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#/deploy"><i class="fa fa-cogs"></i><span>Build Apps</span></a></li>
+                </ul>
+                <div class="copyright-panel"><span id="openpreviewbutton">Open Preview</span></div>
+                <div class="copyright-panel"><span id="openpreviewqr">Show Preview QR Code</span></div>
+                <div class="copyright-panel">
+                    <div>
+                        <p class="poweredby">powered by</p>
+                        <a onclick="openEveryScreenBox()">
+                            <img src="images/everyscreen.png">
+                        </a>
+                    </div>
+                </div>
+                <div class="copyright-panel">
+                    <div><a href="http://www.goquestor.com/">Copyright © 2015 Questor GmbH</a></div>
+                </div>
+            </section>
+        </aside>
+        <aside class="right-side">
+            <section class="content-header">
+                <h1><span id="pagetitle"></span>
+                    <small id="pagesubtitle"></small>
+                </h1>
+                <ol class="breadcrumblist breadcrumb"></ol>
+            </section>
+            <section id="content" ng-view class="content"></section>
+        </aside>
+    </div>
+
+    <%= grunt.file.read('frontend/footer.ejs') %>
+
+</body>
+</html>

@@ -1,0 +1,116 @@
+<div id="modalProject" tabindex="-1" role="dialog" aria-labelledby="modalProject" aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header"><h3 id="modalProjectLabel">Create Project</h3></div>
+            <div class="modal-body">
+                <form role="form">
+                    <div class="form-group"><label for="newProjectName">Project Name</label><input type="text"
+                                                                                                   ng-model="newProjectName"
+                                                                                                   id="newProjectName"
+                                                                                                   placeholder="Give your project a descriptive name"
+                                                                                                   class="form-control"/>
+                    </div>
+                    <div class="form-group"><label for="newProjectDesc">Project Description</label><textarea
+                            ng-model="newProjectDesc" id="newProjectDesc" placeholder="Project description"
+                            class="form-control"></textarea></div>
+                    <div class="form-group"><label for="newProjectTags">Tags</label><input type="text"
+                                                                                           ng-model="newProjectTags"
+                                                                                           id="newProjectTags"
+                                                                                           placeholder="Tags for your project"
+                                                                                           class="form-control"/></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button data-dismiss="modal" aria-hidden="true" id="modalProjectDoOk"
+                        ng-click="createNewProject(newProjectName, newProjectDesc, newProjectTags)" class="btn">Ok
+                </button>
+                <button data-dismiss="modal" aria-hidden="true" id="modalProjectDoCancel" class="btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="height:30%;margin-bottom:1.5em" class="row">
+    <div style="height:100%" class="col-xs-12">
+        <div style="height:100%" id="projectsbox" class="box">
+            <div style="height:20%" class="box-header"><h3 class="box-title">Your Projects</h3>
+
+                <div style="padding-top:10px" class="box-tools pull-right">
+                    <button ng-click="newProject()" id="newProjectButton" class="btn btn-primary"><i
+                            class="glyphicon glyphicon-plus"></i><span>&nbsp;New Project</span></button>
+                </div>
+            </div>
+            <div style="height:80%;overflow-y:scroll" class="box-body table-responsive no-padding">
+                <table style="width:100%" class="table">
+                    <tr>
+                        <th style="width:25%">Name</th>
+                        <th style="width:22%">ID</th>
+                        <th style="width:22%">Keywords</th>
+                        <th style="width:21%">Status</th>
+                        <th style="width:10%">Actions</th>
+                    </tr>
+                </table>
+                <table style="width:100%" id="projectstable" class="table table-hover">
+                    <tr ng-repeat="p in user.data.projectInfos" ng-click="selectRow($event, p.id)"
+                        ng-class="{active: p.id==project.data.id}" class="clickable">
+                        <td style="width:25%">{{p.name}}</td>
+                        <td style="width:22%">{{p.id}}</td>
+                        <td style="width:22%">{{p.tags}}</td>
+                        <td style="width:21%"><span class="label label-warning">{{p.status}}</span></td>
+                        <td style="width:10%"><a ng-click="activateProject(p.id)"><i
+                                class="fa fa-fw fa-download"></i></a><span>&nbsp;&nbsp;</span><a
+                                ng-click="deleteProject(p.id)"><i class="glyphicon glyphicon-remove-circle"></i></a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="height:65%" class="row">
+    <div style="height:100%;overflow:hidden" class="col-md-6">
+        <div style="height:100%" class="box box-info">
+            <div style="height:10%" class="box-header"><h3 class="box-title">Project Info</h3></div>
+            <div style="height:80%" class="box-body">
+                <div class="form-group"><label>Name</label><input id="peName" type="text" placeholder="Enter ..."
+                                                                  ng-model="selectedProject.name" ng-disabled="!selectedProject"
+                                                                  class="form-control"/></div>
+                <div class="form-group"><label>Description</label><textarea id="peDesc" rows="6" placeholder="Enter ..."
+                                                                            ng-model="selectedProject.description"
+                                                                            ng-disabled="!selectedProject"
+                                                                            class="form-control"></textarea></div>
+                <div class="form-group"><label>Keywords</label><input id="peTags" type="text" placeholder="Enter ..."
+                                                                      ng-model="selectedProject.tags"
+                                                                      ng-disabled="!selectedProject" class="form-control"/></div>
+                <div class="form-group"><label>Chapter Sequence</label><select id="sequenceBehaviour"
+                                                                               ng-model="settings.sequence"
+                                                                               ng-disabled="!selectedProject" class="form-control">
+                    <option value="graph">Chapters are manually linked</option>
+                    <option value="sequence">Chapters are displayed in order of sequence</option>
+                </select></div>
+            </div>
+            <div style="text-align:right;height:10%" class="box-footer">
+                <button id="peButton" ng-click="saveSelectedProject()" ng-disabled="!selectedProject" class="btn btn-primary">
+                    Save
+                </button>
+            </div>
+        </div>
+    </div>
+    <div style="height:100%;overflow:hidden" class="col-md-6">
+        <div style="height:100%" class="box box-info">
+            <div class="box-header"><h3 class="box-title">Project Icon Image</h3>
+
+                <div style="padding-top:10px" class="box-tools pull-right">
+                    <button id="iconupload" class="btn btn-primary" ng-file-select ng-model="files"><i
+                            class="glyphicon glyphicon-plus"></i><span>&nbsp;Upload</span></button>
+                    &nbsp;&nbsp;<span
+                        id="showIcons" ng-click="openIconPreview()" class="btn btn-primary">Show Icons</span>
+                </div>
+            </div>
+            <div style="height:100%" class="box-body"><p>Please use a square image for the icon image. Otherwise the
+                image will be distorted.</p>
+
+                <div ng-style="{'background-image': getIconImageStyle()}" class="iconimage"></div>
+            </div>
+        </div>
+    </div>
+</div>

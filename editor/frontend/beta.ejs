@@ -1,0 +1,44 @@
+<!doctype html>
+<html class="no-js">
+
+<%= grunt.file.read('frontend/header.ejs') %>
+
+<style>
+.navbar-default {
+    border-color: #555555;
+    background-color: #367fa9;
+}
+.panel-default {
+    border-color: #ffffff;
+}
+.panel {
+    box-shadow: none;
+    -webkit-box-shadow: none;
+}
+iframe {
+    border: 2px solid #dddddd;
+}
+</style>
+
+<body ng-app="StoryQuestEditorApp" ng-controller="betatestingController" style="padding-top: 70px">
+    <div role="navigation" class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" data-toggle="collapse" data-target=".navbar-collapse" class="navbar-toggle"><span
+                        class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span
+                        class="icon-bar"></span></button>
+                <div style="background-image:url('../images/devlogo.png');background-repeat:no-repeat;background-position:0px 50%;min-width:210px"
+                     class="navbar-brand">
+                    <div style="height:18px"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <sqbetaactive ng-show="betaactive == true"></sqbetaactive>
+    <sqbetainactive ng-show="betaactive == false"></sqbetainactive>
+
+<%= grunt.file.read('frontend/footer.ejs') %>
+
+</body>
+</html>

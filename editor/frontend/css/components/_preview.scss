@@ -1,0 +1,20 @@
+a.list-group-item:hover {
+    cursor:pointer;
+}
+#dataattributescontent {
+    overflow-y: scroll;
+}
+#previewnodes {
+    overflow-y: scroll;
+    height: 100%;
+}
+#previewnodelist {
+    height:100%;
+    white-space:nowrap;
+}
+.owneditem {
+    float: right;
+}
+.owneditementry {
+    background: #b3d0e9;
+}

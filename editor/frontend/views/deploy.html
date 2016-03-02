@@ -1,0 +1,129 @@
+<div style="height:40%" class="row">
+    <div style="height:100%;overflow:hidden" class="col-md-6">
+        <div style="height:100%" class="box box-info">
+            <div style="height:10%" class="box-header"><h3 class="box-title">Export Mobile Apps</h3></div>
+            <div style="height:80%" class="box-body">
+                <table style="width:100%">
+                    <tr>
+                        <td valign="top"><img src="images/android.png"/></td>
+                        <td><p style="margin:0;padding:0"><a href="/api/deployment/android/{{project.data.id}}">Download
+                            APK</a><span>&nbsp;</span><a ng-click="openQRDialog('/api/deployment/android/')">(QR-Code)</a>
+                        </p>
+
+                            <p style="margin:0;padding:0">Store Icons:&nbsp;<a
+                                    href="/api/p/{{project.data.id}}/icons/android/res/drawable-ldpi/icon.png">ldpi</a><span>&nbsp;</span><a
+                                    href="/api/p/{{project.data.id}}/icons/android/res/drawable-mdpi/icon.png">mdpi</a><span>&nbsp;</span><a
+                                    href="/api/p/{{project.data.id}}/icons/android/res/drawable-hdpi/icon.png">hdpi</a><span>&nbsp;</span><a
+                                    href="/api/p/{{project.data.id}}/icons/android/res/drawable-xhdpi/icon.png">xhdpi</a></p>
+                        </td>
+                    </tr>
+                    <tr style="border-top:1em solid white">
+                        <td valign="top"><img src="images/firefoxos.png"/></td>
+                        <td><p style="margin:0;padding:0"><a href="/api/deployment/web/{{project.data.id}}">Download App
+                            Archive</a><span>&nbsp;</span><a ng-click="openQRDialog('/api/deployment/web/')">(QR-Code)</a>
+                        </p>
+
+                            <p style="margin:0;padding:0">Store Icons:&nbsp;<a
+                                    href="/api/p/{{project.data.id}}/icons/firefoxos/www/img/icon-30.png">30px</a><span>&nbsp;</span><a
+                                    href="/api/p/{{project.data.id}}/icons/firefoxos/www/img/icon-60.png">60px</a><span>&nbsp;</span><a
+                                    href="/api/p/{{project.data.id}}/icons/firefoxos/www/img/icon-128.png">128px</a></p></td>
+                    </tr>
+                    <tr style="border-top:1em solid white">
+                        <td valign="top"><img src="images/kindle.png"/></td>
+                        <td><p style="margin:0;padding:0"><a href="/api/deployment/android/{{project.data.id}}">Download Kindle
+                            Fire APK</a><span>&nbsp;</span><a
+                                ng-click="openQRDialog('/api/deployment/android/')">(QR-Code)</a></p>
+
+                            <p style="margin:0;padding:0">Store Icons:&nbsp;<a
+                                    href="/api/p/{{project.data.id}}/icons/android/res/drawable-ldpi/icon.png">ldpi</a><span>&nbsp;</span><a
+                                    href="/api/p/{{project.data.id}}/icons/android/res/drawable-mdpi/icon.png">mdpi</a><span>&nbsp;</span><a
+                                    href="/api/p/{{project.data.id}}/icons/android/res/drawable-hdpi/icon.png">hdpi</a><span>&nbsp;</span><a
+                                    href="/api/p/{{project.data.id}}/icons/android/res/drawable-xhdpi/icon.png">xhdpi</a></p>
+                        </td>
+                    </tr>
+                    <tr style="border-top:1em solid white">
+                        <td valign="top"><img src="images/ios.png"/></td>
+                        <td><p style="margin:0;padding:0"><span style="color:lightgrey">iPHONE/iPAD COMING SOON</span>
+                        </p>
+
+                            <p style="margin:0;padding:0">Store Icons:&nbsp;<a
+                                    href="/api/p/{{project.data.id}}/icons/ios/Resources/icons/icon.png">icon</a><span>&nbsp;</span><a
+                                    href="/api/p/{{project.data.id}}/icons/ios/Resources/icons/icon@2x.png">icon@2x</a><span>&nbsp;</span><a
+                                    href="/api/p/{{project.data.id}}/icons/ios/Resources/icons/icon-40.png">icon40</a><span>&nbsp;</span><a
+                                    href="/api/p/{{project.data.id}}/icons/ios/Resources/icons/icon-40@2x.png">icon40@2x</a><span>&nbsp;</span><a
+                                    href="/api/p/{{project.data.id}}/icons/ios/Resources/icons/icon-50.png">icon50</a><span>&nbsp;</span><a
+                                    href="/api/p/{{project.data.id}}/icons/ios/Resources/icons/icon-50@2x.png">icon50@2x</a></p>
+
+                            <p style="margin:0;padding:0"><a
+                                    href="/api/p/{{project.data.id}}/icons/ios/Resources/icons/icon-57.png">icon57</a><span>&nbsp;</span><a
+                                    href="/api/p/{{project.data.id}}/icons/ios/Resources/icons/icon-57@2x.png">icon57@2x</a><span>&nbsp;</span><a
+                                    href="/api/p/{{project.data.id}}/icons/ios/Resources/icons/icon-60.png">icon60</a><span>&nbsp;</span><a
+                                    href="/api/p/{{project.data.id}}/icons/ios/Resources/icons/icon-60@2x.png">icon60@2x</a><span>&nbsp;</span><a
+                                    href="/api/p/{{project.data.id}}/icons/ios/Resources/icons/icon-72.png">icon72</a><span>&nbsp;</span><a
+                                    href="/api/p/{{project.data.id}}/icons/ios/Resources/icons/icon-72@2x.png">icon72@2x</a></p>
+
+                            <p style="margin:0;padding:0"><a
+                                    href="/api/p/{{project.data.id}}/icons/ios/Resources/icons/icon-76.png">icon76</a><span>&nbsp;</span><a
+                                    href="/api/p/{{project.data.id}}/icons/ios/Resources/icons/icon-76@2x.png">icon76@2x</a><span>&nbsp;</span><a
+                                    href="/api/p/{{project.data.id}}/icons/ios/Resources/icons/icon-small.png">icon-small</a><span>&nbsp;</span><a
+                                    href="/api/p/{{project.data.id}}/icons/ios/Resources/icons/icon-small@2x.png">icon-small@2x</a><span>&nbsp;</span><a
+                                    href="/api/p/{{project.data.id}}/icons/ios/Resources/icons/iTunesArtwork.png">iTunes
+                                Artwork</a><span>&nbsp;</span><a
+                                    href="/api/p/{{project.data.id}}/icons/ios/Resources/icons/iTunesArtwork@2x.png">iTunes
+                                Artwork@2x</a><span>&nbsp;</span></p></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div style="height:100%;overflow:hidden" class="col-md-6">
+        <div style="height:100%" class="box box-info">
+            <div style="height:10%" class="box-header"><h3 class="box-title">Export Web Apps</h3></div>
+            <div style="height:80%" class="box-body">
+                <table style="width:100%">
+                    <tr>
+                        <td valign="top"><img src="images/html5.png"/></td>
+                        <td><p style="margin:0;padding:0"><a href="/api/deployment/web/{{project.data.id}}">Download ZIP
+                            Archive</a><span>&nbsp;</span><a ng-click="openQRDialog('/api/deployment/web/')">(QR-Code)</a>
+                        </p></td>
+                    </tr>
+                    <tr style="border-top:1em solid white">
+                        <td valign="top"><img src="images/chrome.png"/></td>
+                        <td><p style="margin:0;padding:0"><a href="/api/deployment/web/{{project.data.id}}">Download Chrome
+                            Application</a><span>&nbsp;</span><a
+                                ng-click="openQRDialog('/api/deployment/web/')">(QR-Code)</a></p>
+
+                            <p style="margin:0;padding:0">Store Icon:&nbsp;<a
+                                    href="/api/p/{{project.id}}/icons/firefoxos/www/img/icon-128.png">128px</a></p></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="height:40%;margin-top:2em" class="row">
+    <div style="height:100%;overflow:hidden" class="col-md-6">
+        <div style="height:100%" class="box box-info">
+            <div style="height:10%" class="box-header"><h3 class="box-title">Export eReader Formats</h3></div>
+            <div style="height:80%" class="box-body">
+                <table style="width:100%">
+                    <tr>
+                        <td valign="top"><img src="images/epub.png"/></td>
+                        <td><p style="margin:0;padding:0"><span style="color:lightgrey">EPUB COMING SOON</span></p></td>
+                    </tr>
+                    <tr style="border-top:1em solid white">
+                        <td valign="top"><img src="images/kindle.png"/></td>
+                        <td><p style="margin:0;padding:0"><span
+                                style="color:lightgrey">KINDLE eREADER COMING SOON</span></p></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div style="height:100%;overflow:hidden" class="col-md-6">
+        <div style="height:100%" class="box box-info">
+            <div style="height:10%" class="box-header"><h3 class="box-title">Deploy to Stores</h3></div>
+            <div style="height:80%" class="box-body"><p style="color:lightgrey">COMING SOON</p></div>
+        </div>
+    </div>
+</div>

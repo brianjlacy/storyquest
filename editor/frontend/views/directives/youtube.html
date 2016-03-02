@@ -1,0 +1,66 @@
+<div class="directive-youtube">
+    <div id="youtubesearch" class="panel panel-default">
+        <div class="panel-heading">YouTube Video Select</div>
+        <div class="panel-body">
+            <div class="smalltext">
+                You can either enter a YouTube video address (for example, a hidden link) or
+                search and select from a list below.
+            </div>
+            <div class="searchbox">
+                <div class="input-group input-url">
+                    <span class="input-group-addon">YouTube URL</span>
+                    <input type="text" id="youtubeurl" ng-model="node.youTubeURL" ng-change="urlChanged()" class="form-control"/>
+                </div>
+                <div class="search-or"><b>OR</b></div>
+                <div class="input-group input-searchquery">
+                    <span class="input-group-addon">Search YouTube</span>
+                    <input type="text"
+                           id="youtubesearchquery"
+                           class="form-control"
+                           ng-model="youtubeSearchQuery"
+                           ng-change="youtubeSearch()">
+                </div>
+            </div>
+            <div class="videolist">
+                <ul id="youtubelist" class="list-group">
+                    <a ng-repeat="video in videos"
+                       ng-click="selectYouTubeFromList(video.id.videoId)"
+                       class="list-group-item">
+                        <img ng-attr-src="{{video.snippet.thumbnails.default.url}}">
+                        <div><b>{{video.snippet.title}}</b></div>
+                        <div>{{video.snippet.publishedAt | date:'MM.dd.yyyy - HH:mm:ss'}}</div>
+                    </a>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="youtubeconfig" class="panel panel-default">
+        <div class="panel-heading">YouTube Settings</div>
+        <div class="panel-body">
+            <div class="input-group">
+                <div class="input-group-btn">
+                    <button type="button"
+                            data-toggle="dropdown"
+                            id="videoactionbutton"
+                            class="btn btn-default dropdown-toggle">
+                        <span ng-hide="node.videoActionType=='link' || node.videoActionType=='web' || node.videoActionType=='event'">Action <span class='caret'></span></span>
+                        <span ng-hide="node.videoActionType!='link'">Link <span class='caret'></span></span>
+                        <span ng-hide="node.videoActionType!='web'">Web <span class='caret'></span></span>
+                        <span ng-hide="node.videoActionType!='event'">Event <span class='caret'></span></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="" ng-click="actionTypeChanged('link')">Jump to Node</a></li>
+                        <li><a href="" ng-click="actionTypeChanged('web')">Jump to Web</a></li>
+                        <li><a href="" ng-click="actionTypeChanged('event')">Trigger Event</a></li>
+                    </ul>
+                </div>
+                <input type="text"
+                       id="videoaction"
+                       ng-model="node.videoAction"
+                       ng-change="videoactionChanged()"
+                       class="form-control typeahead">
+            </div>
+            <span class="smalltext">This action will be triggered when the video ends or the player skips it.</span>
+        </div>
+    </div>
+</div>

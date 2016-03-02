@@ -1,0 +1,34 @@
+<!doctype html>
+<html class="no-js">
+
+<%= grunt.file.read('frontend/header.ejs') %>
+
+<body ng-app="StoryQuestEditorApp" ng-controller="loginController" ng-cloak class="skin-blue bg-login">
+
+    <%= grunt.file.read('frontend/modals.html') %>
+
+    <div id="login-box" class="form-box login-box">
+        <img class="login-header-image" src="/images/havenlogo.png">
+        <div class="header bg-aqua">Sign In</div>
+        <form>
+            <input type="hidden" name="homeUrl" value="undefined">
+            <div class="body bg-light-blue">
+                <div class="form-group">
+                    <input type="text" placeholder="Your E-Mail address" class="form-control" ng-model="username">
+                </div>
+                <div class="form-group">
+                    <input type="password" placeholder="Password" class="form-control" ng-model="password">
+                </div>
+            </div>
+            <div class="footer">
+                <button type="button" class="btn bg-aqua btn-block" ng-disabled="!username || !password" ng-click="login()">Sign me in</button>
+                <p><a href="lostpassword.html">I forgot my password</a></p>
+                <a href="register.html" class="text-center">Register a new membership</a>&nbsp;&nbsp;&nbsp;<a href="legal.html" >&nbsp;Terms and legal info</a>
+            </div>
+        </form>
+    </div>
+
+<%= grunt.file.read('frontend/footer.ejs') %>
+
+</body>
+</html>

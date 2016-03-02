@@ -1,0 +1,94 @@
+/*
+    Standard definitions.
+*/
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    font-family: textfont, serif;
+    overflow: hidden;
+}
+a {
+    text-decoration: none;
+}
+* {
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+    -webkit-user-select: none;
+    user-select: none;
+    outline: none;
+}
+input {
+    -webkit-user-select: auto;
+    user-select: auto;
+}
+
+/*
+    Fonts
+*/
+
+/* Standard Fonts */
+
+@font-face {
+    font-family: textfont;
+    src: url('../images/AveriaSerif-Regular.ttf') format('truetype');
+}
+@font-face {
+    font-family: headerfont;
+    src: url('../images/Averia-Bold.ttf') format('truetype');
+}
+
+/* Other Fonts */
+
+@font-face {
+    font-family: bolditalic;
+    src: url('../images/Averia-Regular.ttf') format('truetype');
+}
+@font-face {
+    font-family: bolditalic;
+    src: url('../images/Averia-Bold.ttf') format('truetype');
+}
+@font-face {
+    font-family: bolditalic;
+    src: url('../images/Averia-Italic.ttf') format('truetype');
+}
+@font-face {
+    font-family: bolditalic;
+    src: url('../images/Averia-Light.ttf') format('truetype');
+}
+@font-face {
+    font-family: bolditalic;
+    src: url('../images/Averia-BoldItalic.ttf') format('truetype');
+}
+@font-face {
+    font-family: bolditalic;
+    src: url('../images/Averia-LightItalic.ttf') format('truetype');
+}
+@font-face {
+    font-family: bolditalic;
+    src: url('../images/Averia-Gruesa.ttf') format('truetype');
+}
+@font-face {
+    font-family: bolditalic;
+    src: url('../images/AveriaSerif-Regular.ttf') format('truetype');
+}
+@font-face {
+    font-family: bolditalic;
+    src: url('../images/AveriaSerif-LightItalic.ttf') format('truetype');
+}
+@font-face {
+    font-family: bolditalic;
+    src: url('../images/AveriaSerif-Regular.ttf') format('truetype');
+}
+@font-face {
+    font-family: bolditalic;
+    src: url('../images/AveriaSerif-BoldItalic.ttf') format('truetype');
+}
+@font-face {
+    font-family: bolditalic;
+    src: url('../images/AveriaSerif-Italic.ttf') format('truetype');
+}
+@font-face {
+    font-family: bolditalic;
+    src: url('../images/AveriaSerif-Light.ttf') format('truetype');
+}

@@ -1,0 +1,108 @@
+<div style="height:100%" class="row">
+    <span class="drag-object" ng-repeat="type in project.data.nodetypes" style="background-color: #cccccc; border-radius: 1em;">
+        {{type}}&nbsp
+        <span ng-drag="true" ng-drag-data="type" ></span>
+    </span>
+    <div ng-drop="true" ng-drop-success="onDropComplete($data,$event)">
+        <sqgraphicaleditor configure-node="configureNode(nodeId)"
+                           configure-script-on-exit="onExitNode(nodeId)"
+                           configure-script-on-enter="onEnterNode(nodeId)"
+                           delete-node="deleteNode(nodeId)"
+                           edit-node="editNode(nodeId)"
+                           open-node="openNode(nodeId)"></sqgraphicaleditor>
+    </div>
+    <div ng-drag-clone="">
+        {{clonedData.name}}
+    </div>
+    <div id="modalConfiguration" tabindex="-1" role="dialog" aria-labelledby="modalConfiguration" aria-hidden="true" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modalConfigurationLabel">Configuration</h3>
+                </div>
+                <div class="modal-body">
+                    <div style="margin-top:0.5em" class="editmetadata">
+                        <span>Node Color (for your reference, used only in the editor):&nbsp;&nbsp;</span>
+                        <spectrum-colorpicker ng-model="node.nodeColor"
+                                              on-change="changeNodeColor(color)"
+                                              options="{showPaletteOnly: true, showPalette:true, color: 'black', palette: [ ['black', 'white', 'red', 'yellow', 'green', 'blue', 'violet'] ]}">
+                            &nbsp;
+                        </spectrum-colorpicker>
+                        <div id="treemajson" class="editjson"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button data-dismiss="modal" aria-hidden="true" id="modalConfigurationDoCancel" class="btn">Finish</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalEditOnEnter" tabindex="-1" role="dialog" aria-labelledby="modalEditOnEnter" aria-hidden="true" class="modal fade" >
+        <div class="modal-dialog" style="height: 85%">
+            <div class="modal-content" style="height: 100%">
+                <div class="modal-header">
+                    <h3 id="modalEditOnEnterLabel">Script on Enter</h3>
+                </div>
+                <div class="modal-body" style="height: 70%">
+                    <div ui-ace="{ onLoad: aceOnEnterLoaded, onChange: aceOnEnterChanged }"
+                         ng-model="node.onEnter"></div>
+                </div>
+                <div class="modal-footer">
+                    <button data-dismiss="modal" aria-hidden="true" id="modalEditOnEnterDoCancel" class="btn">Finish</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalEditOnExit" tabindex="-1" role="dialog" aria-labelledby="modalEditOnExit" aria-hidden="true" class="modal fade" >
+        <div class="modal-dialog" style="height: 85%">
+            <div class="modal-content" style="height: 100%">
+                <div class="modal-header">
+                    <h3 id="modalEditOnEnterLabel">Script on Exit</h3>
+                </div>
+                <div class="modal-body" style="height: 70%">
+                    <div id="editonexit" style="height:100%" class="tab-pane">
+                        <div ui-ace="{ onLoad: aceOnExitLoaded, onChange: aceOnExitChanged }" ng-model="node.onExit"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button data-dismiss="modal" aria-hidden="true" id="modalEditOnEnterDoCancel" class="btn">Finish</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalContent" tabindex="-1" role="dialog" aria-labelledby="modalContent" aria-hidden="true" class="modal fade" >
+        <div class="modal-dialog" style="height: 90%; width: 90%">
+            <div class="modal-content" style="height: 100%">
+                <div class="modal-header">
+                    <h3 id="modalContent">Content</h3>
+                </div>
+                <div class="modal-body" style="height: 75%">
+                    <sqbookeditor id="sqbookeditor" ng-hide="node.type!='book'"></sqbookeditor>
+                    <sqwebeditor id="sqwebeditor" ng-hide="node.type!='web'"></sqwebeditor>
+                    <sqyoutubeeditor id="sqyoutubeeditor" ng-hide="node.type!='youtube'"></sqyoutubeeditor>
+                    <sqgeoeditor id="sqgeoeditor" ng-hide="node.type!='geo'"></sqgeoeditor>
+                    <sqbareboneeditor id="sqbareboneeditor" ng-hide="node.type!='barebone'"></sqbareboneeditor>
+                </div>
+                <div class="modal-footer">
+                    <button data-dismiss="modal" aria-hidden="true" id="modalContent" class="btn">Finish</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    html{
+        min-width: 3500px;
+    }
+    html, body {
+        overflow: auto!important;
+        min-height: 2500px!important;
+    }
+    div#diagram svg {
+        width: 3250px;
+        height: 2325px;
+    }
+</style>

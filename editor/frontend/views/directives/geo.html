@@ -1,0 +1,84 @@
+<div id="geomapeditorcontainer"  class="directive-geo">
+    <div id="geomapeditor" style="width:70%;height:100%;float:left"></div>
+    <div id="poiconfig" class="panel panel-default">
+        <div class="panel-heading">POI Settings</div>
+        <div class="panel-body">
+            <div class="input-group">
+                <input type="text" id="geosearch" class="form-control">
+                <span class="input-group-btn">
+                    <button type="button" id="geosearchbutton" class="btn btn-default">Search</button>
+                </span>
+            </div>
+            <div class="input-group input-lat">
+                <span class="input-group-addon">LAT</span>
+                <input type="text"
+                       id="poilat"
+                       ng-model="selectedMarker.geometry.y"
+                       ng-change="syncGeoNodeConfig()"
+                       class="form-control">
+            </div>
+            <div class="input-group input-lon">
+                <span class="input-group-addon">LON</span>
+                <input type="text"
+                       id="poilon"
+                       ng-model="selectedMarker.geometry.x"
+                       ng-change="syncGeoNodeConfig()"
+                       class="form-control">
+            </div>
+            <div class="input-group input-action">
+                <div class="input-group-btn">
+                    <button type="button"
+                            data-toggle="dropdown"
+                            id="poiactionbutton"
+                            class="btn btn-default dropdown-toggle">
+                        Action
+                        <span>&nbsp;&nbsp;</span>
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a ng-click="geoaction('link')">Jump to Node</a></li>
+                        <li><a ng-click="geoaction('web')">Jump to Web</a></li>
+                        <li><a ng-click="geoaction('event')">Trigger Event</a></li>
+                    </ul>
+                </div>
+                <input type="text"
+                       id="poiaction"
+                       ng-model="selectedMarker.poiAction"
+                       ng-change="syncGeoNodeConfig()"
+                       class="form-control typeahead">
+            </div>
+            <span class="action-text">This action will be triggered when the player approaches the POI.</span>
+            <div class="input-group input-poitip">
+                <input type="text"
+                       id="poitiptitle"
+                       placeholder="Tip title"
+                       ng-model="selectedMarker.poitiptitle"
+                       ng-change="syncGeoNodeConfig()"
+                       class="form-control">
+            </div>
+            <div class="input-group input-poitext">
+                <textarea
+                          placeholder="Tip text..."
+                          id="poitiptext"
+                          ng-model="selectedMarker.poitiptext"
+                          ng-change="syncGeoNodeConfig()"
+                          class="form-control">
+                </textarea>
+                <span>The tip will be shown when the POI is touched on the map.</span>
+            </div>
+            <div class="icon-picker">
+                POI Icon
+                <div>
+                    <select id="poiiconlist" class="image-picker">
+                        <option ng-repeat="image in imageList"
+                                data-img-src="{{image}}"
+                                value="{{image | regex:'.*\/':''}}">
+                    </select>
+                </div>
+            </div>
+            <div class="input-group" class="input-deletepoi">
+                <button type="button" id="poideletebutton" class="btn btn-default">Delete this POI</button>
+            </div>
+        </div>
+    </div>
+</div>

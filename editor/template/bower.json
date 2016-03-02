@@ -1,0 +1,33 @@
+{
+  "name": "storyquest-template-demo",
+  "version": "1.0.0",
+  "authors": [
+    "Michael Kleinhenz <m.kleinhenz@goquestor.com>"
+  ],
+  "description": "StoryQuest Demo Template",
+  "main": "index.html",
+  "license": "MIT",
+  "homepage": "http://www.storyquest.de/",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "2.1.1",
+    "knockout": "3.1.0",
+    "jquery-hammerjs": "1.1.3",
+    "jquery.TubePlayer": "1.1.6",
+    "openlayers": "#a05d63adfb",
+    "markdown": "0.5.0",
+    "jquery.transit": "0.9.11",
+    "overthrow-dist": "0.7.0",
+    "jquery-ui": "1.11.0",
+    "idangerous-swiper": "2.6.1",
+    "FitText.js": "#9359d0efe0",
+    "jScrollPane": "2.0.20"
+  }
+}

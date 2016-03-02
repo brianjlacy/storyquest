@@ -1,0 +1,98 @@
+---
+- hosts: storyquest
+  remote_user: ubuntu
+  sudo: true
+  tasks:
+    - name: Make sure apt-transport-https is installed
+      apt:
+        pkg: "apt-transport-https"
+        state: installed
+
+    - name: Add Docker repository key
+      apt_key:
+        id: "36A1D7869245C8950F966E92D8576A8BA88D21E9"
+        keyserver: "hkp://keyserver.ubuntu.com:80"
+        state: present
+
+    - name: Add Docker repository and update apt cache
+      apt_repository:
+        repo: "deb http://get.docker.io/ubuntu docker main"
+        update_cache: yes
+        state: present
+        
+    - name: update server
+      apt: update_cache=yes
+    
+    - name: upgrad server
+      apt: upgrade=full
+
+    - name: upload project backup script
+      copy: src=scripts/ProjectBackup.sh dest=/usr/local/bin/ProjectBackup.sh owner=ubuntu group=ubuntu mode=0744
+
+    - name: create cron job for project backup
+      cron: name="storyquest project backup" minute="*/10" job="/usr/local/bin/ProjectBackup.sh"
+      become: yes
+      become_user: ubuntu
+
+    - name: Install dependencies
+      apt:
+        pkg: "{{ item }}"
+        state: installed
+      with_items:
+        - lxc-docker
+        - python-dev
+        - python-pip
+      
+    - name: Make sure pip is upgraded
+      command: easy_install -U pip
+
+    - name: Make sure Docker-py is installed 
+      pip:
+        name: docker-py
+        
+    - name: Make sure docker is running
+      service:
+        name: docker
+        state: started
+    
+    - name: Start couchdb-docker
+      docker: 
+        docker_api_version: 1.18
+        image: klaemo/couchdb 
+        name: couchdb 
+        ports: "0.0.0.0:5984:5984"
+        restart_policy: always
+        pull: always
+        state: reloaded
+        volumes:
+          - "/data/couchdb/couchdb-data:/usr/local/var/lib/couchdb"
+          - "/data/couchdb/couchdb-logs:/usr/local/var/log/couchdb"
+
+    - name: Start storyquest-docker
+      docker: 
+        docker_api_version: 1.18
+        image: kleinhenz/storyquest
+        name: storyquest
+        restart_policy: always
+        pull: always
+        state: reloaded
+        ports:
+          - "0.0.0.0:443:3001"
+          - "0.0.0.0:80:3000"
+          - "0.0.0.0:8080:8080"
+        volumes:
+          - "/data/storyquest/storyquest-projects:/opt/app/projects"
+          - "/data/storyquest/storyquest-logs:/opt/app/logs"
+          - "/data/storyquest/storyquest-config.json:/opt/app/config.json"
+          - "/data/certs/havenstoryquestde.key:/opt/app/havenstoryquestde.key"
+          - "/data/certs/havenstoryquestde.crt:/opt/app/havenstoryquestde.crt"
+          - "/data/certs/sub.class1.server.ca.pem:/opt/app/sub.class1.server.ca.pem"
+          - "/data/certs/android.keystore:/opt/app/android.keystore"
+          - "/tmp:/tmp"
+        links:
+          - "couchdb:couchdb"
+        env:
+          CONFIGFILE: /opt/app/config.json
+
+    - name: Remove all untagged docker images
+      shell: docker rmi $(docker images -q -f dangling=true)

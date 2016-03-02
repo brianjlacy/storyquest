@@ -1,0 +1,36 @@
+{
+  "id": "archive-0001",
+  "technicalName": "archive-0001",
+  "type": "archive",
+  "isStartNode": false,
+  "onEnter": "",
+  "onExit": "",
+  "text": {
+    "de": "archive-0001-intro_de.txt"
+  },
+  "index": [
+    {
+      "id": "someDocumentId1",
+      "keys": [ "keyword1", "keywords2" ],
+      "icon": "../images/avatar.png",
+      "title": {
+        "de": "Some Document Title 1 Some Document Title 1 Some Document Title 1 Some Document Title 1"
+      },
+      "text": {
+        "de": "archive-0001-01_de.txt"
+      }
+    },
+    {
+      "id": "someDocumentId2",
+      "keys": [ "keyword1", "keywords4" ],
+      "icon": "../images/avatar.png",
+      "title": {
+        "de": "Some Document Title 2"
+      },
+      "text": {
+        "de": "archive-0001-02_de.txt"
+      }
+    }
+
+  ]
+}

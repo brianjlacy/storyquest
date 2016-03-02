@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+
+    <link rel="stylesheet" type="text/css" href="../css/storyquest.css"/>
+    <link rel="stylesheet" type="text/css" href="../station-css/archive.css"/>
+
+    <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="../bower_components/jquery.transit/jquery.transit.js"></script>
+    <script src="../bower_components/knockout/dist/knockout.js"></script>
+    <script src="../bower_components/jquery-hammerjs/jquery.hammer-full.min.js"></script>
+    <script src="../bower_components/markdown/lib/markdown.js"></script>
+
+    <script src="../js/storyquest.js"></script>
+    <script src="../js/storyquest-dispatcher.js"></script>
+    <script src="../js/rules.js"></script>
+    <script src="../js/questml.js"></script>
+    <script src="../station-js/archive.js"></script>
+    <script src="../api/storyquestapi-archive.js"></script>
+
+    <script src="../js/global.js"></script>
+</head>
+
+<body id="body">
+
+    <div id="searchbar">
+        <div id="searchcontainer">
+            <textarea id="textarea"></textarea>
+            <a id="searchButton" class="button"><span>SEARCH</span></a>
+        </div>
+    </div>
+
+    <div id="title">
+        <div id="titlebuttons">
+            <a id="backButton" class="button"><span>BACK</span></a>
+        </div>
+        <div id="titletext"></div>
+    </div>
+
+    <div id="content">
+        <div id="resultlist"></div>
+        <div id="text"></div>
+    </div>
+
+</body>
+</html>

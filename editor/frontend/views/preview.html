@@ -1,0 +1,53 @@
+<div style="height:100%" class="row">
+    <div style="height:100%" class="col-md-8">
+        <div style="height:100%" class="nav-tabs-custom">
+            <ul class="nav nav-tabs pull-right">
+                <li class="active"><a href="#previewnodes" data-toggle="tab" class="edittab">Chapter List</a></li>
+                <li><a href="#nodetree" data-toggle="tab" id="treetab" class="edittab">Chapter Tree</a></li>
+                <li class="pull-left header"><span>Chapters&nbsp;&nbsp;</span></li>
+            </ul>
+            <div class="tab-content">
+                <div id="previewnodes" class="tab-pane active">
+                    <ul ui-sortable="sortableOptions" id="previewnodelist" style="height:95%;white-space:nowrap" class="list-group">
+                        <span ng-repeat="thisNode in nodelist | filter:filterText"
+                              ng-click="previewNode(thisNode.id)"
+                              data-id="{{thisNode.id}}"
+                              class="list-group-item {{thisNode | nodeActive:node}}">
+                            <span ng-style="{ 'font-weight':'bold', 'color': thisNode.nodeColor}"
+                                  class="glyphicon {{thisNode.type | typeIconClass}}">&nbsp;</span>
+                            <span editable-text="thisNode.title"
+                                  onbeforesave="saveNodeTitle(thisNode, $data)">{{thisNode.title}}</span>
+                            <span class="nodeid">&nbsp;({{thisNode.id}})</span>
+                        </span>
+                    </ul>
+                </div>
+                <div id="nodetree" style="width:100%;height:100%" class="tab-pane">
+                    <div style="width:100%;height:5%">
+                        <button ng-click="openTreeWindow()" title="Open tree in new window"
+                                class="glyphicon glyphicon-resize-full"></button>
+                    </div>
+                    <iframe id="treeframe" style="width:100%;height:95%;border:0"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="height:100%" class="col-md-4">
+        <div style="height:100%" class="nav-tabs-custom">
+            <ul class="nav nav-tabs pull-right">
+                <li class="active"><a href="#dataattributes" data-toggle="tab" class="edittab">Attributes</a></li>
+                <li><a href="#datainventory" data-toggle="tab" class="edittab">Inventory</a></li>
+                <li class="pull-left header"><span>Reader Data&nbsp;&nbsp;</span></li>
+            </ul>
+            <div id="dataattributescontent" class="tab-content">
+                <div id="dataattributes" class="tab-pane active">
+                    <form role="form">
+                        <div id="dataattributeslist" class="box-body"></div>
+                    </form>
+                </div>
+                <div id="datainventory" class="tab-pane">
+                    <ul id="datainventorylist" class="list-group"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

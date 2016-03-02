@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+
+        <link rel="stylesheet" type="text/css" href="../bower_components/idangerous-swiper/dist/idangerous.swiper.css"/>
+        <link rel="stylesheet" type="text/css" href="../css/storyquest.css"/>
+        <link rel="stylesheet" type="text/css" href="../station-css/settings.css"/>
+
+        <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="../bower_components/jquery-ui/jquery-ui.min.js"></script>
+        <script src="../bower_components/knockout/dist/knockout.js"></script>
+        <script src="../bower_components/jquery-hammerjs/jquery.hammer-full.min.js"></script>
+        <script src="../bower_components/markdown/lib/markdown.js"></script>
+        <script src="../bower_components/jquery.transit/jquery.transit.js"></script>
+        <script src="../bower_components/idangerous-swiper/dist/idangerous.swiper.min.js"></script>
+        <script src="../bower_components/overthrow-dist/overthrow.js"></script>
+
+
+        <script src="../js/storyquest.js"></script>
+        <script src="../js/storyquest-dispatcher.js"></script>
+        <script src="../js/rules.js"></script>
+        <script src="../js/global.js"></script>
+        <script src="../js/questml.js"></script>
+        <script src="../station-js/settings.js"></script>
+        <script src="../api/storyquestapi-settings.js"></script>
+
+        <script src="../js/global.js"></script>
+    </head>
+
+    <body id="body">
+        <!-- Two Button Messagebox -->
+        <div class="messagebox" id="mb_twobuttons">
+            <div class="mb_content">
+                <div class="mb_title" id="mb_twobuttons_title"></div>
+                <div class="mb_boxcontent overthrow" id="mb_twobuttons_content"></div>
+                <div class="mb_button">
+                    <div id="buttonwrap">
+                        <div class="button" style="">
+                            <div class="bl"></div>
+                            <div class="bf" id="mb_twobuttons_button1"></div>
+                            <div class="br"></div>
+                        </div>
+                        <div class="button" style="">
+                            <div class="bl"></div>
+                            <div class="bf" id="mb_twobuttons_button2"></div>
+                            <div class="br"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="header">
+            <span data-i18n="bookmarks"></span>
+        </div>
+        <div id="content">
+            <div id="bookmarks"></div>
+        </div>
+
+        <div id="footer">
+            <a id="cancel">
+                <div class="button">
+                    <div class="bl"></div>
+                    <div class="bf"><span data-i18n="back"></span></div>
+                    <div class="br"></div>
+                </div>
+            </a>
+        </div>
+    </body>
+
+</html>

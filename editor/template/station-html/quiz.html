@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+
+    <link rel="stylesheet" type="text/css" href="../css/storyquest.css"/>
+    <link rel="stylesheet" type="text/css" href="../station-css/quiz.css"/>
+
+    <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="../bower_components/knockout/dist/knockout.js"></script>
+    <script src="../bower_components/jquery-hammerjs/jquery.hammer-full.min.js"></script>
+    <script src="../bower_components/markdown/lib/markdown.js"></script>
+
+    <script src="../js/storyquest.js"></script>
+    <script src="../js/storyquest-dispatcher.js"></script>
+    <script src="../station-js/quiz.js"></script>
+    <script src="../api/storyquestapi-quiz.js"></script>
+
+    <script src="../js/global.js"></script>
+</head>
+
+<body id="body">
+
+    <!-- The top content area -->
+    <div id="contentcontainer">
+
+        <!-- The background image -->
+        <div id="background">
+            <img id="bgimage" src="">
+        </div>
+
+        <!-- The main content -->
+        <div id="content">
+            <div id="question"></div>
+            <div id="textinput">
+                <input type="text" id="answertext">
+            </div>
+            <div id="multipleinput">
+            </div>
+            <div id="result">
+                <div id="resulttext"></div>
+                <button id="resultbutton">Continue</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

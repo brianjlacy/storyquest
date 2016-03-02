@@ -1,0 +1,81 @@
+.nodelistdeleteicon {
+    position:absolute;
+    top:0.8em;
+    right:1em;
+    color:red;
+    display:none
+}
+a.list-group-item:hover {
+    cursor:pointer;
+}
+
+#editcontent {
+    height: 100%;
+}
+#editconfiguration {
+    height: 100%;
+    width: 100%;
+    overflow-y: scroll;
+}
+.treema-node, .ui-widget {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 1em;
+}
+.disabled {
+    pointer-events: none;
+    color: #cccccc;
+}
+.ace_autocomplete {
+    width: 450px;
+}
+.editable-click, a.editable-click {
+    z-index: 2;
+    background-color: inherit;
+    border-color: #428bca;
+    text-decoration: none;
+    color: inherit;
+    border-bottom: none;
+}
+.editable-click:hover, a.editable-click:hover {
+    color: black;
+}
+span.list-group-item:hover {
+    cursor:pointer;
+}
+span.list-group-item.active, span.list-group-item.active:hover, span.list-group-item.active:focus {
+    z-index: 2;
+    color: #fff;
+    background-color: #428bca;
+    border-color: #428bca;
+}
+.ace_gutter {
+    display: none;
+}
+.fullscreen {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 10000;
+}
+.editable-empty, .editable-empty:hover, .editable-empty:focus, a.editable-empty, a.editable-empty:hover, a.editable-empty:focus {
+    font-style: normal;
+}
+
+.edit-header {
+    height: 5%;
+}
+
+.edit-content {
+    height: 95%;
+}
+
+.ace_editor {
+    height: 100%;
+    width: 100%;
+}
+
+.tab-content {
+    height: 95%;
+}

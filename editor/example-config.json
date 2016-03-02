@@ -1,0 +1,36 @@
+{
+    "serverName": "localhost",
+    "port": 3000,
+    "cookieSecret": "changeme",
+    "projectsDir": "projects",
+    "tempDir": "/tmp",
+    "logfile": "storyquest.log",
+    "exceptionlogfile": "logs/exceptions.log",
+    "redirectPort": 8080,
+    "httpOnly": false,
+    "httpPort": 3000,
+
+    "allowedNewUserContexts": [ "sqw2014" ],
+
+    "dbHost": "http://localhost",
+    "dbPort": 5984,
+
+    "facebookAppId": "123",
+    "facebookSecret": "abc",
+    "facebookCallbackUrl": "https://server.name/auth/facebook/callback",
+
+    "youtubeApiKey": "abc",
+
+    "sslKeyFile": "ssl.key",
+    "sslCertFile": "ssl.crt",
+
+    "androidKeystore": "android.keystore",
+    "androidKeyStoreAlias": "android.keystore",
+    "androidKeyStoreStorePass": "123456",
+    "androidKeyStoreKeyPass": "123456",
+
+    "smtpServer": "smtp.mail.server",
+    "smtpPort": 587,
+    "smtpUsername": "username",
+    "smtpPassword": "password"
+}

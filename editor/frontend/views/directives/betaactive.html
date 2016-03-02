@@ -1,0 +1,58 @@
+<span>
+    <div class="container">
+        <div class="tab-content">
+            <div class="tab-pane fade in active">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <iframe id="previewframe" width="480px" height="800px" name="preview">
+                                Your browser does not support iframes. Please use a different browser.
+                            </iframe>
+                            <p style="font-size:0.8em">
+                                Please use a current browser for this app preview.
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <h4>Thanks for testing!</h4>
+                                    <p>Thank you for testdriving this app. You can use the app in the left window in the same way an actual smartphone app is used. Use your mouse to touch on elements and drag your mouse to emulate touch dragging. If you find any problems, you can report them with the input box below. You do not need to report the position inside the app, this information is automatically added.</p>
+                                    <p>Please make sure you are using a current desktop browser like Google Chrome or Firefox. The app uses modern HTML5 features and relies on a proper implementation. Using an outdated browser may result in errors.</p>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <form id="feedbackForm">
+                                        <textarea class="form-control" name="message" placeholder="Type in the problem description" rows="15" style="margin-bottom:10px;"></textarea>
+                                        <input type="hidden" name="position" id="position"/>
+                                        <input type="hidden" name="sender" value="Beta Reader"/>
+                                        <h6 class="pull-right" id="counter">Position:&nbsp;
+                                            <span id="currentStationId">None</span>
+                                        </h6>
+                                        <button class="btn btn-info" id="feedbackButton">Report Problem</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="problemSent" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 id="modalLabel">Report sent successfully</h3>
+                </div>
+                <div class="modal-body">
+                    <p id="modalText"></p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</span>

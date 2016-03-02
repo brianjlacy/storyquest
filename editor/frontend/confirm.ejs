@@ -1,0 +1,22 @@
+<!doctype html>
+<html class="no-js">
+
+<%= grunt.file.read('frontend/header.ejs') %>
+
+<body ng-app="StoryQuestEditorApp" ng-cloak class="skin-blue" ng-controller="confirmController">
+
+    <div class="confirm">
+        <img src="images/havenlogo.png">
+        <h1>{{title}}</h1>
+        <p>
+            {{message}}
+        </p>
+        <p>
+            <a href="login.html" class="text-center">Proceed to Login</a>
+        </p>
+    </div>
+
+<%= grunt.file.read('frontend/footer.ejs') %>
+
+</body>
+</html>

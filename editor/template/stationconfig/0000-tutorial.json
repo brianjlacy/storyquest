@@ -1,0 +1,63 @@
+{"id": "0000-tutorial", "technicalName": "0000-tutorial", "title": "Tutorial Screen", "type": "cutscene", "isStartNode": true, "onEnter": "", "onExit": "", "nextStation": "0000-create",
+    "frames": [
+        {
+            "layers": [
+                {
+                    "type": "background",
+                    "className": "image",
+                    "image": "intro_book.jpg",
+                    "duration": "1000"
+                }
+            ]
+        },
+        {
+            "layers": [
+                {
+                    "type": "background",
+                    "className": "image",
+                    "image": "intro_paging.jpg",
+                    "duration": "1000"
+                }
+            ]
+        },
+        {
+            "layers": [
+                {
+                    "type": "background",
+                    "className": "image",
+                    "image": "intro_paging2.jpg",
+                    "duration": "1000"
+                }
+            ]
+        },
+        {
+            "layers": [
+                {
+                    "type": "background",
+                    "className": "image",
+                    "image": "intro_menu.jpg",
+                    "duration": "1000"
+                }
+            ]
+        },
+        {
+            "layers": [
+                {
+                    "type": "background",
+                    "className": "image",
+                    "image": "intro_choice.jpg",
+                    "duration": "1000"
+                }
+            ]
+        },
+        {
+            "layers": [
+                {
+                    "type": "background",
+                    "className": "image",
+                    "image": "intro_end.jpg",
+                    "duration": "1000"
+                }
+            ]
+        }
+]}

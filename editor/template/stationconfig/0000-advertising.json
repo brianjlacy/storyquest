@@ -1,0 +1,14 @@
+{"id": "0000-advertising", "technicalName": "0000-advertising", "title": "Advertising", "type": "cutscene", "isStartNode": false, "onEnter": "", "onExit": "", "nextStation": "0000-create",
+    "frames": [
+        {
+            "layers": [
+                {
+                    "type": "background",
+                    "className": "image",
+                    "image": "advertising.jpg",
+                    "duration": "1000"
+                }
+            ]
+        }
+    ]
+}

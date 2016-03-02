@@ -1,0 +1,48 @@
+
+### Book Title
+
+[i|character1.png]
+
+[b|creditstext|by Author Name]
+
+### Realisierung
+
+[b|creditstext|Questor GmbH • Gustav-Meyer-Allee 25 • 13355 Berlin]
+
+### Projektleitung
+
+[b|creditstext|Some Name]
+
+### Illustrationen
+
+[b|creditstext|Some Name]
+
+### Grafikdesign
+
+[b|creditstext|Some Name]
+
+### Entwickler
+
+[b|creditstext|Some Name]
+
+### Tester
+
+[b|creditstext|
+Some Name
+]
+
+### Mehr Infos auf Facebook
+
+[d|verysmallimg|https://www.facebook.com/storyquest|facebook-button.png]
+
+[d|smallimg|https://www.facebook.com/storyquest|storyquest-logo.png]
+
+### Datenschutzerklärung
+
+Wir nehmen den Schutz Ihrer persönlichen Daten sehr ernst und behandeln personenbezogenen Daten, die Sie uns über ein Kontaktformular oder per E-Mail vermitteln, vertraulich und entsprechend der gesetzlichen Datenschutzvorschriften sowie dieser Datenschutzerklärung.
+
+Wir erheben und verarbeiten personenbezogene Daten nur, soweit diese für die Begründung und inhaltliche Ausgestaltung oder Änderung des Rechtsverhältnisses erforderlich sind (Bestandsdaten). Personenbezogene Daten über die Inanspruchnahme unserer App (Nutzungsdaten) erheben wir nicht.
+
+Wir übermitteln keine personenbezogene Daten an Dritte.
+
+Sie haben jederzeit das Recht auf Auskunft über die gespeicherten personenbezogenen Daten, deren Herkunft und Empfänger sowie den Zweck der Datenverarbeitung. Wenn Sie Fragen hierzu haben, die Ihnen diese Datenschutzerklärung nicht beantworten konnte, können Sie sich jederzeit unter folgender eMail-Adresse an uns wenden: info@storyquest.de

@@ -1,0 +1,14 @@
+{
+    "name": "App Name",
+    "description": "App description (132 characters or less, no HTML)",
+    "version": "1.0.0",
+    "manifest_version": 2,
+    "icons": {
+        "128": "firefoxos/www/img/icon-128.png"
+    },
+    "app": {
+        "launch": {
+            "local_path": "index.html"
+        }
+    }
+}

@@ -1,0 +1,94 @@
+<div id="modalYesNo" tabindex="-1" role="dialog" aria-labelledby="modalYesNoLabel" aria-hidden="true"
+     class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header"><h3 id="modalYesNoLabel">Label</h3></div>
+            <div class="modal-body"><p id="modalYesNoText">Text</p></div>
+            <div class="modal-footer">
+                <button data-dismiss="modal" aria-hidden="true" id="modalYesNoDoYes" class="btn">Yes</button>
+                <button data-dismiss="modal" aria-hidden="true" id="modalYesNoDoNo" class="btn">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modalOk" tabindex="-1" role="dialog" aria-labelledby="modalOkLabel" aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header"><h3 id="modalOkLabel">Label</h3></div>
+            <div class="modal-body"><p id="modalOkText">Text</p></div>
+            <div class="modal-footer">
+                <button data-dismiss="modal" aria-hidden="true" id="modalOkDoOk" class="btn">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modalOkCancel" tabindex="-1" role="dialog" aria-labelledby="modalOkCancelLabel" aria-hidden="true"
+     class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header"><h3 id="modalOkCancelLabel">Label</h3></div>
+            <div class="modal-body"><p id="modalOkCancelText">Text</p></div>
+            <div class="modal-footer">
+                <button data-dismiss="modal" aria-hidden="true" id="modalOkCancelDoOk" class="btn">Ok</button>
+                <button data-dismiss="modal" aria-hidden="true" id="modalOkCancelDoCancel" class="btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modalWarning" tabindex="-1" role="dialog" aria-labelledby="modalWarningLabel" aria-hidden="true"
+     class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                <h3 id="modalWarningLabel">Label</h3></div>
+            <div class="modal-body"><p id="modalWarningText">Text</p></div>
+            <div class="modal-footer">
+                <button data-dismiss="modal" aria-hidden="true" class="btn">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modalQR" tabindex="-1" role="dialog" aria-labelledby="modalQRLabel" aria-hidden="true"
+     class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                <h3 id="modalQRLabel">Preview QR Code</h3></div>
+            <div class="modal-body">
+                <div id="modalQRText">
+                    <div id='previewqr' style='margin-left:auto;margin-right:auto;width:200px;height:200px'></div>
+                    <div style='margin-top:10px'>You can open the preview in any browser or mobile device by scanning this qr code. Live changes and preview data changes will be reflected in all open preview windows. Or <a id="devmodeurl">open the preview</a> in development mode in a new browser window. Note that the development mode does not allow for remote control using the Preview tab.</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button data-dismiss="modal" aria-hidden="true" class="btn">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modalPassword" tabindex="-1" role="dialog" aria-labelledby="modalPasswordLabel" aria-hidden="true"
+     class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                <h3 id="modalPasswordLabel">Change Password</h3></div>
+            <div class="modal-body">
+                <div class="form-group"><input type="password" name="password" ng-model="newPassword"
+                                               placeholder="Password" class="form-control"></div>
+                <div class="form-group"><input type="password" name="passwordRepeat" ng-model="newPasswordRepeat"
+                                               placeholder="Repeat Password" class="form-control"></div>
+                <p><span>&nbsp;</span><span ng-hide="!newPassword || newPassword=='' || newPassword==newPasswordRepeat">Passwords do not match!</span>
+                </p></div>
+            <div class="modal-footer">
+                <button ng-click="changePassword()" data-dismiss="modal" aria-hidden="true"
+                        ng-disabled="!newPassword || newPassword=='' || newPassword!=newPasswordRepeat" class="btn">
+                    Change Password
+                </button>
+                <button data-dismiss="modal" aria-hidden="true" class="btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

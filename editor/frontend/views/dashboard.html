@@ -1,0 +1,110 @@
+<div style="height:20%" class="row">
+    <div class="col-lg-3 col-xs-6">
+        <div class="small-box bg-aqua">
+            <div class="inner"><h3>{{stats.nodescount}}&nbsp;</h3>
+
+                <p>Chapters</p></div>
+            <div class="icon"><i class="ion ion-android-book"></i></div>
+            <a href="#/edit" class="small-box-footer"><span>Go to Chapter Editor&nbsp;</span><i
+                    class="fa fa-arrow-circle-right"></i></a></div>
+    </div>
+    <div class="col-lg-3 col-xs-6">
+        <div class="small-box bg-green">
+            <div class="inner"><h3>{{stats.feedbacks}}&nbsp;</h3>
+
+                <p>Feedback Messages</p></div>
+            <div class="icon"><i class="ion ion-android-forums"></i></div>
+            <a href="#/beta" class="small-box-footer"><span>View Feedback&nbsp;</span><i
+                    class="fa fa-arrow-circle-right"></i></a></div>
+    </div>
+    <div class="col-lg-3 col-xs-6">
+        <div class="small-box bg-yellow">
+            <div class="inner"><h3>{{stats.mediaobjects}}&nbsp;</h3>
+
+                <p>Media Objects</p></div>
+            <div class="icon"><i class="ion ion-images"></i></div>
+            <a href="#/media" class="small-box-footer"><span>Go to Media Library&nbsp;</span><i
+                    class="fa fa-arrow-circle-right"></i></a></div>
+    </div>
+    <div class="col-lg-3 col-xs-6">
+        <div class="small-box bg-red">
+            <div class="inner"><h3>{{stats.nodetypes}}&nbsp;</h3>
+
+                <p>Chapter Types</p></div>
+            <div class="icon"><i class="ion ion-compose"></i></div>
+            <a href="#/layout" class="small-box-footer"><span>View Chapter Types&nbsp;</span><i
+                    class="fa fa-arrow-circle-right"></i></a></div>
+    </div>
+</div>
+<div style="height:80%" class="row">
+    <div style="height:100%;overflow:hidden" class="col-md-4">
+        <div style="height:100%" class="box box-info">
+            <div style="height:5%" class="box-header"><i class="glyphicon glyphicon-star"></i>
+
+                <h3 class="box-title">Welcome to StoryQuest Haven</h3></div>
+            <div style="height:85%" class="box-body">
+                <blockquote><p>It is a book, but much more than a book.</p>
+                    <footer>Neal Stephenson, The Diamond Age</footer>
+                </blockquote>
+                <p>With StoryQuest, you can create rich, interactive books for a variety of platforms. Using StoryQuest
+                    Haven, you can create your book, add moving and sounding content, create storylines and let others
+                    read your creations. You can then download your book for phones, tablets or eReaders or you can sell
+                    your books right from StoryQuest.</p>
+
+                <p>For getting started, read the documentation or browse some example books from our catalog. Also, take
+                    a look at the community forums to let people help you out. You can also take one of our tours thru
+                    the Haven, which explain creating and writing books using StoryQuest.</p>
+
+                <p>You can publish StoryQuest books to any or all of the stores and devices below:</p><img
+                    src="images/storelogos.png" style="margin-top:1em;margin-bottom:1em"/>
+
+                <p>If you want to publish for ePub eReaders or Amazon Kindle devices, please note that these platforms
+                    have limited multimedia capablilities. Refer to the manual to understand which features of
+                    StoryQuest are compatible with those platforms.</p></div>
+        </div>
+    </div>
+    <div style="height:100%;overflow:hidden" class="col-md-4">
+        <div style="height:100%" class="box box-info">
+            <div style="height:5%" class="box-header"><i class="glyphicon glyphicon-question-sign"></i>
+
+                <h3 class="box-title">Help and Resources</h3></div>
+            <div style="height:85%" class="box-body"><h4>Documentation</h4>
+
+                <p>The Haven documentation is available here. You can also download the PDF documentation in the
+                    download section.</p><h4>Haven Tours</h4>
+
+                <p>Board one of our sightseeing ships to take a tour of the Haven:</p>
+                <ul>
+                    <li><a ng-click="quickTour.start()">Quick tour thru the StoryQuest Haven editor.</a></li>
+                    <li><a ng-click="creatingProjects.start()">Creating projects.</a></li>
+                    <li><a ng-click="creatingChapters.start()">Creating chapters and writing content.</a></li>
+                    <li><a ng-click="addingMultimedia.start()">Adding illustrations, video and other multimedia
+                        content.</a></li>
+                </ul>
+                <h4>Community Resources</h4>
+
+                <p>The StoryQuest community is available to help you out:</p>
+                <ul>
+                    <li><a href="https://storyquest.zendesk.com/forums">Community Forums</a></li>
+                    <li><a href="https://storyquest.zendesk.com/home">Report a StoryQuest Bug</a></li>
+                    <li><a href="http://storyquestblog.blogspot.de/">StoryQuest Blog</a></li>
+                </ul>
+                <h4>Contact us</h4>
+
+                <p>You can contact us via <a href="mailto:info@storyquest.de">info@storyquest.de</a>. We are happy to
+                    hear from you!</p></div>
+        </div>
+    </div>
+    <div style="height:100%;overflow:hidden" class="col-md-4">
+        <div style="height:100%" class="box box-info">
+            <div style="height:5%" class="box-header"><i class="glyphicon glyphicon-user"></i>
+
+                <h3 class="box-title">Latest from the Blog</h3></div>
+            <div style="height:85%" class="box-body">
+                <div ng-repeat="post in blogPosts | limitTo:5"><h4><a href="{{post.link}}">{{post.title}}</a></h4>
+
+                    <p>{{post.contentSnippet}}</p></div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,81 @@
+<div class="directive-book">
+
+    <div id="modalImage" tabindex="-1" role="dialog" aria-labelledby="modalImage" aria-hidden="true" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modalImageLabel">Insert Image</h3>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <select id="insertImageList" ng-model="imageId" class="image-picker">
+                            <option ng-repeat="image in imageList"
+                                    data-img-src="{{image}}"
+                                    value="{{image | regex:'.*\/':''}}">
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="modalImageDoOk" ng-click="insertImage()" class="btn">
+                        Ok
+                    </button>
+                    <button id="modalImageDoCancel" ng-click="closeInsertImage()" class="btn">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalLink" tabindex="-1" role="dialog" aria-labelledby="modalLink" aria-hidden="true" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modalLinkLabel">Insert Link</h3>
+                </div>
+                <div class="modal-body">
+                    <form role="form">
+                        <div class="form-group">
+                            <label for="linkText">Link Text</label>
+                            <input type="text"
+                                   ng-model="linkText"
+                                   id="linkText"
+                                   placeholder="Enter link button text here"
+                                   class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="linkTarget">Linked Chapter</label>
+                            <select id="linkTarget" ng-model="linkTarget" class="form-control">
+                                <option ng-repeat="thisNode in nodelist" value="{{thisNode.id}}">{{thisNode.title}}</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button id="modalLinkDoOk"
+                            ng-click="insertLink(linkTarget, linkText)"
+                            class="btn">
+                        Ok
+                    </button>
+                    <button id="modalLinkDoCancel" ng-click="closeInsertLink()" class="btn">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="fullscreenEditor">
+        <div class="acebuttons">
+            <button ng-click="showInsertImage()" title="Insert Image" class="glyphicon glyphicon-picture"></button>
+            <span>&nbsp;</span>
+            <button ng-click="showInsertLink()" title="Insert Link" class="glyphicon glyphicon-random"></button>
+            <div class="right">
+                <button ng-click="toggleFullscreen()" title="Toggle Fullscreen" class="glyphicon glyphicon-resize-full"></button>
+                <span>&nbsp;</span>
+                <button ng-click="openEditHelp()" title="Open Editor Help" class="glyphicon glyphicon-question-sign"></button>
+            </div>
+        </div>
+        <div ui-ace="{ onLoad: aceLoaded, onChange: aceChanged }" ng-model="node.text[0].text"></div>
+    </div>
+
+</div>

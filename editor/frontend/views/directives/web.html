@@ -1,0 +1,10 @@
+<div class="directive-web">
+    <div class="acebuttons">
+        <button ng-click="insertImage()" title="Insert Image"
+                class="glyphicon glyphicon-picture"></button>
+        <span>&nbsp;</span>
+        <button ng-click="insertLink()" title="Insert Link"
+                class="glyphicon glyphicon-random"></button>
+    </div>
+    <div ui-ace="{ onLoad: aceLoaded, onChange: aceChanged }" ng-model="node.text[0].text"></div>
+</div>

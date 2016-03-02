@@ -1,0 +1,200 @@
+/*
+    Frame definitions
+*/
+body {
+    background: url(../images/bg-create.jpg) no-repeat;
+    background-size: 100% 100%;
+    height: 100%;
+    width: 100%;
+}
+div#header {
+    width: 100%;
+    text-align: center;
+    font-family: headerfont;
+    font-size: 2em;
+    color: #efac54;
+    height: 9%;
+    overflow: hidden;
+    margin-top: 0.3em;
+}
+div#header span {
+    display:inline-block;
+    vertical-align:middle;
+    text-shadow: 0px -2px 5px #000000;
+}
+div#footer {
+    width: 100%;
+    height: 13%;
+    overflow: hidden;
+}
+div#content {
+    width: 90%;
+    height: 70%;
+    color: #461b0b;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 1em;
+    line-height: 1.2em;
+    text-align: left;
+    overflow: auto;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    padding: 1%;
+    font-family: textfont;
+    -webkit-overflow-scrolling:touch;
+}
+div#content::-webkit-scrollbar {
+    display: none;
+}
+div#indicator {
+    display: none;
+    position:absolute;
+    bottom: 15%;
+    right: 1em;
+    opacity: 0;
+    width: 10%;
+}
+div#indicator img {
+    width: 100%;
+}
+
+/*
+    Buttons
+*/
+#cancel, #continue {
+    display: none;
+}
+div.button {
+    display: table;
+    height: 3em;
+    margin-left: auto;
+    margin-right: auto;
+    min-width: 40%;
+    cursor: pointer;
+}
+div.bl {
+    display: table-cell;
+    height: 100%;
+    width: 10%;
+    background: url(../images/button-left.png) no-repeat;
+    background-size: 100% 100%;
+}
+div.br {
+    display: table-cell;
+    height: 100%;
+    width: 10%;
+    background: url(../images/button-right.png) no-repeat;
+    background-size: 100% 100%;
+}
+div.bf {
+    display: table-cell;
+    height: 100%;
+    background: url(../images/button-fill.png) repeat-x;
+    background-size: 100% 100%;
+    text-align: center;
+    font-family: headerfont, serif;
+    font-size: 1.3em;
+    color: #efac54;
+    text-shadow: 0px -2px 5px #000000;
+    padding-top: 0;
+    margin: 0;
+    line-height: 3em;
+}
+div.bf:active {
+    color: #ffffff;
+}
+
+/*
+    Modal message box definitions
+*/
+div.messagebox {
+    position: fixed;
+    display: none;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 99;
+}
+div.mb_content {
+    position: relative;
+    width: 100%;
+    height: 80%;
+    top: 5%;
+    background: url(../images/bg-messagebox.png) no-repeat;
+    background-size: 100% 100%;
+}
+div.mb_title {
+    height: 8%;
+    padding-top: 9%;
+    font-weight: bold;
+    text-align: center;
+    font-family: headerfont, serif;
+    font-size: 1.3em;
+    color: #efac54;
+    text-shadow: 0px -2px 5px #000000;
+}
+div.mb_boxcontent {
+    padding-left: 10%;
+    padding-right: 10%;
+    padding-top: 5%;
+    height: 60%;
+    color: #461b0b;
+    overflow: scroll;
+    line-height: 1.3em;
+    font-size: 1em;
+    text-align: center;
+}
+div.mb_boxcontent::-webkit-scrollbar {
+    display: none;
+}
+div.mb_button {
+    padding-left: 10%;
+    padding-right: 10%;
+    padding-top: 1%;
+    height: 12%;
+    text-align: center;
+}
+h3, h4 {
+    text-align: center;
+    color: #461b0b;
+}
+div#content p {
+    text-align: justify;
+    margin-bottom: 0.5em;
+    margin-top: 0;
+}
+div#content div.image {
+    width: 100%;
+}
+div#content div.image img {
+    width: 100%;
+}
+
+/* Special classes */
+
+.creditstext {
+    text-align: center;
+}
+.helpimage img {
+    text-align: center;
+    width: 100%;
+}
+.helpimage span {
+    display: none;
+}
+.smallimg {
+    text-align: center;
+}
+.smallimg img {
+    width: 50%;
+}
+.smallimg span {
+    display: none;
+}
+.verysmallimg {
+    text-align: center;
+}
+.verysmallimg img {
+    width: 25%;
+}

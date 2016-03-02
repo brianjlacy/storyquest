@@ -1,0 +1,73 @@
+.joint-html-element {
+    position: absolute;
+    pointer-events: none;
+    -webkit-user-select: none;
+    text-align: center;
+}
+.joint-html-element button {
+    /* Enable interacting with inputs only. */
+    pointer-events: auto;
+    display: inline;
+}
+.joint-html-element idholder {
+    display: none;
+}
+.link-tools .tool-remove {
+    display: none;
+}
+.link-tools .tool-options {
+    display: none;
+}
+[ng-drag], [ng-drag-clone]{
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.drag-object, [ng-drag-clone], [ng-drop] [ng-drag]{
+    border-color: mediumgray;
+    border-width: 1px;
+    border-style: solid;
+    height: 25px;
+    width: 100px;
+    text-align: center;
+    display: inline-block;
+    margin:0 10px;
+    cursor: move;
+    position: relative;
+    overflow: hidden;
+}
+.drag-object [ng-drag]{
+    width: 100px;
+    height: 25px;
+    position: absolute;
+    top:0; left:0;
+    padding: 0;
+    margin: 0;
+}
+.idholder {
+  background-color: #cccccc;
+  border-radius: 1em;
+  overflow: hidden;
+  margin-top: 0.2em;
+}
+.idholder button {
+  background-color: #cccccc;
+  border-color:   #cccccc;
+  border: none;
+  outline:none;
+  padding: 0.6em;
+}
+.idholder button:hover {
+  color: #3c8dbc;
+}
+[ng-drag-clone]{
+    margin: 0;
+}
+[ng-drag].drag-over{
+    border:solid 1px red;
+}
+[ng-drag].dragging{
+    opacity: 0.5;
+}

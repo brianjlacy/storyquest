@@ -1,0 +1,39 @@
+body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding:0;
+}
+div#contentcontainer {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+div#background {
+    position: absolute;
+    margin: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: -10;
+}
+div#background img {
+    width: 100%;
+    height: 100%;
+}
+div.enabled {
+    opacity: 0.8;
+}
+div.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+div#textinput {
+    display: none;
+}
+div#multipleinput, div#result {
+    display: none;
+}
+.selected {
+    color: red;
+}

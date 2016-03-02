@@ -1,0 +1,631 @@
+
+html, body {
+    font-family: textfont, serif;
+}
+a {
+    text-decoration: none;
+}
+* {
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+    -webkit-user-select: none;
+    user-select: none;
+    outline: none;
+}
+input {
+    -webkit-user-select: auto;
+    user-select: auto;
+}
+
+/*
+    Animation definitions
+*/
+div#animationcontainer {
+    width:100%;
+    height:100%;
+    top: 100%;
+}
+
+/*
+    Frame definitions.
+*/
+div#contentcontainer {
+    height: 90%;
+}
+div#background {
+    position: absolute;
+    margin: 0px;
+    width: 100%;
+    height: 90%;
+    z-index: -10;
+}
+div#background img {
+    width: 100%;
+    height: 100%;
+}
+div#header {
+    position: absolute;
+    margin-top: 1.5%;
+    width: 100%;
+    text-align: center;
+    font-family: headerfont;
+    font-size: 1em;
+}
+div#content {
+    height: 85%;
+    padding-top: 15%;
+    padding-left: 5%;
+    padding-right: 5%;
+    overflow: hidden;
+    text-indent: 1.5em;
+    text-align: justify;
+    line-height: 125%;
+    font-size: 1em;
+}
+div#content p {
+    margin: 0.1em;
+}
+div#content::-webkit-scrollbar {
+    display: none;
+}
+div#slideout {
+    height: 90%;
+    width: 95%;
+    top: 0px;
+    background-image: url(../images/woodbg-edge.jpg);
+    background-size: 100% 100%;
+    padding: 1% 3%;
+    text-align: center;
+    -webkit-backface-visibility: hidden;
+}
+div.image {
+    height: 40%;
+    text-align: center;
+    text-indent: 0px;
+}
+div.image img {
+    margin-top: 2%;
+    height: 90%;
+    max-width: 90%;
+}
+
+/*
+    Paging Elements definitions.
+*/
+#npleft {
+    display: none;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+#npright {
+    display: none;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
+/*
+    Slideout definitions.
+*/
+div#so_menu {
+    height: 12%;
+}
+div#so_menu img {
+    height: 85%;
+    padding: 0.2em 1em 0px 1em;
+}
+hr {
+    color: #ca8a00;
+    background-color: #ca8a00;
+    height: 2px;
+    width: 90%;
+    border: none;
+    margin-bottom: 0px;
+}
+div.slideouttab::-webkit-scrollbar {
+    display: none;
+}
+div.slideouttab {
+    height: 100%;
+    overflow: auto;
+}
+div#so_content {
+    height: 88%;
+}
+
+/*
+    Slideout definitions for character sheet.
+*/
+div#content_character img#characterimage, div#t_follower img#characterimage {
+    width: 90%;
+}
+div#content_character,div#t_follower h2 {
+    color: #ecd2af;
+    margin: 0.9em 0px 0.1em 0px;
+    padding: 0px;
+    line-height: 1em;
+    font-size: 1.3em;
+}
+div#content_character div.attributes, div#t_follower div.attributes {
+    margin-left: 10%;
+    margin-right: 10%;
+    width: 80%;
+    display:table;
+    border-spacing: 0 7px;
+    margin-bottom: 2em;
+    float: left;
+    font-size: 1.5em;
+}
+div#content_character div.attribute, div#t_follower div.attribute {
+    display:table-row;
+}
+div.attribute div.attributelabel {
+    font-size: 0.6em;
+    line-height: 2em;
+    text-align: center;
+    color: #ecd2af;
+    font-weight: bold;
+    display:table-cell;
+    text-align: left;
+}
+div.attribute div.attributevalue {
+    width: 4em;
+    min-width: 2.5em
+height: 2em;
+    line-height: 2.5em;
+    font-size: 0.6em;
+    text-align: center;
+    color: #ecd2af;
+    font-weight: bold;
+    background: rgba(244,133,2,0.3);
+    font-family: sans-serif;
+    display:table-cell;
+}
+
+
+/*
+    Slideout definitions for menu.
+*/
+.menubutton {
+    cursor: pointer;
+}
+#content_menu {
+    font-weight: bold;
+    color: #ecd2af;
+    font-size: 1.3em;
+    cursor: pointer;
+}
+div.rednogap {
+    font-size: 0.7em;
+    height: 2em;
+    line-height: 2.4em;
+    background: rgba(255,1,1,0.5);
+    padding: 5px 5px 5px 5px;
+    margin: 12px auto 12px auto;
+    width: 80%;
+    cursor: pointer;
+}
+div.red {
+    font-size: 0.7em;
+    height: 2em;
+    line-height: 2.4em;
+    background: rgba(255,1,1,0.5);
+    padding: 5px 5px 5px 5px;
+    margin: 50px auto 13px auto;
+    width: 80%;
+    cursor: pointer;
+}
+div.yellow {
+    font-size: 0.7em;
+    height: 2em;
+    line-height: 2.4em;
+    background: rgba(244,133,2,0.3);
+    padding: 5px 5px 5px 5px;
+    margin: 12px auto 12px auto;
+    width: 80%;
+    cursor: pointer;
+}
+div.yellowsmall {
+    font-size: 0.7em;
+    height: 2em;
+    line-height: 2.4em;
+    background: rgba(244,133,2,0.3);
+    padding: 5px 5px 5px 5px;
+    margin: auto;
+    margin-bottom: 12px;
+    width: 30%;
+    display: inline-block;
+    cursor: pointer;
+}
+div.red:active, div.yellow:active, div.yellowsmall:active {
+    opacity: 0.5;
+}
+
+/*
+    Slideout definitions for inventory.
+*/
+#content_inventory {
+    font-weight: bold;
+    color: #ecd2af;
+    font-size: 1.2em;
+}
+div.inventorysummary_high {
+    margin: 0;
+    padding: 0;
+    font-size: 0.6em;
+    line-height: 2em;
+}
+div.inventorysummary_high div {
+    padding:0;
+    margin:0;
+    font-family: sans-serif;
+}
+div.inventorysummary_high hr {
+    margin: 0 auto;
+}
+div.inventorysummary_low {
+    margin: 0;
+    padding: 0;
+    font-size: 0.6em;
+    line-height: 2em;
+}
+div.inventorysummary_low div {
+    padding-top: 1%;
+    margin:0;
+}
+div.inventorysummary_low hr {
+    margin: 0 auto;
+}
+#is_wrap {
+    display: table;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+#is_wrap a {
+    text-decoration: none;
+    font-weight: bold;
+}
+.is_middle a {
+    color: #000000;
+    background: #ecd2af;
+    padding-left: 2%;
+    padding-right: 2%;
+    margin-left: 2%;
+    margin-right: 2%;
+    opacity: 0.5;
+    -webkit-border-radius: 5px;
+}
+a.selected {
+    opacity: 1;
+}
+#is_left {
+    display: table-cell;
+    text-align: left;
+}
+#is_left a {
+    color: #ecd2af;
+}
+#is_middle {
+    display: table-cell;
+    text-align: center;
+    color: #ecd2af;
+}
+#is_right {
+    display: table-cell;
+    text-align: right;
+}
+#is_right a {
+    color: #ecd2af;
+}
+div#tabscontainer {
+    height: 70%;
+    overflow: scroll;
+}
+.ibuttonfade {
+    display:none;
+}
+
+a.ibutton {
+    color: #ecd2af;
+    cursor: pointer;
+}
+div#tabscontainer::-webkit-scrollbar {
+    display: none;
+}
+div#content_inventory table {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    overflow: scroll;
+    table-layout: fixed;
+    padding-top: 3%;
+}
+div#content_inventory td.icon {
+    text-align: right;
+    padding: 3%;
+    width: 20%;
+    height: 20%;
+}
+div#content_inventory td.icon img {
+    width: 70%;
+}
+div#content_inventory td.text {
+    padding: 3%;
+    text-align: left;
+    line-height: 1em;
+    width: 40%;
+}
+div#content_inventory td.button {
+    width: 30%;
+    white-space: nowrap;
+    margin-right: 0.5em;
+}
+table td.button span {
+    background:rgba(244,133,2,0.3);
+    color: #ecd2af;
+    padding: 10% 8% 1%;
+    margin:0;
+    font-size: 0.7em;
+}
+#t_items {
+    display: block;
+    height: 100%;
+}
+#t_conditions {
+    display: block;
+    height: 100%;
+}
+#t_follower {
+    display: block;
+    height: 100%;
+}
+#tabscontainer .button img {
+    height: 2em;
+}
+.normal {
+    font-weight: normal;
+    font-size: 80%;
+}
+.bold {
+    font-weight: bold;
+}
+.consumeration img {
+    height: 1em;
+    margin-right: 0.5em;
+    vertical-align: middle;
+    cursor: pointer;
+}
+.consumeration img:active {
+    opacity: 0.5;
+}
+.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/*
+    Text flow definitions
+*/
+div.end {
+    font-weight: bold;
+    text-align: center;
+    margin-top: 1em;
+}
+div.choice {
+    text-align: justify;
+    text-indent: 0;
+    line-height: 125%;
+    font-weight: bold;
+    font-size: 0.8em;
+    padding: 3% 2% 2% 2%;
+    margin: 4% auto 4% auto;
+    width: 90%;
+    -webkit-border-radius: 10px;
+    background: rgb(255,255,255);
+    cursor: pointer;
+}
+div.exec {
+    text-align: justify;
+    text-indent: 0;
+    line-height: 125%;
+    font-weight: bold;
+    font-size: 0.8em;
+    padding: 3% 2% 2% 2%;
+    margin: 4% auto 4% auto;
+    width: 90%;
+    -webkit-border-radius: 10px;
+    background: rgb(255,255,255);
+    cursor: pointer;
+}
+div.task {
+    text-align: justify;
+    text-indent: 0;
+    line-height: 125%;
+    font-weight: bold;
+    font-size: 0.8em;
+    padding: 3% 2% 2% 2%;
+    margin: 4% auto 4% auto;
+    width: 90%;
+    -webkit-border-radius: 10px;
+    background: rgb(244,133,2);
+    cursor: pointer;
+}
+div.battle {
+    text-align: justify;
+    text-indent: 0;
+    line-height: 125%;
+    font-weight: bold;
+    font-size: 0.8em;
+    padding: 3% 2% 2% 2%;
+    margin: 4% auto 4% auto;
+    width: 90%;
+    -webkit-border-radius: 10px;
+    background: #8b0000;
+    color: white;
+    cursor: pointer;
+}
+div.choice:active, div.exec:active, div.task:active, div.battle:active {
+    opacity: 0.5;
+}
+
+div.enabled {
+    opacity: 0.8;
+    box-shadow: rgba(0,0,0,0.8) 0 0 10px;
+}
+div.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+div.gameresult {
+    font-weight: bold;
+    text-align: center;
+}
+/*
+    Modal message box definitions
+*/
+div.messagebox {
+    position: fixed;
+    display: none;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 99;
+}
+div.mb_content {
+    position: relative;
+    width: 100%;
+    height: 80%;
+    top: 5%;
+    background: url(../images/messagebox_de.png) no-repeat;
+    background-size: 100% 100%;
+}
+div.mb_title {
+    height: 8%;
+    padding-top: 9%;
+    font-weight: bold;
+    text-align: center;
+    font-family: headerfont, serif;
+    font-size: 1.3em;
+    color: #efac54;
+    text-shadow: 0px -2px 5px #000000;
+}
+div.mb_boxcontent {
+    padding-left: 10%;
+    padding-right: 10%;
+    padding-top: 5%;
+    height: 63%;
+    color: #461b0b;
+    overflow: scroll;
+    line-height: 1.3em;
+    font-size: 1em;
+    text-align: center;
+    font-family: textfont;
+}
+div.mb_boxcontent::-webkit-scrollbar {
+    display: none;
+}
+div.mb_button {
+    padding-left: 10%;
+    padding-right: 10%;
+    padding-top: 1%;
+    height: 12%;
+    text-align: center;
+}
+#mb_twobuttons_content {
+    height:50%;
+}
+
+/*
+    Darken Overlay
+*/
+#overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: none;
+    background: #000000;
+    opacity: 0.7;
+    z-index: 99;
+}
+
+/*
+    Buttons
+*/
+div.button {
+    display: table;
+    height: 3em;
+    margin-left: auto;
+    margin-right: auto;
+    min-width: 40%;
+    width: 40%;
+    cursor: pointer;
+}
+div.bl {
+    display: table-cell;
+    height: 100%;
+    width: 10%;
+    background: url(../images/button-left.png) no-repeat;
+    background-size: 100% 100%;
+}
+div.br {
+    display: table-cell;
+    height: 100%;
+    width: 10%;
+    background: url(../images/button-right.png) no-repeat;
+    background-size: 100% 100%;
+}
+div.bf {
+    display: table-cell;
+    height: 100%;
+    background: url(../images/button-fill.png) repeat-x;
+    background-size: 100% 100%;
+    text-align: center;
+    font-family: headerfont, serif;
+    font-size: 1.3em;
+    color: #efac54;
+    text-shadow: 0px -2px 5px #000000;
+    padding-top: 0;
+    margin: 0;
+    line-height: 3em;
+}
+div.bf:active {
+    color: #ffffff;
+}
+
+/*
+    Overthrow CSS:
+    Enable overflow: auto on elements with overthrow
+    class when html element has overthrow class too
+*/
+.overthrow-enabled .overthrow {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+.overthrow::-webkit-scrollbar {
+    display: none;
+}
+
+.bold{
+    font-weight: bold;
+}
+
+.italic{
+    font-style: italic;
+}
+
+.center{
+    text-align: center;
+}
+
+.centerbold{
+    text-align: center;
+    font-weight: bold;
+}
+.chaptertitle{
+    textx-indent: 0;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.3em;
+}
