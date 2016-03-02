@@ -18,12 +18,12 @@ if (propFile.canRead()) {
 } else {
     project.ext.set("APP_LABEL", "StoryQuest Client")
     project.ext.set("GOOGLE_SERVICES_ID", "123456")
-    project.ext.set("STORYQUEST_TEMPLATE_PATH", "../sampleproject/template")
-    project.ext.set("STORYQUEST_PROJECT_PATH", "../sampleproject/project")
+    project.ext.set("STORYQUEST_TEMPLATE_PATH", "../../editor/projects/sampleproject/template")
+    project.ext.set("STORYQUEST_PROJECT_PATH", "../../editor/projects/sampleproject/project")
     project.ext.set("APP_ID", "de.storyquest.client.android.sample")
     project.ext.set("APP_VERSION_CODE", 1)
     project.ext.set("APP_VERSION_NAME", "1.0.0")
-    project.ext.set("STORYQUEST_ICON_PATH", "../sampleproject/icon.png")
+    project.ext.set("STORYQUEST_ICON_PATH", "../../editor/projects/sampleproject/icon.png")
 }
 
 buildscript {
