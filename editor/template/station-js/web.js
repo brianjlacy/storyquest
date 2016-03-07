@@ -32,11 +32,22 @@
 function switchContent(stationIdx) {
     loadFile("../stationconfig/" + stationIdx + ".json", function(result) {
         var loadedStation = JSON.parse(result);
+        $("#content").addClass(loadedStation.style)
+            .css("background-color", loadedStation.backgroundColor);
+        $("#body").css("background-image", "url(../images/" + loadedStation.backgroundImage + ")")
+            .css("padding-top", loadedStation.paddingTop);
         loadFile("../stationconfig/" + loadedStation.text['de'], function(result) {
-            sideloadContent(stationIdx, loadedStation, result);
+            sideloadContent(stationIdx, loadedStation, result, function() {
+                $("h1").addClass("accentColor").css("color", loadedStation.accentColor);
+                $("h3").addClass("accentColor").css("color", loadedStation.accentColor);
+                $(".box").css("background-color", loadedStation.boxBackgroundColor);
+                $(".choice.enabled").css("background-image", "linear-gradient(to bottom, " + loadedStation.choiceEnabledGradientStartColor + ", " + loadedStation.choiceEnabledGradientEndColor + ")");
+                $(".choice.disabled").css("background-image", "linear-gradient(to bottom, " + loadedStation.choiceDisabledGradientStartColor + ", " + loadedStation.choiceDisabledGradientEndColor + ")");
+                $(".choice").css("color", loadedStation.choiceTextColor);
+            });
         });
     });
-};
+}
 
 function escapeRegExp(str) {
     return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
@@ -72,30 +83,18 @@ function parseStoryQuestStatement(statement) {
 }
 
 /**
- * Sideloads the given StoryQuest book station.
+ * Sideloads the given StoryQuest station.
  *
  * @param stationIdx
  * @param config
  * @param configAsset
  */
-function sideloadContent(stationIdx, config, configAsset) {
+function sideloadContent(stationIdx, config, configAsset, callback) {
     currentStationId = stationIdx;
 
     // parsing config
     currentStation = config;
     var contentElem = $("#content");
-    contentElem.css("color", currentStation.textColor);
-    $("#background").css("background-color", currentStation.backgroundColor);
-    if (currentStation.backgroundImage)
-        $("#bgimage").attr("src", "../images/" + currentStation.backgroundImage);
-    $("#header").css("color", currentStation.headerColor);
-    $("#headertext").html(currentStation.headerText[lang]);
-
-    // enable buttons based on configuration
-    if (typeof currentStation.nextStation!="undefined" && currentStation.nextStation!="")
-        $("#continue").show();
-    else
-        $("#cancel").show();
 
     // parsing & setting text content
     var tree = markdown.parse(configAsset, "Gruber");
@@ -122,21 +121,7 @@ function sideloadContent(stationIdx, config, configAsset) {
     // finalizing rendering
     var html = markdown.renderJsonML(htmlTree);
     html = parseStoryQuestArticleML(html);
-    $("#content").html(html);
-
-    // setting up scroll indicator
-    var contentScroller = $("#content");
-    if( contentScroller.prop("offsetHeight") < contentScroller.prop("scrollHeight")) {
-        $("#indicator").show();
-    }
-    contentScroller.scroll(function() {
-        buffer = 40; // # of pixels from bottom of scroll to fire your function. Can be 0.
-        if (contentScroller.prop('scrollHeight') - contentScroller.scrollTop() <= contentScroller.height() + buffer )   {
-            $("#indicator").hide();
-        } else {
-            $("#indicator").show();
-        }
-    });
+    contentElem.html(html);
 
     // register hooks for enabled choices
     $(".choice.enabled").each(function(idx, elem) {
@@ -146,30 +131,14 @@ function sideloadContent(stationIdx, config, configAsset) {
         });
     });
 
+    // call callback
+    if (callback)
+        callback();
+
     // finally call onEnter
     onEnter();
-};
-
-
+}
 
 $(document).ready(function() {
-    
-    // cancel listener
-    $("#cancel").hammer().on("tap", function(event) {
-        playButtonSound();
-        toStation(model.previousNodeId);
-    });
-
-    // continue listener
-    $("#continue").hammer().on("tap", function(event) {
-        playButtonSound();
-        toStation(currentStation.nextStation);
-    });
-
-    setInterval(function() {
-        $("#indicator").transition({ opacity: 0, duration: 1500 });
-        $("#indicator").transition({ opacity: 0.5, duration: 1500 });
-    }, 3000);
-
     autoSwitchContent();
 });

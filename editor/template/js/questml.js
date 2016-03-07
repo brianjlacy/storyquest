@@ -25,31 +25,16 @@
 
 var questML = {
 
-    // Images classes: left, full, right
-    "a": function(tokens) {
-        return replaceAny(tokens, "<span class='nodelink'><a href='#' onclick='toStation(\"$1\")'>$2</a></span>")
-    },
-
-    // Images classes: simple
+    // Images classes: left, center, right
     "i": function(tokens) {
-        return replaceAny(tokens, "<div class='image'><img src='../images/$0'></div>")
-    },
-
-    // Images classes: left, full, right
-    "j": function(tokens) {
-        return replaceAny(tokens, "<div class='$0'><img src='../images/$1'><span>$2</span></img></div>")
-    },
-
-    // Images link
-    "d": function(tokens) {
-        return replaceAny(tokens, "<div class='$0'><a href='$1'><img src='../images/$2'></a></div>")
+        return replaceAny(tokens, "<div class='image $0'><img src='../images/$1'></div>")
     },
 
     // Content Boxes classes: left, full, right
     "b": function(tokens) {
         // TODO: this is a hack
         tokens[1] = tokens[1].replace("</p>", "");
-        var result = replaceAny(tokens, "<div class='$0'>$1</div>")
+        var result = replaceAny(tokens, "<div class='box $0'>$1</div>")
         return result.replace("<p></p>", "");
     },
 
@@ -73,9 +58,9 @@ var questML = {
         if (!tokens[3]) tokens[3] = "true";
         if (tokens[2]=="" || secureEvalBool(tokens[2]))
             if (tokens[3]=="" || secureEvalBool(tokens[3]))
-                return replaceAny(tokens, "<div class='choice enabled' data-target='$0'>$1</div>");
+                return replaceAny(tokens, "<div class='choice enabled' data-target='$0'><i class='fa fa-external-link'></i>&nbsp;&nbsp;$1</div>");
             else
-                return replaceAny(tokens, "<div class='choice disabled' data-target='$0'>$1</div>");
+                return replaceAny(tokens, "<div class='choice disabled' data-target='$0'><i class='fa fa-external-link'></i>&nbsp;&nbsp;$1</div>");
         else
             return "";
     },
@@ -93,30 +78,12 @@ var questML = {
             return "";
     },
 
-    // text formatting
-    "y": function(tokens){
-        return replaceAny(tokens, "<div class='$0'>$1</div>");
-    },
-
-    "z": function(tokens){
-        return replaceAny(tokens, "<span class='$0'>$1</div>");
-    },
-
-
     // task boxes
     "t": function(tokens) {
         if (tokens[5]=="" || secureEvalBool(tokens[5]))
             return replaceAny(tokens, "<div class='task enabled' data-target='$0'>$4</div>");
         else
             return replaceAny(tokens, "<div class='task disabled' data-target='$0'>$4</div>");
-    },
-
-    // battle
-    "f": function(tokens) {
-        if (tokens[4]=="" || secureEvalBool(tokens[4]))
-            return replaceAny(tokens, "<div class='battle enabled' data-target='$0'>"+ i18n[lang].fight +"</div>");
-        else
-            return replaceAny(tokens, "<div class='battle disabled' data-target='$0'>"+ i18n[lang].fight +"</div>");
     },
 
     // condition
@@ -157,15 +124,6 @@ var questML = {
     "p": function(tokens) {
         eval(tokens[0]);
         return "";
-    },
-
-    // question
-    "q": function(tokens) {
-        if (eval(tokens[0]))
-            return tokens[1];
-        else
-            return tokens[2];
     }
-
 };
 

@@ -1,0 +1,19 @@
+{
+  "id": "001",
+  "type": "web",
+  "style": "default",
+  "isStartNode": false,
+  "backgroundImage": "background.jpg",
+  "backgroundColor": "#efefef",
+  "paddingTop": "100%",
+  "accentColor": "#766278",
+  "boxBackgroundColor": "white",
+  "choiceEnabledGradientStartColor": "#3498db",
+  "choiceEnabledGradientEndColor": "#2980b9",
+  "choiceDisabledGradientStartColor": "#3498db",
+  "choiceDisabledGradientEndColor": "#2980b9",
+  "choiceTextColor": "white",
+  "text": {
+    "de": "001_de.txt"
+  }
+}

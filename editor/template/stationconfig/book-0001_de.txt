@@ -1,7 +1,0 @@
-This is a simple demo text for a sample book station.
-
-[l|book-0001|Go to 0001.|true|true]
-
-[l|battle-0001|Start a battle.|true|true]
-
-[l|check-0001_0001|Start a check.|true|true]

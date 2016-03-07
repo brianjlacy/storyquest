@@ -4,10 +4,11 @@
 html, body {
     width: 100%;
     height: 100%;
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
     font-family: textfont, serif;
-    overflow: hidden;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 a {
     text-decoration: none;
@@ -20,75 +21,52 @@ a {
 }
 input {
     -webkit-user-select: auto;
-    user-select: auto;
+    user-select: default;
 }
-
-/*
-    Fonts
-*/
 
 /* Standard Fonts */
 
 @font-face {
-    font-family: textfont;
-    src: url('../images/AveriaSerif-Regular.ttf') format('truetype');
-}
-@font-face {
     font-family: headerfont;
-    src: url('../images/Averia-Bold.ttf') format('truetype');
+    src: url('../images/FjallaOne-Regular.ttf') format('truetype');
 }
 
-/* Other Fonts */
+@font-face {
+    font-family: textfont;
+    src: url('../images/AlegreyaSans-Light.ttf') format('truetype');
+}
 
 @font-face {
-    font-family: bolditalic;
-    src: url('../images/Averia-Regular.ttf') format('truetype');
+    font-family: lightfont;
+    src: url('../images/AlegreyaSans-Light.ttf') format('truetype');
 }
+
 @font-face {
-    font-family: bolditalic;
-    src: url('../images/Averia-Bold.ttf') format('truetype');
+    font-family: regularfont;
+    src: url('../images/AlegreyaSans-Regular.ttf') format('truetype');
 }
+
 @font-face {
-    font-family: bolditalic;
-    src: url('../images/Averia-Italic.ttf') format('truetype');
+    font-family: boldfont;
+    src: url('../images/AlegreyaSans-Bold.ttf') format('truetype');
 }
+
 @font-face {
-    font-family: bolditalic;
-    src: url('../images/Averia-Light.ttf') format('truetype');
+    font-family: thinfont;
+    src: url('../images/AlegreyaSans-Thin.ttf') format('truetype');
 }
+
 @font-face {
-    font-family: bolditalic;
-    src: url('../images/Averia-BoldItalic.ttf') format('truetype');
+    font-family: thinitalic;
+    src: url('../images/AlegreyaSans-ThinItalic.ttf') format('truetype');
 }
+
 @font-face {
-    font-family: bolditalic;
-    src: url('../images/Averia-LightItalic.ttf') format('truetype');
+    font-family: regularitalic;
+    src: url('../images/AlegreyaSans-Italic.ttf') format('truetype');
 }
+
 @font-face {
-    font-family: bolditalic;
-    src: url('../images/Averia-Gruesa.ttf') format('truetype');
-}
-@font-face {
-    font-family: bolditalic;
-    src: url('../images/AveriaSerif-Regular.ttf') format('truetype');
-}
-@font-face {
-    font-family: bolditalic;
-    src: url('../images/AveriaSerif-LightItalic.ttf') format('truetype');
-}
-@font-face {
-    font-family: bolditalic;
-    src: url('../images/AveriaSerif-Regular.ttf') format('truetype');
-}
-@font-face {
-    font-family: bolditalic;
-    src: url('../images/AveriaSerif-BoldItalic.ttf') format('truetype');
-}
-@font-face {
-    font-family: bolditalic;
-    src: url('../images/AveriaSerif-Italic.ttf') format('truetype');
-}
-@font-face {
-    font-family: bolditalic;
-    src: url('../images/AveriaSerif-Light.ttf') format('truetype');
+    font-family: lightitalic;
+    src: url('../images/AlegreyaSans-LightItalic.ttf') format('truetype');
 }

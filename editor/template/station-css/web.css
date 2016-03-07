@@ -1,200 +1,149 @@
-/*
-    Frame definitions
-*/
 body {
-    background: url(../images/bg-create.jpg) no-repeat;
-    background-size: 100% 100%;
-    height: 100%;
-    width: 100%;
+    background: white;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    color: black;
+    padding-top: 50%;
 }
-div#header {
-    width: 100%;
-    text-align: center;
-    font-family: headerfont;
-    font-size: 2em;
-    color: #efac54;
-    height: 9%;
-    overflow: hidden;
-    margin-top: 0.3em;
-}
-div#header span {
-    display:inline-block;
-    vertical-align:middle;
-    text-shadow: 0px -2px 5px #000000;
-}
-div#footer {
-    width: 100%;
-    height: 13%;
-    overflow: hidden;
-}
-div#content {
-    width: 90%;
-    height: 70%;
-    color: #461b0b;
-    margin-left: auto;
-    margin-right: auto;
-    font-size: 1em;
-    line-height: 1.2em;
-    text-align: left;
-    overflow: auto;
-    margin-top: 5%;
-    margin-bottom: 5%;
-    padding: 1%;
-    font-family: textfont;
-    -webkit-overflow-scrolling:touch;
-}
+
 div#content::-webkit-scrollbar {
     display: none;
 }
-div#indicator {
-    display: none;
-    position:absolute;
-    bottom: 15%;
-    right: 1em;
-    opacity: 0;
-    width: 10%;
+
+div#content {
+    -webkit-overflow-scrolling:touch;
+    font-family: textfont;
+    font-weight: normal;
+    font-size: 18pt;
+    background: #e9e9e9;
 }
-div#indicator img {
+
+div#content h1 {
+    margin: 0;
+    padding: 0;
+    font-family: headerfont;
+    font-size: 44pt;
+    font-weight: normal;
+    line-height: 52pt;
+    text-align: center;
+}
+
+div#content h2 {
+    margin: 9pt 0 0 0;
+    padding: 0;
+    font-family: thinfont;
+    font-size: 36pt;
+    font-weight: normal;
+    line-height: 36pt;
+    text-align: center;
+}
+
+div#content h3 {
+    margin: 0;
+    padding: 0;
+    font-family: headerfont;
+    font-size: 24pt;
+    font-weight: normal;
+    line-height: 32pt;
+    text-align: left;
+}
+
+div.image.center img {
     width: 100%;
 }
 
-/*
-    Buttons
-*/
-#cancel, #continue {
-    display: none;
+div.image.left img {
+    width: 50%;
+    padding: 4%;
+    margin-left: -10%;
+    margin-right: 5%;
+    float: left;
+    background: white;
 }
-div.button {
-    display: table;
-    height: 3em;
+
+div.image.right img {
+    width: 50%;
+    padding: 4%;
+    margin-right: -10%;
+    margin-left: 5%;
+    float: right;
+    background: white;
+}
+
+h2 em {
+    font-family: thinitalic;
+    font-weight: normal;
+    font-style: normal;
+}
+
+p em {
+    font-family: lightitalic;
+    font-weight: normal;
+    font-style: normal;
+}
+
+p strong {
+    font-family: headerfont;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24pt;
+}
+
+div.box.left {
+    width: 50%;
+    padding: 4%;
+    margin-left: -10%;
+    margin-right: 5%;
+    float: left;
+    background: white;
+}
+
+div.box.right {
+    width: 50%;
+    padding: 4%;
+    margin-right: -10%;
+    margin-left: 5%;
+    float: right;
+    background: white;
+}
+
+div.box.center {
+    width: 92%;
+    padding: 4%;
     margin-left: auto;
     margin-right: auto;
-    min-width: 40%;
-    cursor: pointer;
+    background: white;
 }
-div.bl {
-    display: table-cell;
-    height: 100%;
-    width: 10%;
-    background: url(../images/button-left.png) no-repeat;
-    background-size: 100% 100%;
+
+div#content.default {
+    width: 80%;
+    margin-left: 5%;
+    margin-right: 5%;
+    padding: 5%;
 }
-div.br {
-    display: table-cell;
-    height: 100%;
-    width: 10%;
-    background: url(../images/button-right.png) no-repeat;
-    background-size: 100% 100%;
-}
-div.bf {
-    display: table-cell;
-    height: 100%;
-    background: url(../images/button-fill.png) repeat-x;
-    background-size: 100% 100%;
-    text-align: center;
-    font-family: headerfont, serif;
-    font-size: 1.3em;
-    color: #efac54;
-    text-shadow: 0px -2px 5px #000000;
-    padding-top: 0;
+
+div#content.fullwidth {
+    width: 100%;
     margin: 0;
-    line-height: 3em;
-}
-div.bf:active {
-    color: #ffffff;
+    padding: 5%;
 }
 
-/*
-    Modal message box definitions
-*/
-div.messagebox {
-    position: fixed;
-    display: none;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    z-index: 99;
-}
-div.mb_content {
-    position: relative;
-    width: 100%;
-    height: 80%;
-    top: 5%;
-    background: url(../images/bg-messagebox.png) no-repeat;
-    background-size: 100% 100%;
-}
-div.mb_title {
-    height: 8%;
-    padding-top: 9%;
-    font-weight: bold;
-    text-align: center;
-    font-family: headerfont, serif;
-    font-size: 1.3em;
-    color: #efac54;
-    text-shadow: 0px -2px 5px #000000;
-}
-div.mb_boxcontent {
-    padding-left: 10%;
-    padding-right: 10%;
-    padding-top: 5%;
-    height: 60%;
-    color: #461b0b;
-    overflow: scroll;
-    line-height: 1.3em;
-    font-size: 1em;
-    text-align: center;
-}
-div.mb_boxcontent::-webkit-scrollbar {
-    display: none;
-}
-div.mb_button {
-    padding-left: 10%;
-    padding-right: 10%;
-    padding-top: 1%;
-    height: 12%;
-    text-align: center;
-}
-h3, h4 {
-    text-align: center;
-    color: #461b0b;
-}
-div#content p {
-    text-align: justify;
-    margin-bottom: 0.5em;
-    margin-top: 0;
-}
-div#content div.image {
-    width: 100%;
-}
-div#content div.image img {
-    width: 100%;
+div.choice {
+    background: red;
 }
 
-/* Special classes */
+div.choice {
+    background-image: linear-gradient(to bottom, #3498db, #2980b9);
+    color: white;
+    margin-left: -10%;
+    font-family: regularfont;
+    border-radius: 7px;
+    box-shadow: 0 1px 3px #666666;
+    padding: 10px 20px 10px 20px;
+    text-decoration: none;
+}
 
-.creditstext {
-    text-align: center;
-}
-.helpimage img {
-    text-align: center;
-    width: 100%;
-}
-.helpimage span {
-    display: none;
-}
-.smallimg {
-    text-align: center;
-}
-.smallimg img {
-    width: 50%;
-}
-.smallimg span {
-    display: none;
-}
-.verysmallimg {
-    text-align: center;
-}
-.verysmallimg img {
-    width: 25%;
+div.choice i {
+    vertical-align: middle;
 }

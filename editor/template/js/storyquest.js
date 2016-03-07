@@ -46,10 +46,8 @@ var model = null;
 var nodeResult = null;
 
 // the current station id (used for the external debugging)
-var currentStationId = "None";
+var currentStationId = "none";
 var currentStation = null;
-
-
 
 /**
  * Returns the GET parameters as an object, parameter names as attributes.
@@ -68,6 +66,12 @@ function retrieveGetParams() {
     return params;
 }
 
+/**
+ * Quotes html entities.
+ *
+ * @param str
+ * @returns {string}
+ */
 function htmlEntities(str) {
     return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
@@ -78,7 +82,6 @@ function htmlEntities(str) {
  *
  */
 function onEnter() {
-    refreshEquippedStates();
     if (currentStation.onEnter)
         eval(currentStation.onEnter);
 }
@@ -94,19 +97,12 @@ function onExit() {
 }
 
 /**
- * Applies special
+ * Replaces any occurrence of tokens in a text.
+ *
+ * @param tokens
+ * @param text
+ * @returns {*}
  */
-function conditionOnce(){
-    if (currentStation.conditionOnce && condition_once_applied==false) {
-        eval(currentStation.conditionOnce);
-    }
-}
-
-function conditionRecurring(){
-    if (currentStation.conditionRecurring)
-        eval(currentStation.conditionRecurring);
-}
-
 function replaceAny(tokens, text) {
     for (var i=0; i<tokens.length; i++)
         text = text.replace(new RegExp("\\$" + i, "g"), tokens[i].replace(/'/g, '"'));
@@ -114,6 +110,12 @@ function replaceAny(tokens, text) {
     return text;
 }
 
+/**
+ * Evaluates a boolean statement.
+ *
+ * @param jsText
+ * @returns {boolean}
+ */
 function secureEvalBool(jsText) {
     jsText = jsText.replace(/#/g, '|');
     var result = true;
@@ -188,6 +190,11 @@ function pixVal(str) {
     return value;
 }
 
+/**
+ * Generates an UUID.
+ *
+ * @returns {*}
+ */
 function uuid() {
     function s4() {
         return Math.floor((1 + Math.random()) * 0x10000)
@@ -197,14 +204,23 @@ function uuid() {
     return s4() + s4() + s4() + s4();
 }
 
-function hideFollower(){
-        if(typeof rules!="undefined" && !rules.follower) $('#th_follower').hide()
-}
-
+/**
+ * Generates a random number between 0 and the given range.
+ *
+ * @param range
+ * @returns {number}
+ */
 function random(range) {
     return Math.floor((Math.random() * range));
 }
 
+/**
+ * Returns the text, regardless if it is a language object text or
+ * direct text value.
+ *
+ * @param input
+ * @returns {*}
+ */
 function getLanguageStringContent(input) {
     if (typeof input == "string")
         return input;
@@ -214,10 +230,15 @@ function getLanguageStringContent(input) {
         return null;
 }
 
+/**
+ * Plays the button click.
+ */
+function playButtonSound() {
+    playSFXOnce("sounds/button.mp3");
+}
+
 $(document).ready(function() {
     applyI18n();
-    hideFollower();
-    initBookmarks();
     model = retrieveModel();
     if (!model && (typeof Character!="undefined")) {
         model = new Character();
@@ -225,8 +246,4 @@ $(document).ready(function() {
     }
     if (typeof model!="undefined" && model!=null)
         ko.applyBindings(model);
-
-    if (typeof postBinding!="undefined")
-        postBinding();
-
 });
