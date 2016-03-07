@@ -109,7 +109,23 @@ function sideloadContent(stationIdx, config, configAsset) {
         stopPagingBlink();
 
     // finally call onEnter
+
+    changePages();
+
     onEnter();
+
+    // display counter and effects
+    $("#counterLabel").html(localStorage.getItem("counterLabel"));
+    $("#counterValue").html(localStorage.getItem("counterValue"));
+    var verwundet = localStorage.getItem("verwundet");
+    var bewaffnet = localStorage.getItem("bewaffnet");
+    var effectStr = "";
+    if (typeof bewaffnet!="undefined" && bewaffnet!="" && parseInt(bewaffnet)==1)
+        effectStr+=i18n[lang].armedicon ;
+    if (typeof verwundet!="undefined" && verwundet!="" && parseInt(verwundet)==1)
+        effectStr+=i18n[lang].woundedicon ;
+    $("#effects").html(effectStr);
+
 }
 
 function refreshPage() {
@@ -181,6 +197,13 @@ function stopPagingBlink() {
         clearInterval(rightPagerInterval);
 }
 
+function changePages(){
+
+    for(var i=0;i<model.readPages[currentStationId];i++){
+        setTimeout(function(){ bookNextPage(); }, 300*(i+1));
+    }
+}
+
 $(document).ready(function() {
 
     // navigation setup
@@ -198,4 +221,5 @@ $(document).ready(function() {
     });
 
     autoSwitchContent();
+
 });

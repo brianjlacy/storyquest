@@ -422,6 +422,8 @@ Pager.prototype.nextPage = function() {
         };
         this.currentPageIdx++;
         this.displayPage(this.currentPageIdx);
+        if(typeof model.readPages[currentStationId]==="undefined") model.readPages[currentStationId]=0;
+        model.readPages[currentStationId]=model.readPages[currentStationId]+1;
     }
 };
 
@@ -444,5 +446,7 @@ Pager.prototype.previousPage = function() {
         this.clearPage();
         this.currentPageIdx--;
         this.displayPage(this.currentPageIdx);
+        if(typeof model.readPages[currentStationId]==="undefined") model.readPages[currentStationId]=0;
+        model.readPages[currentStationId]=model.readPages[currentStationId]-1;
     }
 };

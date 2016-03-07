@@ -266,6 +266,7 @@ BuffFactory.removeTag = function (buffId, tagName) {
 // <editor-fold desc="Character definitions, Attributes">
 
 Character.prototype.name = "CHARACTER NAME";
+Character.prototype.readPages = {};
 Character.prototype.startGE = 0;
 Character.prototype.startKO = 0;
 Character.prototype.startKA = 0;
@@ -1053,6 +1054,7 @@ Character.prototype.dropFlag = function (flag) {
 Character.fromJSON = function (json) {
     var out = new Character();
     out.name = json.name;
+    out.readPages = json.readPages;
     out.startGE = json.startGE;
     out.startKO = json.startKO;
     out.startKA = json.startKA;
