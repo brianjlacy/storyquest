@@ -26,7 +26,7 @@
 editorModule.directive("sqwebeditor", function() {
     return {
         restrict: "E",
-        templateUrl: "views/directives/web.html",
+        templateUrl: "views/directives/index.html",
         replace: true,
         scope: true,
         controller: "editorWebController"

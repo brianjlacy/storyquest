@@ -27,7 +27,7 @@ var questML = {
 
     // Images classes: left, center, right
     "i": function(tokens) {
-        return replaceAny(tokens, "<div class='image $0'><img src='../images/$1'></div>")
+        return replaceAny(tokens, "<div class='image $0'><img src='images/$1'></div>")
     },
 
     // Content Boxes classes: left, full, right

@@ -30,13 +30,13 @@
  * @param stationIdx
  */
 function switchContent(stationIdx) {
-    loadFile("../stationconfig/" + stationIdx + ".json", function(result) {
+    loadFile("stationconfig/" + stationIdx + ".json", function(result) {
         var loadedStation = JSON.parse(result);
         $("#content").addClass(loadedStation.style)
             .css("background-color", loadedStation.backgroundColor);
-        $("#body").css("background-image", "url(../images/" + loadedStation.backgroundImage + ")")
+        $("#body").css("background-image", "url(images/" + loadedStation.backgroundImage + ")")
             .css("padding-top", loadedStation.paddingTop);
-        loadFile("../stationconfig/" + loadedStation.text['de'], function(result) {
+        loadFile("stationconfig/" + loadedStation.text['de'], function(result) {
             sideloadContent(stationIdx, loadedStation, result, function() {
                 $("h1").addClass("accentColor").css("color", loadedStation.accentColor);
                 $("h3").addClass("accentColor").css("color", loadedStation.accentColor);

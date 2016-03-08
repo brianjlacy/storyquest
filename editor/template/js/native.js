@@ -34,7 +34,7 @@ if (typeof nativeStorage != "undefined")
 else
     sqStorage = localStorage;
 
-/** Core function for StoryQuest to work:
+/**
  * All function (or variables) that might be provided by built-in versions in the Questor clients have to be 
  * declared using 'weakDeclare'.
  *
@@ -51,9 +51,6 @@ if (!window['weakDeclare']) {
 		}
 	}
 }
-
-// ressource prefix, may be different in different environments
-weakDeclare('resPrefix', "");
 
 /**
  * Returns true if we're running inside a Questor client context. False otherwise.
@@ -92,22 +89,14 @@ weakDeclare('autoSwitchContent', function() {
     // use the station given by the get parameter "station" or "001" if not given
     var startStation = params.station || "001";
 
-    // loading station data (TEXT ONLY)
+    // loading station data
     switchContent(startStation);
 });
 
 weakDeclare('dispatchLocal', function(nextStationConfig) {
     // to be sure, store model here
     storeModel();
-    if (nextStationConfig.type=="book" && typeof currentStation!="undefined" && currentStation.type=="book") {
-        // the current station is text and the next station is text, just load the content
-        switchContent(nextStationConfig.id);
-    }
-    else {
-        // otherwise store character and load new station html
-        var stationUrl =  '../station-html/' + nextStationConfig.type + '.html?station=' + nextStationConfig.id;
-        window.location.href = stationUrl;
-    }
+    switchContent(nextStationConfig.id);
 });
 
 weakDeclare('toStation', function(stationId, deeplinkId) {
@@ -115,33 +104,25 @@ weakDeclare('toStation', function(stationId, deeplinkId) {
     onExit();
     if (typeof model!="undefined" && model!=null) {
         model.previousNodeId = currentStation.id;
-        model.previousNodetype = currentStation.type;
-        model.previousResult = nodeResult;
-        model.stationCount = model.stationCount + 1;
         model.deepLinkId = deeplinkId;
     }
-
-    if (model.hasFlag('dead')) stationId="999";
-
-    loadFile("../stationconfig/" + stationId + ".json", function(result) {
+    loadFile("stationconfig/" + stationId + ".json", function(result) {
         var nextStationConfig = JSON.parse(result);
         dispatchLocal(nextStationConfig);
     });
 });
 
-weakDeclare('retrieveModel', function() {
+weakDeclare('retrieveModelStr', function() {
     var mdlStr = sqStorage.getItem("sqModel");
-    if (mdlStr && mdlStr!="null" && (typeof Character!="undefined")) {
-        var strData = JSON.parse(mdlStr);
-        var char = Character.fromJSON(strData);
-        return char;
+    if (mdlStr && mdlStr!="null") {
+        return mdlStr;
     } else {
         return null;
     }
 });
 
-weakDeclare('storeModel', function() {
-    return sqStorage.setItem("sqModel", ko.toJSON(model));
+weakDeclare('storeModelStr', function(modelStr) {
+    return sqStorage.setItem("sqModel", modelStr);
 });
 
 weakDeclare('initBookmarks', function() {
@@ -167,10 +148,9 @@ weakDeclare('storeBookmark', function(name) {
 weakDeclare('autoStoreBookmark', function() {
     if (currentStation.type=="create" || currentStation.type=="settings")
         return;
-    var title = i18n["de"].defaultsave;
     var bookmark = {
         id: uuid(),
-        name: title,
+        name: "Autosave",
         date: new Date(),
         model: model,
         currentStation: currentStationId
@@ -187,7 +167,7 @@ weakDeclare('loadBookmark', function(id) {
     for (var i=0; i<bookmarks.length; i++)
         if (bookmarks[i].id===id) {
             var modelStr = bookmarks[i].model;
-            model = Character.fromJSON(modelStr);
+            model = JSON.parse(modelStr);
             storeModel();
             toStation(bookmarks[i].currentStation);
         }
@@ -276,37 +256,6 @@ weakDeclare('exitClient', function() {
     } else {
         console.log("Exit client called. HTML5 mode enabled, not exiting.")
     }
-});
-
-weakDeclare('isIAPEnabled', function() {
-    if (typeof sqIAP != "undefined")
-        return sqIAP.isIAPEnabled();
-    else
-        return true;
-});
-
-weakDeclare('getPremiumType', function() {
-    if (typeof sqIAP != "undefined")
-        return sqIAP.getPremiumType();
-    else
-        return "steps";
-});
-
-weakDeclare('unlockFullVersion', function() {
-    if (typeof sqIAP != "undefined")
-        sqIAP.openSidemenu();
-});
-
-weakDeclare('incrementSteps', function() {
-    if (typeof sqIAP != "undefined")
-        sqIAP.incrementSteps();
-});
-
-weakDeclare('isUnlocked', function() {
-    if (typeof sqIAP != "undefined")
-        return sqIAP.hasUnlockedFullVersion();
-    else
-        return false;
 });
 
 /*

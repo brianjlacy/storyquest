@@ -37,7 +37,7 @@ $(function() {
 
     sideload = function(stationId, config, configAsset) {
         sideloadContent(stationId, config, configAsset)
-    }
+    };
 
     itemAPI = {
         items: { },
@@ -46,7 +46,7 @@ $(function() {
         },
         removeItemFromCharacter: function(itemId) {
         }
-    }
+    };
 
     playerDataAPI = [
     ];

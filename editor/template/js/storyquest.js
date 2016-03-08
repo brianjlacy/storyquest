@@ -39,9 +39,6 @@ var params = retrieveGetParams();
 // the result is needed in parts of the code outside of document.ready().
 var lang = queryLanguage();
 
-// model
-var model = null;
-
 // node result
 var nodeResult = null;
 
@@ -239,11 +236,8 @@ function playButtonSound() {
 
 $(document).ready(function() {
     applyI18n();
-    model = retrieveModel();
-    if (!model && (typeof Character!="undefined")) {
-        model = new Character();
-        storeModel();
-    }
+    retrieveModel();
+    storeModel();
     if (typeof model!="undefined" && model!=null)
         ko.applyBindings(model);
 });
