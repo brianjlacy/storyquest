@@ -58,9 +58,9 @@ var questML = {
         if (!tokens[3]) tokens[3] = "true";
         if (tokens[2]=="" || secureEvalBool(tokens[2]))
             if (tokens[3]=="" || secureEvalBool(tokens[3]))
-                return replaceAny(tokens, "<div class='choice enabled' data-target='$0'><i class='fa fa-external-link'></i>&nbsp;&nbsp;$1</div>");
+                return replaceAny(tokens, "<div class='choice enabled' data-target='$0' href='#'><i class='fa fa-external-link'></i>&nbsp;&nbsp;$1</div>");
             else
-                return replaceAny(tokens, "<div class='choice disabled' data-target='$0'><i class='fa fa-external-link'></i>&nbsp;&nbsp;$1</div>");
+                return replaceAny(tokens, "<div class='choice disabled' data-target='$0' href='#'><i class='fa fa-external-link'></i>&nbsp;&nbsp;$1</div>");
         else
             return "";
     },

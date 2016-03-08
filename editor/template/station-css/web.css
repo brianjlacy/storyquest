@@ -115,7 +115,6 @@ div.box.center {
     margin-right: auto;
     background: white;
 }
-
 div#content.default {
     width: 80%;
     margin-left: 5%;
@@ -123,17 +122,9 @@ div#content.default {
     padding: 5%;
 }
 
-div#content.fullwidth {
+div.choice {
+    display: block;
     width: 100%;
-    margin: 0;
-    padding: 5%;
-}
-
-div.choice {
-    background: red;
-}
-
-div.choice {
     background-image: linear-gradient(to bottom, #3498db, #2980b9);
     color: white;
     margin-left: -10%;
@@ -144,6 +135,68 @@ div.choice {
     text-decoration: none;
 }
 
+div.choice.enabled:active {
+    opacity: 0.7 !important;
+}
+
 div.choice i {
     vertical-align: middle;
+}
+
+/* Alternate Style: fullwidth */
+
+div#content.fullwidth {
+    width: 90%;
+    margin: 0;
+    padding: 5%;
+}
+
+div#content.fullwidth div.box.left {
+    width: 50%;
+    padding: 4%;
+    margin-left: -3%;
+    margin-right: 5%;
+    float: left;
+    background: white;
+}
+
+div#content.fullwidth div.box.right {
+    width: 50%;
+    padding: 4%;
+    margin-right: -3%;
+    margin-left: 5%;
+    float: right;
+    background: white;
+}
+
+div#content.fullwidth div.image.left img {
+    width: 50%;
+    padding: 4%;
+    margin-left: -3%;
+    margin-right: 5%;
+    float: left;
+    background: white;
+}
+
+div#content.fullwidth div.image.right img {
+    width: 50%;
+    padding: 4%;
+    margin-right: -3%;
+    margin-left: 5%;
+    float: right;
+    background: white;
+}
+
+div#content.fullwidth div.choice {
+    display: block;
+    width: 90%;
+    background-image: linear-gradient(to bottom, #3498db, #2980b9);
+    color: white;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: regularfont;
+    border-radius: 7px;
+    box-shadow: 0 1px 3px #666666;
+    padding: 10px 20px 10px 20px;
+    text-decoration: none;
 }

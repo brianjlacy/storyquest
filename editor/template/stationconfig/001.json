@@ -1,7 +1,7 @@
 {
   "id": "001",
   "type": "web",
-  "style": "default",
+  "style": "fullwidth",
   "isStartNode": false,
   "backgroundImage": "background.jpg",
   "backgroundColor": "#efefef",
