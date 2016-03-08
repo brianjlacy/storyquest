@@ -29,48 +29,73 @@ var path = require("path");
 var Project = require("../model/project");
 var preview = require("./liveupdateserver");
 
+var editableFiles = [
+    {
+        id: "contentcss",
+        path: "css/content.css",
+        title: "Content CSS",
+        description: "The text display styling.",
+        type: "css"
+    },
+    {
+        id: "contenthtml",
+        path: "index.html",
+        title: "Main HTML",
+        description: "The base html framework.",
+        type: "html"
+    }
+];
+
 exports.registerServices = function(config, app) {
-    app.get("/api/frame/:projectId/:type", authUser, authProject, this.getFrameAsset);
-    app.post("/api/frame/:projectId/:type", authUser, authProject, this.storeFrameAsset);
+    app.get("/api/frame/:projectId", authUser, authProject, this.getFrameResourceList);
+    app.get("/api/frame/:projectId/:id", authUser, authProject, this.getFrameAsset);
+    app.post("/api/frame/:projectId/:id", authUser, authProject, this.storeFrameAsset);
+};
+
+exports.getResourceEntry = function(id) {
+    for (var i=0; i<editableFiles.length; i++)
+        if (editableFiles[i].id===id)
+            return editableFiles[i];
+};
+
+exports.getFrameResourceList = function(req, res) {
+    return res.json(200, editableFiles);
 };
 
 exports.getFrameAsset = function(req, res) {
     var outputDir = Utils.getProjectDir(req.param("projectId"));
-    var type = req.param("type");
-    var asset = {};
-    asset.type = type;
-    asset.html = fs.readFileSync(Utils.retrieveProjectFile(outputDir, "station-html/" + req.param("type") + ".html"), "utf8");
-    asset.css = fs.readFileSync(Utils.retrieveProjectFile(outputDir, "station-css/" + req.param("type") + ".css"), "utf8");
-    asset.js = fs.readFileSync(Utils.retrieveProjectFile(outputDir, "station-js/" + req.param("type") + ".js"), "utf8");
-    var globalJSFile = Utils.retrieveProjectFile(outputDir, "js/global.js");
-    if (fs.existsSync(globalJSFile))
-        asset.globaljs = fs.readFileSync(globalJSFile, "utf8");
-    else
-        asset.globaljs = "// Add global JavaScript definitions here\n// and include '../js/global.js' in your frame.\n// The global.js is the same for all chapter types!";
-    return res.json(200, asset);
+    var id = req.param("id");
+
+    var resourceEntry = exports.getResourceEntry(id);
+    if (!resourceEntry)
+        return res.json(500, {type:"REQUEST_FAILED", "message":"no such resource id"});
+
+    resourceEntry.data = fs.readFileSync(Utils.retrieveProjectFile(outputDir, resourceEntry.path), "utf8");
+    return res.json(200, resourceEntry);
 };
 
 exports.storeFrameAsset = function(req, res) {
     var outputDir = Utils.getProjectDir(req.param("projectId"));
+    var id = req.param("id");
+
+    var resourceEntry = exports.getResourceEntry(id);
+    if (!resourceEntry)
+        return res.json(500, {type:"REQUEST_FAILED", "message":"no such resource id"});
+
     try {
         // update preview
         preview.updateFrame(req.param("projectId"));
 
         // create directories if needed
-        if (!fs.existsSync(path.join(outputDir, "station-html")))
-            fs.mkdirSync(path.join(outputDir, "station-html"));
-        if (!fs.existsSync(path.join(outputDir, "station-css")))
-            fs.mkdirSync(path.join(outputDir, "station-css"));
-        if (!fs.existsSync(path.join(outputDir, "station-js")))
-            fs.mkdirSync(path.join(outputDir, "station-js"));
         if (!fs.existsSync(path.join(outputDir, "js")))
             fs.mkdirSync(path.join(outputDir, "js"));
+        if (!fs.existsSync(path.join(outputDir, "css")))
+            fs.mkdirSync(path.join(outputDir, "css"));
 
         // store frame
-        fs.writeFileSync(path.join(outputDir, "station-html", req.param("type") + ".html"), req.body.html);
-        fs.writeFileSync(path.join(outputDir, "station-css", req.param("type") + ".css"), req.body.css);
-        fs.writeFileSync(path.join(outputDir, "station-js", req.param("type") + ".js"), req.body.js);
-        fs.writeFileSync(path.join(outputDir, "js/global.js"), req.body.globaljs);
+        // TODO: only write files if they differ from the default template
+        if (Utils.fileContentDifference(outputDir, resourceEntry.path, req.body.data))
+            fs.writeFileSync(path.join(outputDir, resourceEntry.path), req.body.data);
         return res.json(200, {});
     }
     catch(err) {

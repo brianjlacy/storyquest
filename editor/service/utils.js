@@ -35,7 +35,7 @@ exports.uuid = function() {
             .substring(1);
     }
     return s4() + s4() + s4() + s4();
-}
+};
 
 exports.retrieveProjectFile = function(projectPath, reqPath) {
     var projectFile = path.join(projectPath, reqPath);
@@ -46,8 +46,13 @@ exports.retrieveProjectFile = function(projectPath, reqPath) {
         return templateFile;
     else
         return undefined;
-}
+};
+
+exports.fileContentDifference = function(projectPath, reqPath, data) {
+    var dataOnDisk = fs.readFileSync(Utils.retrieveProjectFile(projectPath, reqPath), "utf8");
+    return dataOnDisk !== data;
+};
 
 exports.getProjectDir = function(projectId) {
     return path.join(config.projectsDir || path.join(__dirname, "projects"), projectId);
-}
+};

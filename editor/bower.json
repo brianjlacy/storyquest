@@ -38,7 +38,6 @@
     "engine.io": "^1.5.1",
     "sigma": "^1.0.2",
     "jquery-qrcode": "v1.0",
-    "openlayers": "release-2.13.1",
     "image-picker": "https://github.com/rvera/image-picker.git#master",
     "typeahead.js": "^0.10.2",
     "x-editable": "^1.5.1",

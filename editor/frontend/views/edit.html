@@ -17,16 +17,7 @@
                     <span class="dropdown">
                         <a href="" data-toggle="dropdown" id="addchapterdropdown" class="dropdown-toggle">
                             <span id="tool_node_add" title="Add chapter" class="glyphicon glyphicon-plus"></span>
-                            <i class="caret"></i>
                         </a>
-                        <ul id="addnodedropdown" class="dropdown-menu">
-                            <li ng-repeat="type in project.data.nodetypes">
-                                <a style="font-size:0.9em" ng-click="createNode(type)" class="addnodebutton">
-                                    <span class="glyphicon {{type | typeIconClass}}">&nbsp;</span>
-                                    <span style="text-transform:capitalize">{{type}}</span>
-                                </a>
-                            </li>
-                        </ul>
                     </span>
                 </div>
             </div>
@@ -56,7 +47,7 @@
     <div style="height:100%" class="col-md-8">
         <div style="height:100%" class="nav-tabs-custom">
             <ul class="nav nav-tabs pull-right edit-header">
-                <li class="active"><a href="#editcontent" data-toggle="tab" class="edittab">Chapter</a></li>
+                <li class="active"><a href="#editcontent" data-toggle="tab" class="edittab">Text</a></li>
                 <li><a href="#editconfiguration" data-toggle="tab" class="edittab">Configuration</a></li>
                 <li><a href="#editonenter" data-toggle="tab" class="edittab">Script on Enter</a></li>
                 <li><a href="#editonexit" data-toggle="tab" class="edittab">Script on Leave</a></li>
@@ -74,11 +65,7 @@
             </ul>
             <div class="tab-content edit-content">
                 <div id="editcontent" class="tab-pane active" ng-show="contentEditorEnabled">
-                    <sqbookeditor id="sqbookeditor" ng-hide="node.type!='book'"></sqbookeditor>
-                    <sqwebeditor id="sqwebeditor" ng-hide="node.type!='web'"></sqwebeditor>
-                    <sqyoutubeeditor id="sqyoutubeeditor" ng-hide="node.type!='youtube'"></sqyoutubeeditor>
-                    <sqgeoeditor id="sqgeoeditor" ng-hide="node.type!='geo'"></sqgeoeditor>
-                    <sqbareboneeditor id="sqbareboneeditor" ng-hide="node.type!='barebone'"></sqbareboneeditor>
+                    <sqdefaulteditor id="sqdefaulteditor" ng-hide="node.type!='default'"></sqdefaulteditor>
                 </div>
                 <div id="editconfiguration" class="tab-pane" ng-show="configurationEditorEnabled">
                     <div style="margin-top:0.5em" class="editmetadata">

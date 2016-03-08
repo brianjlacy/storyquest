@@ -1,6 +1,7 @@
 {
   "id": "001",
-  "type": "web",
+  "type": "default",
+  "title": "Internal Editor Title",
   "style": "fullwidth",
   "isStartNode": false,
   "backgroundImage": "background.jpg",

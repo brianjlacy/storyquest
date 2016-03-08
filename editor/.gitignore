@@ -1,7 +1,7 @@
 # ide files
 .idea/
 atlassian-ide-plugin.xml
-storyquest2.iml
+storyquest.iml
 
 # built application files
 *~
@@ -13,7 +13,7 @@ node_modules/
 .sass-cache/
 .tmp/
 dist/
-logs/
+*.log
 
 # Ignore gradle files
 .gradle/

@@ -23,38 +23,49 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-editorModule.directive("sqbareboneeditor", function() {
+editorModule.directive("sqdefaulteditor", function() {
     return {
         restrict: "E",
-        templateUrl: "views/directives/barebone.html",
+        templateUrl: "views/directives/default.html",
         replace: true,
         scope: true,
-        controller: "editorBareboneController"
+        controller: "editorDefaultController"
     };
 });
 
-var editorBareboneModule = angular.module("editorBareboneModule", [ "ngResource", "ui.ace" ]);
+var editorDefaultModule = angular.module("editorDefaultModule", [ "ngResource", "ui.ace" ]);
 
-editorBareboneModule.controller("editorBareboneController", ["$scope", "TypeIcons",
+editorDefaultModule.controller("editorDefaultController", ["$scope", "TypeIcons",
     function ($scope, TypeIcons) {
 
-        // FIXME all this registers are happening only when this controller is called, thus nut available in the preview tab.
-        TypeIcons.registerType("barebone", "glyphicon-asterisk");
+        TypeIcons.registerType("default", "glyphicon-globe");
 
         $scope.$watch("node", function() {
-            if ($scope.node && $scope.node.type=="barebone") {
-                console.log("Loading Barebone node data: " + $scope.node.id);
+            if ($scope.node && $scope.node.type == "default") {
+                console.log("Loading default node data: " + $scope.node.id);
                 $scope.setContentEditorEnabled(true);
                 $scope.setConfigurationEditorEnabled(true);
             }
         });
 
         $scope.aceLoaded = function(editor) {
-            $scope.barebonenodeeditor = editor;
-            editor.setFontSize(20);
-            editor.setShowPrintMargin(false);
-            editor.getSession().setMode("ace/mode/markdown");
-            editor.getSession().setUseWrapMode(true);
+            if (editor) {
+                $scope.webnodeeditor = editor;
+                editor.setFontSize(20);
+                editor.setShowPrintMargin(false);
+                editor.getSession().setMode("ace/mode/markdown");
+                editor.getSession().setUseWrapMode(true);
+                editor.setOptions({
+                    enableBasicAutocompletion: true,
+                    enableSnippets: true
+                });
+                if ($scope.sqAceLoaded)
+                    $scope.sqAceLoaded(editor);
+                // this seems to be a bug in angular-ace: aceLoaded gets called twice with editor.completers==undefined first
+                // strip all completers besides snippets and our own.
+                if (editor.completers)
+                    editor.completers = [ editor.completers[0], $scope.sqCompleter ];
+            }
         };
 
         $scope.aceChanged = function(e) {
@@ -62,11 +73,11 @@ editorBareboneModule.controller("editorBareboneController", ["$scope", "TypeIcon
         };
 
         $scope.insertLink = function() {
-            $scope.barebonenodeeditor.insert("[l|Enter chapter id here| Enter link text here]");
+            $scope.webnodeeditor.insert("[l|Enter chapter id here| Enter link text here]");
         };
 
         $scope.insertImage = function() {
-            $scope.barebonenodeeditor.insert("[i|Enter alignment here|Enter image name here|Enter caption here]");
+            $scope.webnodeeditor.insert("[i|Enter alignment here|Enter image name here|Enter caption here]");
         };
     }]
 );

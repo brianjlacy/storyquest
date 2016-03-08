@@ -1,7 +1,7 @@
 <div style="height:100%" class="row">
     <div style="height:100%" class="col-md-4">
         <div style="height:100%" class="box box-info">
-            <div style="height:5%" class="box-header"><h3 class="box-title">Chapter Types</h3></div>
+            <div style="height:5%" class="box-header"><h3 class="box-title">Design Elements</h3></div>
             <div style="height:95%" class="box-body">
                 <div style="width:100%;overflow-y:scroll;height:100%;overflow-x:hidden">
                     <ul id="frametypelist" style="height:95%;white-space:nowrap" class="list-group"></ul>
@@ -12,10 +12,7 @@
     <div style="height:100%" class="col-md-8">
         <div style="height:100%" class="nav-tabs-custom">
             <ul class="nav nav-tabs pull-right layout-header">
-                <li class="active"><a href="#frameedithtml" data-toggle="tab" class="edittab">HTML</a></li>
-                <li><a href="#frameeditcss" data-toggle="tab" class="edittab">CSS</a></li>
-                <li><a href="#frameeditjs" data-toggle="tab" class="edittab">JavaScript</a></li>
-                <li><a href="#frameeditglobaljs" data-toggle="tab" class="edittab">Global JavaScript</a></li>
+                <li class="active"><a href="#frameedithtml" data-toggle="tab" class="edittab">Editor</a></li>
                 <li class="pull-left header">
                     <span>Editor&nbsp;&nbsp;</span>
                     <span class="editorsynced">
@@ -30,16 +27,7 @@
             </ul>
             <div class="tab-content content">
                 <div id="frameedithtml" class="tab-pane active">
-                    <div ui-ace="{ onLoad: aceHTMLLoaded, onChange: aceFrameChanged }" ng-model="frame.html"></div>
-                </div>
-                <div id="frameeditcss" class="tab-pane">
-                    <div ui-ace="{ onLoad: aceCSSLoaded, onChange: aceFrameChanged }" ng-model="frame.css"></div>
-                </div>
-                <div id="frameeditjs" class="tab-pane">
-                    <div ui-ace="{ onLoad: aceJSLoaded, onChange: aceFrameChanged }" ng-model="frame.js"></div>
-                </div>
-                <div id="frameeditglobaljs" class="tab-pane">
-                    <div ui-ace="{ onLoad: aceGlobalJSLoaded, onChange: aceFrameChanged }" ng-model="frame.globaljs"></div>
+                    <div ui-ace="{ onLoad: aceFrameLoaded, onChange: aceFrameChanged }" ng-model="frameResource.data"></div>
                 </div>
             </div>
         </div>

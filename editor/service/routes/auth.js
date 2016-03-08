@@ -9,9 +9,7 @@ function Auth(config) {
 
     passport.use(new AuthNLocalStrategy(
         function(username, password, done) {
-console.log(username + "/" + password);
             User.getByUsername(username, function(err, user) {
-		console.log(user);
                 if (err || !user || !user.password || !User.checkPassword(user.password, password) || !user.confirmed) {
                     logger.info("Authentication failed for " + username);
                     console.log(err);

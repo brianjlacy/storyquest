@@ -33,7 +33,7 @@ var StoryQuestEditorApp = angular.module("StoryQuestEditorApp", [
     "confirmModule"
 ]);
 
-var editorModule = angular.module("editorModule", [ "ngResource", "ui.ace", "angularSpectrumColorpicker", "ui.sortable", "xeditable", "ngResource", "angularFileUpload", "editorBookModule", "editorWebModule", "editorYouTubeModule", "editorGeoModule", "editorBareboneModule", "graphicalEditorModule" ]);
+var editorModule = angular.module("editorModule", [ "ngResource", "ui.ace", "angularSpectrumColorpicker", "ui.sortable", "xeditable", "ngResource", "angularFileUpload", "editorDefaultModule", "graphicalEditorModule" ]);
 
 StoryQuestEditorApp.config(["$routeProvider",
         function($routeProvider) {
@@ -107,12 +107,10 @@ StoryQuestEditorApp.factory("TypeIcons", [
         var self = {
             iconMap: {
                 // some default icons for no-editor types
-                cutscene: "glyphicon-play-circle",
-                create: "glyphicon-off",
-                battle: "glyphicon-fire",
-                check: "glyphicon-ok",
-                settings: "glyphicon-cog",
-                quiz: "glyphicon-question-sign"
+                default: "glyphicon-globe",
+                css: "glyphicon-eye-open",
+                html: "glyphicon-link",
+                javascript: "glyphicon-cog"
             },
             registerType: function(type, icon) {
                 self.iconMap[type] = icon;
