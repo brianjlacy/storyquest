@@ -76,19 +76,20 @@ editorModule.controller("layoutCoreController", ["$scope", "$http", "$interval",
                     var glyph = TypeIcons.getByType(thisResource.type);
                     var active = (i==0?"active":"");
                     html = "<a data-id='" + thisResource.id + "' class='list-group-item " + active + "'>"
-                        + "<span class='glyphicon " + glyph + "' style='font-weight:bold' align='middle'></span>&nbsp;&nbsp;&nbsp;<span>"
-                        + thisResource.title + "<br>" + thisResource.description
-                        + "</span></a>"
+                        + "<div><span class='glyphicon " + glyph + "' style='font-weight:bold' align='middle'></span>&nbsp;&nbsp;&nbsp;<span>"
+                        + thisResource.title + "</span></div><div><span class='framedescription'>" + thisResource.description + "</span></div>"
+                        + "</a>"
                         + html;
                     if (i==0)
                         $scope.loadFrame(thisResource.id);
                 }
                 $("#frametypelist").html(html);
-                $("#frametypelist .list-group-item")
+                $("#frametypelist a.list-group-item")
                     .on("click", function(e) {
                         var previous = $(this).closest(".list-group").children(".active");
                         previous.removeClass("active"); // previous list-item
-                        $(e.target).addClass("active"); // activated list-item
+                        var target = $(e.target).closest(".list-group-item");
+                        target.addClass("active"); // activated list-item
                         $scope.loadFrame($(this).attr("data-id"));
                     });
             });
@@ -106,6 +107,7 @@ editorModule.controller("layoutCoreController", ["$scope", "$http", "$interval",
         };
 
         $scope.aceFrameLoaded = function(editor) {
+            editor.$blockScrolling = Infinity;
             $scope.frameResourceEditor = editor;
         };
 

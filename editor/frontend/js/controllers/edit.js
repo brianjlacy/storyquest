@@ -99,22 +99,24 @@ editorModule.controller("editCoreController", ["$scope", "$http", "$timeout", "$
 
         // on enter/exit editors
         $scope.aceOnEnterLoaded = function(editor) {
+            editor.$blockScrolling = Infinity;
             editor.setFontSize(20);
             editor.setShowPrintMargin(false);
             editor.getSession().setMode("ace/mode/javascript");
             editor.getSession().setUseWrapMode(false);
         };
         $scope.aceOnEnterChanged = function(e) {
-            nodeChanged($scope.node);
+            $scope.nodeChanged($scope.node);
         };
         $scope.aceOnExitLoaded = function(editor) {
+            editor.$blockScrolling = Infinity;
             editor.setFontSize(20);
             editor.setShowPrintMargin(false);
             editor.getSession().setMode("ace/mode/javascript");
             editor.getSession().setUseWrapMode(false);
         };
         $scope.aceOnExitChanged = function(e) {
-            nodeChanged($scope.savequeue, $scope.node);
+            $scope.nodeChanged($scope.savequeue, $scope.node);
         };
 
         // enable auto saving of node content
@@ -322,6 +324,7 @@ editorModule.controller("editCoreController", ["$scope", "$http", "$timeout", "$
         $scope.sqAceLoaded = function(editor) {
             if (editor) {
                 editor.renderer.setShowGutter(false);
+                editor.$blockScrolling = Infinity;
             }
         };
 

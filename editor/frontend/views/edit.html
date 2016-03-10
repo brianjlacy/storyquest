@@ -15,7 +15,7 @@
                     </a>
                     <span>&nbsp;&nbsp;</span>
                     <span class="dropdown">
-                        <a href="" data-toggle="dropdown" id="addchapterdropdown" class="dropdown-toggle">
+                        <a href="" id="addchapter" class="dropdown-toggle" ng-click="createNode('default')">
                             <span id="tool_node_add" title="Add chapter" class="glyphicon glyphicon-plus"></span>
                         </a>
                     </span>
@@ -24,7 +24,7 @@
             <div style="height:95%" class="box-body">
                 <div style="width:100%;overflow-y:scroll;height:100%;overflow-x:hidden">
                     <ul id="nodelist" style="height:95%;white-space:nowrap" class="list-group">
-                        <span ng-repeat="thisNode in nodelist | filter:filterText"
+                        <span ng-repeat="thisNode in nodelist track by thisNode.id | filter:filterText"
                               ng-click="loadNode(thisNode.id)"
                               data-id="{{thisNode.id}}"
                               class="list-group-item {{thisNode | nodeActive:node}}">

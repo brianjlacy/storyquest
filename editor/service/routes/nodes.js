@@ -34,13 +34,10 @@ var preview = require('./liveupdateserver');
 
 exports.registerServices = function(config, app) {
     app.get("/api/nodelist/:projectId", authUser, authProject, this.getNodeList);
-
     app.get("/api/node/:projectId/:id", authUser, authProject, this.getNode);
     app.post("/api/node/:projectId/:id", authProject, authUser, this.storeNode);
     app.put("/api/node", authUser, authProject, this.createNode);
     app.delete("/api/node/:projectId/:id", authUser, authProject, this.deleteNode);
-
-    app.post("/api/geosearch", authUser, this.geosearch);
 };
 
 exports.createIndexHTML = function(outputDir, type, nodeId) {
@@ -123,37 +120,6 @@ exports.storeNode = function(req, res){
             exports.createIndexHTML(Utils.getProjectDir(req.param("projectId")), node.type, node.id);
         }
 
-        /*
-        // FIXME enable this
-        // if this is a searchable node, update index
-        if (node.searchable && node.searchable=="true") {
-            // indexing the asset
-            // TODO: only works on german, only the german title field is used.
-            var title = "";
-            if (req.body.config.headerText && req.body.config.headerText.de)
-                title = req.body.config.headerText.de;
-            var indexFile = outputDir + "/index.idx";
-            var index = null;
-            // TODO: add german stemmer using "Utils.stemmer(word);"
-            if (fs.existsSync(indexFile)) {
-                var indexSerialized = fs.readFileSync(indexFile, "utf8");
-                index = lunr.Index.load(JSON.parse(indexSerialized));
-            } else {
-                index = new lunr.Index;
-                index.field("title", {boost: 10});
-                index.field("text");
-                index.ref("id");
-            }
-            index.update({
-                id: req.body.config.technicalName,
-                title: title,
-                text: req.body.configAsset
-            }, false);
-            indexSerialized = JSON.stringify(index.toJSON());
-            fs.writeFileSync(indexFile, indexSerialized);
-        }
-         */
-
         res.status(200);
         res.json({});
     }
@@ -169,12 +135,14 @@ exports.createNode = function(req, res){
     try {
         // FIXME: check if the type is contained in the project's types
         newNodeSkeleton = nodetypes.createNode(req.param("nodeIdOrType"), outputDir);
+        if (newNodeSkeleton==null)
+            throw ("Unknown node type " + req.param("nodeIdOrType"));
         if (exports.retrieveNodeList(req.param("projectId")).length==1) {
             // this is the first created node, make it the start node
             newNodeSkeleton.isStartNode = true;
             fs.writeFileSync(outputDir + "/" + newNodeSkeleton.id + ".json", JSON.stringify(newNodeSkeleton));
             exports.createIndexHTML(Utils.getProjectDir(req.param("projectId")), newNodeSkeleton.type, newNodeSkeleton.id);
-        };
+        }
         // store new node id in sequence
         var sequence = [];
         var sequenceFile = path.join(Utils.getProjectDir(req.param("projectId")), "sequence.json");
@@ -189,9 +157,9 @@ exports.createNode = function(req, res){
         }
         fs.writeFileSync(sequenceFile, JSON.stringify(sequence));
         res.json(newNodeSkeleton);
-    } catch(err) {
+    } catch (err) {
         console.log(err);
-        res.status(501);
+        res.status(500);
         res.json(err);
     }
 };
@@ -222,19 +190,4 @@ exports.deleteNode = function(req, res) {
     catch (err) {
         return res.json(500, {type:"REQUEST_FAILED", "message":err});
     }
-};
-
-exports.geosearch = function(req, res) {
-    request.post(
-        "http://www.openrouteservice.org/php/OpenLSLUS_Geocode.php",
-        { form: { FreeFormAdress: req.param("query"), MaxResponse: "1" } },
-        function (error, response, body) {
-            res.status(response.statusCode);
-            if (!error && response.statusCode == 200) {
-                res.writeHead( 200, {'Content-Type': 'text/xml'} );
-                return res.end(body);
-            } else
-                return res.json(200, {});
-        }
-    );
 };

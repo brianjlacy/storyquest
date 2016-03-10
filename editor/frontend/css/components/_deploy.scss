@@ -1,6 +1,23 @@
+.deploy {
+    i {
+        top: 2px;
+    }
+
+    td {
+        vertical-align: middle !important;
+    }
+
+    .artifacts {
+        width: 98%;
+        overflow-y: scroll;
+    }
+}
+
 textarea {
     resize: vertical;
 }
+
 a {
     cursor:pointer;
 }
+

@@ -56,3 +56,10 @@ exports.fileContentDifference = function(projectPath, reqPath, data) {
 exports.getProjectDir = function(projectId) {
     return path.join(config.projectsDir || path.join(__dirname, "projects"), projectId);
 };
+
+exports.mergeObjects = function(object1, object2) {
+    var obj3 = {};
+    for (var attrname in object1) { obj3[attrname] = object1[attrname]; }
+    for (var attrname in object2) { obj3[attrname] = object2[attrname]; }
+    return obj3;
+};

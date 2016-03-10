@@ -35,5 +35,26 @@ editorModule.controller("deployCoreController", ["$scope", "ProjectService", "Us
             var port = (document.location.port=="")?"443":document.location.port;
             var qrUrl = "https://" + document.location.hostname + ":" + port + url + $scope.project.data.id + "?authtoken=" + $scope.user.data.authtoken;
             modalQR(qrUrl, $scope.project.data.id);
-        }
+        };
+
+        $scope.clearConsole = function() {
+            $(".console").empty();
+        };
+
+        $scope.appendToConsole = function(text) {
+            $(".console").text($(".console").text() + text);
+        };
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/api/deployment/android/sampleproject', true);
+        xhr.send(null);
+        var timer;
+        timer = window.setInterval(function() {
+            if (xhr.readyState == XMLHttpRequest.DONE) {
+                window.clearTimeout(timer);
+                $scope.appendToConsole("done\n");
+            }
+            $scope.appendToConsole('state: ' + xhr.readyState + "\n");
+            $scope.appendToConsole('data: ' + xhr.responseText + "\n");
+        }, 1000);
 }]);

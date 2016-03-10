@@ -38,11 +38,11 @@ var editableFiles = [
         type: "css"
     },
     {
-        id: "contenthtml",
-        path: "index.html",
-        title: "Main HTML",
-        description: "The base html framework.",
-        type: "html"
+        id: "globaljs",
+        path: "js/global.js",
+        title: "Global JS",
+        description: "JavaScript that is available in all chapters.",
+        type: "javascript"
     }
 ];
 

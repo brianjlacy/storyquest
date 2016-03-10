@@ -31,6 +31,7 @@ var async = require("async");
 var sys = require("sys");
 var exec = require("child_process").exec;
 var rimraf = require("rimraf");
+var spawn = require('child_process').spawn;
 
 var config;
 
@@ -70,90 +71,34 @@ exports.deployWeb = function(req, res) {
 };
 
 exports.deployAndroid = function(req, res) {
-    // FIXME: MAKE ABOLUTELY SURE THERE IS NOTHING EVIL IN THE GET PARAMS!!
     var projectId = req.param("projectId");
+    // copy android source to temp location
     var tempDir = path.join(config.tempDir, projectId + "_" + Utils.uuid());
-    var archiveFile = path.join(config.tempDir, projectId + "_" + Utils.uuid() + ".apk")
-    var signedFile = path.join(config.tempDir, projectId + "_" + Utils.uuid() + "_signed.apk")
-
-    var archive = archiver("zip");
-    archive.on('error', function(err) {
-        return res.json(500, {type:"REQUEST_FAILED", "message":err});
-    });
-
-    var output = fs.createWriteStream(archiveFile);
-    output.on("close", function () {
-        var jarsigner = "jarsigner -verbose -keystore " +
-            config.androidKeystore +
-            " -keypass " +
-            config.androidKeyStoreKeyPass +
-            " -storepass " +
-            config.androidKeyStoreStorePass +
-            " -signedjar " +
-            signedFile +
-            " " +
-            archiveFile +
-            " " +
-            config.androidKeyStoreAlias;
-        exec(jarsigner, { maxBuffer: 10000*1024}, function(error, stdout, stderr) {
-            if (error || stderr)
-                return res.json(500, {type:"REQUEST_FAILED", "message":error + stderr});
-            else {
-                res.setHeader("Content-disposition", "attachment; filename=" + projectId + ".apk");
-                res.writeHead(200, { "Content-Type": "application/vnd.android.package-archive" });
-                var zip = fs.readFileSync(signedFile);
-                fs.unlinkSync(archiveFile);
-                fs.unlinkSync(signedFile);
-                rimraf(tempDir, function(err) {
-                    if (err)
-                        return res.json(500, {type:"REQUEST_FAILED", "message":err});
-                    else
-                        return res.end(zip, "binary");
-                });
-            }
-        });
-    });
-
-    // copy path
     fs.mkdirSync(tempDir);
-    async.series([
-            function(callback){
-                ncp("arches/android/", tempDir, function (err) {
-                    if (err) {
-                        callback(err);
-                    } else {
-                        callback(null);
-                    }
+    ncp(config.androidBuildDir + "/", tempDir, function (err) {
+        if (err) {
+            return res.json(500, {type:"REQUEST_FAILED", "message":err});
+        } else {
+            try {
+                // initiate build
+                var child = spawn("./gradlew", [ "-b", "build-test.gradle" ], { cwd: tempDir });
+                child.stdout.on("data", function(chunk) {
+                    res.write(chunk);
                 });
-            },
-            function(callback){
-                ncp("template/", path.join(tempDir, "assets"), function (err) {
-                    if (err) {
-                        callback(err);
-                    } else {
-                        callback(null);
-                    }
+                child.stdout.on("exit", function(exitCode, signal) {
+                    res.end("EXITCODE " + exitCode);
                 });
-            },
-            function(callback){
-                ncp(Utils.getProjectDir(projectId) + "/", path.join(tempDir, "assets"), function (err) {
-                    if (err) {
-                        callback(err);
-                    } else {
-                        callback(null);
-                    }
+                child.stdout.on("error", function(error) {
+                    res.end("ERROR " + error);
                 });
-            }
-        ],
-        function(err){
-            if (err)
+                child.stdout.on("close", function(exitCode, signal) {
+                    res.end("EXITCODE " + exitCode);
+                });
+            } catch (err) {
                 return res.json(500, {type:"REQUEST_FAILED", "message":err});
-            else {
-                archive.pipe(output);
-                archive.bulk([
-                    { expand: true, cwd: tempDir, src: ["**"], dest: "."}
-                ]);
-                archive.finalize();
             }
-        });
+        }
+    });
+    // FIXME: retrieve APK
+    // FIXME: remove tempDir
 };

@@ -51,6 +51,13 @@ editorModule.controller("betaCoreController", ["$scope", "$http", "$compile", "U
             $http({method: "GET", url: "/api/feedback/" + $scope.project.data.id}).
                 success(function (feedback, status, headers, config) {
                     $scope.feedback = feedback;
+                    if (feedback && feedback.length>0) {
+                        $(".nofeedback").hide();
+                        $(".messagecontainer").show();
+                    } else {
+                        $(".nofeedback").show();
+                        $(".messagecontainer").hide();
+                    }
                 }).
                 error(function (data, status, headers, config) {
                     modalError("Error retrieving feedback data. Please try again.")

@@ -38,26 +38,98 @@ editorModule.controller("projectsCoreController", ["$scope", "$http", "$upload",
             }
         });
 
+        $scope.updateSplashVideoView = function() {
+            // update video and resize. the video tag is a pain-in-the-ass
+            var video = $(".projectsplashvideo");
+            video.empty();
+            video.append(
+                '<source src="'+ "/api/splashvideo/" + $scope.selectedProject.id + '?' + new Date().getTime() + '">'
+            );
+            setTimeout(function(){
+                $(".novideo").hide();
+                video.css("height", $(".videocontainer").height());
+                video.css("width", $(".videocontainer").width());
+                video.css("left", $(".videocontainer").offset().left);
+            }, 1000);
+        };
+
         // initialize icon upload
-        $scope.$watch("files", function() {
-            if ($scope.files)
+        $scope.$watch("iconFiles", function() {
+            if ($scope.iconFiles)
                 $scope.upload = $upload.upload({
                     method: "PUT",
                     url: "/api/iconimage/" + $scope.selectedProject.id,
                     data: {},
-                    file: $scope.files
+                    file: $scope.iconFiles
                 }).progress(function(evt) {
                     // TODO: report proper progress with pace: parseInt(100.0 * evt.loaded / evt.total)
                     Pace.restart();
                 }).success(function(data, status, headers, config) {
-                    //refresh background
+                    $(".projecticon").attr("src", $(".projecticon").attr("src") + "?date=" + new Date().getTime());
                 });
         });
 
-        $scope.getIconImageStyle = function() {
-            if ($scope.selectedProject)
-                return "url(/api/iconimage/" + $scope.selectedProject.id + ")";
-        };
+        // initialize cover upload
+        $scope.$watch("coverFiles", function() {
+            if ($scope.coverFiles)
+                $scope.upload = $upload.upload({
+                    method: "PUT",
+                    url: "/api/coverimage/" + $scope.selectedProject.id,
+                    data: {},
+                    file: $scope.coverFiles
+                }).progress(function(evt) {
+                    // TODO: report proper progress with pace: parseInt(100.0 * evt.loaded / evt.total)
+                    Pace.restart();
+                }).success(function(data, status, headers, config) {
+                    $(".projectcover").attr("src", $(".projectcover").attr("src") + "?date=" + new Date().getTime());
+                });
+        });
+
+        // initialize splash image upload
+        $scope.$watch("splashImageFiles", function() {
+            if ($scope.splashImageFiles)
+                $scope.upload = $upload.upload({
+                    method: "PUT",
+                    url: "/api/splashimage/" + $scope.selectedProject.id,
+                    data: {},
+                    file: $scope.splashImageFiles
+                }).progress(function(evt) {
+                    // TODO: report proper progress with pace: parseInt(100.0 * evt.loaded / evt.total)
+                    Pace.restart();
+                }).success(function(data, status, headers, config) {
+                    console.log("REFRESH)");
+                    $(".projectsplash").attr("src", $(".projectsplash").attr("src") + "?date=" + new Date().getTime());
+                }).error(function() {
+                    modalWarning("Error uploading file", "The file could not be saved. Please check if the resolution and format of the file are exactly as required.");
+                });
+        });
+
+        // initialize splash image upload
+        $scope.$watch("splashVideoFiles", function() {
+            if ($scope.splashVideoFiles)
+                $scope.upload = $upload.upload({
+                    method: "PUT",
+                    url: "/api/splashvideo/" + $scope.selectedProject.id,
+                    data: {},
+                    file: $scope.splashVideoFiles
+                }).progress(function(evt) {
+                    // TODO: report proper progress with pace: parseInt(100.0 * evt.loaded / evt.total)
+                    Pace.restart();
+                }).success(function(data, status, headers, config) {
+                    $scope.updateSplashVideoView();
+                });
+        });
+
+        $(".setting-tabs a").click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+        });
+
+        $(".images-tabs a").click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+            $scope.updateSplashVideoView();
+        });
 
         $scope.newProject = function() {
             $("#modalProject").modal();
@@ -89,6 +161,9 @@ editorModule.controller("projectsCoreController", ["$scope", "$http", "$upload",
                 });
             Project.get({projectId: projectId}, function(project) {
                 $scope.selectedProject = project;
+                $(".projecticon").attr("src", "/api/iconimage/" + $scope.selectedProject.id);
+                $(".projectcover").attr("src", "/api/coverimage/" + $scope.selectedProject.id);
+                $(".projectsplash").attr("src", "/api/splashimage/" + $scope.selectedProject.id);
             });
         };
 

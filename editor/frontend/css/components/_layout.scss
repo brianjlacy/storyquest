@@ -6,6 +6,19 @@ a.list-group-item:hover {
     height: 100%;
 }
 
+
+#frametypelist {
+
+    .glyphicon {
+        top: 2px;
+    }
+
+    .framedescription {
+        font-size: 80%;
+        vertical-align: top;
+    }
+}
+
 .layout-header {
     height: 5%;
 }

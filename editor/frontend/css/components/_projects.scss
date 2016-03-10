@@ -4,10 +4,37 @@ textarea {
 a, tr.clickable {
     cursor:pointer;
 }
-.iconimage {
-    height: 80%;
+.projectimages {
+    width: 100%;
     margin-top:1em;
-    background-size:contain;
-    background-repeat:no-repeat;
-    background-position:center
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.imagescell {
+    display:table-cell;
+    text-align: center;
+    font-weight: bold;
+    height: 100%;
+    img {
+        display: inline-block;
+        max-height: 25%;
+    }
+}
+
+.imagesrow {
+    display:table-row;
+}
+
+.imagestable {
+    display:table;
+    width: 100%;
+    margin-left:auto;
+    margin-right: auto;
+}
+
+video {
+    position: fixed;
+    width: 1px;
+    height: 1px;
 }

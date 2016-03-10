@@ -1,129 +1,165 @@
-<div style="height:40%" class="row">
-    <div style="height:100%;overflow:hidden" class="col-md-6">
-        <div style="height:100%" class="box box-info">
-            <div style="height:10%" class="box-header"><h3 class="box-title">Export Mobile Apps</h3></div>
-            <div style="height:80%" class="box-body">
-                <table style="width:100%">
-                    <tr>
-                        <td valign="top"><img src="images/android.png"/></td>
-                        <td><p style="margin:0;padding:0"><a href="/api/deployment/android/{{project.data.id}}">Download
-                            APK</a><span>&nbsp;</span><a ng-click="openQRDialog('/api/deployment/android/')">(QR-Code)</a>
+<div style="height:100%;overflow:hidden" class="col-md-6 deploy">
+    <div class="box box-info">
+        <div class="box-header"><h3 class="box-title">Build Mobile Apps</h3></div>
+        <div class="box-body">
+            <p>Build project "{{project.data.name}}" or download a project backup file.</p>
+            <table style="width:100%">
+                <tr>
+                    <td valign="top"><img src="images/html5.png"/></td>
+                    <td>
+                        <p style="margin:0;padding:0">
+                            <a class="btn btn-primary" href="/api/deployment/web/{{project.data.id}}"><i class="glyphicon glyphicon-download"></i>&nbsp;&nbsp;Download Project Backup Archive</a>
                         </p>
-
-                            <p style="margin:0;padding:0">Store Icons:&nbsp;<a
-                                    href="/api/p/{{project.data.id}}/icons/android/res/drawable-ldpi/icon.png">ldpi</a><span>&nbsp;</span><a
-                                    href="/api/p/{{project.data.id}}/icons/android/res/drawable-mdpi/icon.png">mdpi</a><span>&nbsp;</span><a
-                                    href="/api/p/{{project.data.id}}/icons/android/res/drawable-hdpi/icon.png">hdpi</a><span>&nbsp;</span><a
-                                    href="/api/p/{{project.data.id}}/icons/android/res/drawable-xhdpi/icon.png">xhdpi</a></p>
-                        </td>
-                    </tr>
-                    <tr style="border-top:1em solid white">
-                        <td valign="top"><img src="images/firefoxos.png"/></td>
-                        <td><p style="margin:0;padding:0"><a href="/api/deployment/web/{{project.data.id}}">Download App
-                            Archive</a><span>&nbsp;</span><a ng-click="openQRDialog('/api/deployment/web/')">(QR-Code)</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top"><img src="images/android.png"/></td>
+                    <td>
+                        <p style="margin:0;padding:0">
+                            <a class="btn btn-primary" href="/api/deployment/android/{{project.data.id}}"><i class="glyphicon glyphicon-cog"></i>&nbsp;&nbsp;Build Android App</a>
                         </p>
-
-                            <p style="margin:0;padding:0">Store Icons:&nbsp;<a
-                                    href="/api/p/{{project.data.id}}/icons/firefoxos/www/img/icon-30.png">30px</a><span>&nbsp;</span><a
-                                    href="/api/p/{{project.data.id}}/icons/firefoxos/www/img/icon-60.png">60px</a><span>&nbsp;</span><a
-                                    href="/api/p/{{project.data.id}}/icons/firefoxos/www/img/icon-128.png">128px</a></p></td>
-                    </tr>
-                    <tr style="border-top:1em solid white">
-                        <td valign="top"><img src="images/kindle.png"/></td>
-                        <td><p style="margin:0;padding:0"><a href="/api/deployment/android/{{project.data.id}}">Download Kindle
-                            Fire APK</a><span>&nbsp;</span><a
-                                ng-click="openQRDialog('/api/deployment/android/')">(QR-Code)</a></p>
-
-                            <p style="margin:0;padding:0">Store Icons:&nbsp;<a
-                                    href="/api/p/{{project.data.id}}/icons/android/res/drawable-ldpi/icon.png">ldpi</a><span>&nbsp;</span><a
-                                    href="/api/p/{{project.data.id}}/icons/android/res/drawable-mdpi/icon.png">mdpi</a><span>&nbsp;</span><a
-                                    href="/api/p/{{project.data.id}}/icons/android/res/drawable-hdpi/icon.png">hdpi</a><span>&nbsp;</span><a
-                                    href="/api/p/{{project.data.id}}/icons/android/res/drawable-xhdpi/icon.png">xhdpi</a></p>
-                        </td>
-                    </tr>
-                    <tr style="border-top:1em solid white">
-                        <td valign="top"><img src="images/ios.png"/></td>
-                        <td><p style="margin:0;padding:0"><span style="color:lightgrey">iPHONE/iPAD COMING SOON</span>
-                        </p>
-
-                            <p style="margin:0;padding:0">Store Icons:&nbsp;<a
-                                    href="/api/p/{{project.data.id}}/icons/ios/Resources/icons/icon.png">icon</a><span>&nbsp;</span><a
-                                    href="/api/p/{{project.data.id}}/icons/ios/Resources/icons/icon@2x.png">icon@2x</a><span>&nbsp;</span><a
-                                    href="/api/p/{{project.data.id}}/icons/ios/Resources/icons/icon-40.png">icon40</a><span>&nbsp;</span><a
-                                    href="/api/p/{{project.data.id}}/icons/ios/Resources/icons/icon-40@2x.png">icon40@2x</a><span>&nbsp;</span><a
-                                    href="/api/p/{{project.data.id}}/icons/ios/Resources/icons/icon-50.png">icon50</a><span>&nbsp;</span><a
-                                    href="/api/p/{{project.data.id}}/icons/ios/Resources/icons/icon-50@2x.png">icon50@2x</a></p>
-
-                            <p style="margin:0;padding:0"><a
-                                    href="/api/p/{{project.data.id}}/icons/ios/Resources/icons/icon-57.png">icon57</a><span>&nbsp;</span><a
-                                    href="/api/p/{{project.data.id}}/icons/ios/Resources/icons/icon-57@2x.png">icon57@2x</a><span>&nbsp;</span><a
-                                    href="/api/p/{{project.data.id}}/icons/ios/Resources/icons/icon-60.png">icon60</a><span>&nbsp;</span><a
-                                    href="/api/p/{{project.data.id}}/icons/ios/Resources/icons/icon-60@2x.png">icon60@2x</a><span>&nbsp;</span><a
-                                    href="/api/p/{{project.data.id}}/icons/ios/Resources/icons/icon-72.png">icon72</a><span>&nbsp;</span><a
-                                    href="/api/p/{{project.data.id}}/icons/ios/Resources/icons/icon-72@2x.png">icon72@2x</a></p>
-
-                            <p style="margin:0;padding:0"><a
-                                    href="/api/p/{{project.data.id}}/icons/ios/Resources/icons/icon-76.png">icon76</a><span>&nbsp;</span><a
-                                    href="/api/p/{{project.data.id}}/icons/ios/Resources/icons/icon-76@2x.png">icon76@2x</a><span>&nbsp;</span><a
-                                    href="/api/p/{{project.data.id}}/icons/ios/Resources/icons/icon-small.png">icon-small</a><span>&nbsp;</span><a
-                                    href="/api/p/{{project.data.id}}/icons/ios/Resources/icons/icon-small@2x.png">icon-small@2x</a><span>&nbsp;</span><a
-                                    href="/api/p/{{project.data.id}}/icons/ios/Resources/icons/iTunesArtwork.png">iTunes
-                                Artwork</a><span>&nbsp;</span><a
-                                    href="/api/p/{{project.data.id}}/icons/ios/Resources/icons/iTunesArtwork@2x.png">iTunes
-                                Artwork@2x</a><span>&nbsp;</span></p></td>
-                    </tr>
-                </table>
-            </div>
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
-    <div style="height:100%;overflow:hidden" class="col-md-6">
-        <div style="height:100%" class="box box-info">
-            <div style="height:10%" class="box-header"><h3 class="box-title">Export Web Apps</h3></div>
-            <div style="height:80%" class="box-body">
-                <table style="width:100%">
-                    <tr>
-                        <td valign="top"><img src="images/html5.png"/></td>
-                        <td><p style="margin:0;padding:0"><a href="/api/deployment/web/{{project.data.id}}">Download ZIP
-                            Archive</a><span>&nbsp;</span><a ng-click="openQRDialog('/api/deployment/web/')">(QR-Code)</a>
-                        </p></td>
-                    </tr>
-                    <tr style="border-top:1em solid white">
-                        <td valign="top"><img src="images/chrome.png"/></td>
-                        <td><p style="margin:0;padding:0"><a href="/api/deployment/web/{{project.data.id}}">Download Chrome
-                            Application</a><span>&nbsp;</span><a
-                                ng-click="openQRDialog('/api/deployment/web/')">(QR-Code)</a></p>
-
-                            <p style="margin:0;padding:0">Store Icon:&nbsp;<a
-                                    href="/api/p/{{project.id}}/icons/firefoxos/www/img/icon-128.png">128px</a></p></td>
-                    </tr>
-                </table>
-            </div>
+    <div class="box box-info">
+        <div class="box-header"><h3 class="box-title">Download Build Artifacts</h3></div>
+        <div class="box-body artifacts" style="height:89%;overflow-y: scroll">
+            <table class="table table-hover table-condensed">
+                <tr>
+                    <td valign="top" width="20%"><img src="images/android.png"/></td>
+                    <td>Some Project Name</td>
+                    <td>com.example.app</td>
+                    <td>1.0.3 / 42</td>
+                    <td>
+                        <a class="btn btn-primary btn-xs" href="/api/deployment/web/{{project.data.id}}"><i class="glyphicon glyphicon-download"></i></a>
+                        <a class="btn btn-primary btn-xs" ng-click="openQRDialog('/api/deployment/android/')"><i class="glyphicon glyphicon-qrcode"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top" width="20%"><img src="images/android.png"/></td>
+                    <td>Some Project Name</td>
+                    <td>com.example.app</td>
+                    <td>1.0.3 / 42</td>
+                    <td>
+                        <a class="btn btn-primary btn-xs" href="/api/deployment/web/{{project.data.id}}"><i class="glyphicon glyphicon-download"></i></a>
+                        <a class="btn btn-primary btn-xs" ng-click="openQRDialog('/api/deployment/android/')"><i class="glyphicon glyphicon-qrcode"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top" width="20%"><img src="images/android.png"/></td>
+                    <td>Some Project Name</td>
+                    <td>com.example.app</td>
+                    <td>1.0.3 / 42</td>
+                    <td>
+                        <a class="btn btn-primary btn-xs" href="/api/deployment/web/{{project.data.id}}"><i class="glyphicon glyphicon-download"></i></a>
+                        <a class="btn btn-primary btn-xs" ng-click="openQRDialog('/api/deployment/android/')"><i class="glyphicon glyphicon-qrcode"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top" width="20%"><img src="images/android.png"/></td>
+                    <td>Some Project Name</td>
+                    <td>com.example.app</td>
+                    <td>1.0.3 / 42</td>
+                    <td>
+                        <a class="btn btn-primary btn-xs" href="/api/deployment/web/{{project.data.id}}"><i class="glyphicon glyphicon-download"></i></a>
+                        <a class="btn btn-primary btn-xs" ng-click="openQRDialog('/api/deployment/android/')"><i class="glyphicon glyphicon-qrcode"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top" width="20%"><img src="images/android.png"/></td>
+                    <td>Some Project Name</td>
+                    <td>com.example.app</td>
+                    <td>1.0.3 / 42</td>
+                    <td>
+                        <a class="btn btn-primary btn-xs" href="/api/deployment/web/{{project.data.id}}"><i class="glyphicon glyphicon-download"></i></a>
+                        <a class="btn btn-primary btn-xs" ng-click="openQRDialog('/api/deployment/android/')"><i class="glyphicon glyphicon-qrcode"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top" width="20%"><img src="images/android.png"/></td>
+                    <td>Some Project Name</td>
+                    <td>com.example.app</td>
+                    <td>1.0.3 / 42</td>
+                    <td>
+                        <a class="btn btn-primary btn-xs" href="/api/deployment/web/{{project.data.id}}"><i class="glyphicon glyphicon-download"></i></a>
+                        <a class="btn btn-primary btn-xs" ng-click="openQRDialog('/api/deployment/android/')"><i class="glyphicon glyphicon-qrcode"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top" width="20%"><img src="images/android.png"/></td>
+                    <td>Some Project Name</td>
+                    <td>com.example.app</td>
+                    <td>1.0.3 / 42</td>
+                    <td>
+                        <a class="btn btn-primary btn-xs" href="/api/deployment/web/{{project.data.id}}"><i class="glyphicon glyphicon-download"></i></a>
+                        <a class="btn btn-primary btn-xs" ng-click="openQRDialog('/api/deployment/android/')"><i class="glyphicon glyphicon-qrcode"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top" width="20%"><img src="images/android.png"/></td>
+                    <td>Some Project Name</td>
+                    <td>com.example.app</td>
+                    <td>1.0.3 / 42</td>
+                    <td>
+                        <a class="btn btn-primary btn-xs" href="/api/deployment/web/{{project.data.id}}"><i class="glyphicon glyphicon-download"></i></a>
+                        <a class="btn btn-primary btn-xs" ng-click="openQRDialog('/api/deployment/android/')"><i class="glyphicon glyphicon-qrcode"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top" width="20%"><img src="images/android.png"/></td>
+                    <td>Some Project Name</td>
+                    <td>com.example.app</td>
+                    <td>1.0.3 / 42</td>
+                    <td>
+                        <a class="btn btn-primary btn-xs" href="/api/deployment/web/{{project.data.id}}"><i class="glyphicon glyphicon-download"></i></a>
+                        <a class="btn btn-primary btn-xs" ng-click="openQRDialog('/api/deployment/android/')"><i class="glyphicon glyphicon-qrcode"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top" width="20%"><img src="images/android.png"/></td>
+                    <td>Some Project Name</td>
+                    <td>com.example.app</td>
+                    <td>1.0.3 / 42</td>
+                    <td>
+                        <a class="btn btn-primary btn-xs" href="/api/deployment/web/{{project.data.id}}"><i class="glyphicon glyphicon-download"></i></a>
+                        <a class="btn btn-primary btn-xs" ng-click="openQRDialog('/api/deployment/android/')"><i class="glyphicon glyphicon-qrcode"></i></a>
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
 </div>
-<div style="height:40%;margin-top:2em" class="row">
-    <div style="height:100%;overflow:hidden" class="col-md-6">
-        <div style="height:100%" class="box box-info">
-            <div style="height:10%" class="box-header"><h3 class="box-title">Export eReader Formats</h3></div>
-            <div style="height:80%" class="box-body">
-                <table style="width:100%">
-                    <tr>
-                        <td valign="top"><img src="images/epub.png"/></td>
-                        <td><p style="margin:0;padding:0"><span style="color:lightgrey">EPUB COMING SOON</span></p></td>
-                    </tr>
-                    <tr style="border-top:1em solid white">
-                        <td valign="top"><img src="images/kindle.png"/></td>
-                        <td><p style="margin:0;padding:0"><span
-                                style="color:lightgrey">KINDLE eREADER COMING SOON</span></p></td>
-                    </tr>
-                </table>
-            </div>
+<div style="height:100%;overflow:hidden" class="col-md-6 deploy">
+    <div style="height:100%" class="box box-info">
+        <div class="box-header">
+            <h3 class="box-title">Build Progress</h3>
+            <button class="btn btn-primary btn-xs pull-right" style="margin-top:10px;margin-right:10px" ng-click="clearConsole()"><i class="glyphicon glyphicon-remove-circle"></i></button>
         </div>
-    </div>
-    <div style="height:100%;overflow:hidden" class="col-md-6">
-        <div style="height:100%" class="box box-info">
-            <div style="height:10%" class="box-header"><h3 class="box-title">Deploy to Stores</h3></div>
-            <div style="height:80%" class="box-body"><p style="color:lightgrey">COMING SOON</p></div>
+        <div style="height:95%" class="box-body">
+            <pre style="height:100%;font-family:monospace" class="console">
+Message 1
+Message 2
+:help
+
+Welcome to Gradle 2.10.
+
+To run a build, run gradlew
+
+To see a list of available tasks, run gradlew tasks
+
+To see a list of command-line options, run gradlew --help
+
+To see more detail about a task, run gradlew help --task
+
+    BUILD SUCCESSFUL
+
+    Total time: 5.947 secs
+
+    This build could be faster, please consider using the Gradle Daemon: https://docs.gradle.org/2.10/userguide/gradle_daemon.html
+    EXITCODE false
+            </pre>
         </div>
     </div>
 </div>

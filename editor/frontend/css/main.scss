@@ -13,6 +13,11 @@ input.ng-invalid {
   border: 1px solid red !important;
 }
 
+.dropdown-menu>li>a:hover {
+  background-color: #f6f6f6 !important;
+  color: #444444 !important;
+}
+
 // basic stuff
 @import "fonts";
 @import "components/login";

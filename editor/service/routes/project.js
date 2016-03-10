@@ -27,17 +27,28 @@ var path = require("path");
 var fs = require("fs");
 var genicon = require("cordova-gen-icon");
 var async = require("async");
+var propertiesParser = require("properties-parser");
+var imageSize = require('image-size');
 
 var Project = require("../model/project.js");
 var User = require("../model/user.js");
 
-exports.registerServices = function(config, app) {
+var config;
+
+exports.registerServices = function(appConfig, app) {
+    config = appConfig;
     app.get("/api/project/:projectId", global.authPublicProject, this.getProject);
     app.put("/api/project", global.authUser, this.createProject);
     app.post("/api/project/:projectId", global.authUser, global.authProject, this.updateProject);
     app.delete("/api/project/:projectId", global.authUser, global.authProject, this.deleteProject);
     app.put("/api/iconimage/:projectId", global.authUser, global.authProject, this.updateIconImage);
     app.get("/api/iconimage/:projectId", global.authUser, global.authProject, this.getIconImage);
+    app.put("/api/coverimage/:projectId", global.authUser, global.authProject, this.updateCoverImage);
+    app.get("/api/coverimage/:projectId", global.authUser, global.authProject, this.getCoverImage);
+    app.put("/api/splashimage/:projectId", global.authUser, global.authProject, this.updateSplashImage);
+    app.get("/api/splashimage/:projectId", global.authUser, global.authProject, this.getSplashImage);
+    app.put("/api/splashvideo/:projectId", global.authUser, global.authProject, this.updateSplashVideo);
+    app.get("/api/splashvideo/:projectId", global.authUser, global.authProject, this.getSplashVideo);
     app.get("/api/storerating/:projectId", global.authUser, this.storeRating);
     app.post("/api/storecomment/:projectId", this.storeComment);
     app.get("/api/sequence/:projectId", global.authUser, global.authProject, this.getSequence);
@@ -51,11 +62,7 @@ exports.generateAppIcons = function(destDir, sourceImagePath, done) {
     if (!fs.existsSync(path.join(destDir, "icons")))
         fs.mkdirSync(path.join(destDir, "icons"));
     async.series([
-            function(callback) { generator.generateAmazonFireOSIcon("", sourceImagePath, path.join(destDir, "icons"), callback); },
-            function(callback) { generator.generateFirefoxOSIcon("", sourceImagePath, path.join(destDir, "icons"), callback); },
-            function(callback) { generator.generateIOSIcon("", sourceImagePath, path.join(destDir, "icons"), callback); },
-            function(callback) { generator.generateAndroidIcon("", sourceImagePath, path.join(destDir, "icons"), callback); },
-            function(callback) { generator.generateWindowsPhone8Icon("", sourceImagePath, path.join(destDir, "icons"), callback); },
+            function(callback) { generator.generateAndroidIcon("", sourceImagePath, path.join(destDir, "icons"), callback); }
         ],
         function(err) {
             if (err)
@@ -130,15 +137,22 @@ exports.getSettings = function(req, res) {
     if (!req.param("projectId"))
         return res.json(500, {type: "REQUEST_FAILED", "message":"No projectId given."});
     else {
-        var settingsFile = path.join(Utils.getProjectDir(req.param("projectId")), "settings.json");
+        var settingsFile = path.join(Utils.getProjectDir(req.param("projectId")), "storyquest.json");
+        var propertiesFile = path.join(Utils.getProjectDir(req.param("projectId")), "storyquest.properties");
+        var settings = {};
         if (!fs.existsSync(settingsFile))
-            return res.json({
+            settings = Utils.mergeObjects(settings, {
                 sequence: "graph"
             });
         else {
-            var settings = JSON.parse(fs.readFileSync(settingsFile, "utf8"));
-            return res.json(settings);
+            settings = Utils.mergeObjects(settings, JSON.parse(fs.readFileSync(settingsFile, "utf8")));
         }
+        if (fs.existsSync(propertiesFile))
+            settings = Utils.mergeObjects(settings, propertiesParser.parse(fs.readFileSync(propertiesFile, "utf8")));
+        // convert app version code to number
+        if (typeof settings.APP_VERSION_CODE === "string")
+            settings.APP_VERSION_CODE = parseInt(settings.APP_VERSION_CODE);
+        return res.json(settings);
     }
 };
 
@@ -146,13 +160,49 @@ exports.storeSettings = function(req, res) {
     if (!req.param("projectId"))
         return res.json(500, {type: "REQUEST_FAILED", "message":"No projectId given."});
     else {
-        var settingsFile = path.join(Utils.getProjectDir(req.param("projectId")), "settings.json");
-        fs.writeFile(settingsFile, JSON.stringify(req.body), function(err) {
+        // write settings file
+        var settingsFile = path.join(Utils.getProjectDir(req.param("projectId")), "storyquest.json");
+        var settings = {
+            id: req.body.id,
+            name: req.body.name,
+            author: req.body.author,
+            publisher: req.body.publisher,
+            sequence: req.body.sequence
+        };
+        fs.writeFile(settingsFile, JSON.stringify(settings), function(err) {
             if (err)
                 return res.json(500, {type: "REQUEST_FAILED", "message":err});
             else
                 return res.json(200, {});
         });
+        // write properties file
+        var propertiesFile = path.join(Utils.getProjectDir(req.param("projectId")), "storyquest.properties");
+        // for security reasons, only store certain fields, take others (eg paths) from system config
+        var properties = {
+            STORYQUEST_TEMPLATE_PATH: config.templateDirFromAndroidContext,
+            STORYQUEST_PROJECT_PATH: config.projectsDirFromAndroidContext + "/" + req.param("projectId") + "/",
+            STORYQUEST_ICON_PATH: config.projectsDirFromAndroidContext + "/" + req.param("projectId") + "/icon.png"
+        };
+        if (fs.existsSync(propertiesFile))
+            properties = Utils.mergeObjects(properties, propertiesParser.parse(fs.readFileSync(propertiesFile, "utf8")));
+        properties.APP_LABEL = req.body.APP_LABEL;
+        properties.GOOGLE_SERVICES_ID = req.body.GOOGLE_SERVICES_ID;
+        properties.APP_ID = req.body.APP_ID;
+        properties.APP_VERSION_CODE = "" + req.body.APP_VERSION_CODE;
+        properties.APP_VERSION_NAME = req.body.APP_VERSION_NAME;
+        var propEditor = propertiesParser.createEditor();
+        for (var property in properties) {
+            if (properties.hasOwnProperty(property)) {
+                propEditor.set(property, properties[property]);
+            }
+        }
+        try {
+            propEditor.save(propertiesFile, function() {
+                return res.json(200, {});
+            })
+        } catch (err) {
+            return res.json(500, {type: "REQUEST_FAILED", "message":err});
+        }
     }
 };
 
@@ -202,6 +252,28 @@ exports.storeComment = function(req, res) {
         });
 };
 
+exports.updateIconImage = function(req, res){
+    var outputDir = Utils.getProjectDir(req.param("projectId"));
+    try {
+        if (req.files && req.files.file) {
+            var dimensions = imageSize(req.files.file.path);
+            if (dimensions.width===1024 && dimensions.height===1024) {
+                fs.renameSync(req.files.file.path, path.join(outputDir, "icon.png"));
+                return res.json(200, {});
+            } else
+                return res.json(500, {type: "REQUEST_FAILED", "message": "Image does not have the right size."});
+        }
+        exports.generateAppIcons(outputDir, path.join(outputDir, "icon.png"), function(err) {
+            if (err)
+                throw err;
+            else
+                return res.json(200, {});
+        });
+    } catch(err) {
+        return res.json(500, {type: "REQUEST_FAILED", "message": err});
+    }
+};
+
 exports.getIconImage = function(req, res) {
     var projectId = req.param("projectId");
     var iconFile = path.join(Utils.getProjectDir(projectId), "icon.png");
@@ -214,23 +286,85 @@ exports.getIconImage = function(req, res) {
     }
 };
 
-exports.updateIconImage = function(req, res){
+exports.updateCoverImage = function(req, res){
     var outputDir = Utils.getProjectDir(req.param("projectId"));
     try {
         if (req.files && req.files.file) {
-            // TODO: check if the image is PNG and has the right size
-            fs.renameSync(req.files.file.path, path.join(outputDir, "icon.png"));
-        }
-        exports.generateAppIcons(outputDir, path.join(outputDir, "icon.png"), function(err) {
-            if (err)
-                throw err;
-            else
+            var dimensions = imageSize(req.files.file.path);
+            if (dimensions.width===500 && dimensions.height===312) {
+                fs.renameSync(req.files.file.path, path.join(outputDir, "cover.png"));
                 return res.json(200, {});
-        });
+            } else
+                return res.json(500, {type: "REQUEST_FAILED", "message": "Image does not have the right size."});
+        }
     } catch(err) {
         return res.json(500, {type: "REQUEST_FAILED", "message": err});
     }
-}
+};
+
+exports.getCoverImage = function(req, res) {
+    var projectId = req.param("projectId");
+    var coverFile = path.join(Utils.getProjectDir(projectId), "cover.png");
+    if (fs.existsSync(coverFile)) {
+        res.writeHead(200, { "Content-Type": "image/png" });
+        return res.end(fs.readFileSync(coverFile), "binary");
+    } else {
+        res.writeHead(200, { "Content-Type": "image/png" });
+        return res.end(fs.readFileSync(path.join(Utils.getProjectDir(projectId), "..", "..", "template", "cover.png")), "binary");
+    }
+};
+
+exports.updateSplashImage = function(req, res){
+    var outputDir = Utils.getProjectDir(req.param("projectId"));
+    try {
+        if (req.files && req.files.file) {
+            var dimensions = imageSize(req.files.file.path);
+            if (dimensions.width===800 && dimensions.height===1280) {
+                fs.renameSync(req.files.file.path, path.join(outputDir, "splash.jpg"));
+                return res.json(200, {});
+            } else
+                return res.json(500, {type: "REQUEST_FAILED", "message": "Image does not have the right size."});
+        }
+    } catch(err) {
+        return res.json(500, {type: "REQUEST_FAILED", "message": err});
+    }
+};
+
+exports.getSplashImage = function(req, res) {
+    var projectId = req.param("projectId");
+    var splashFile = path.join(Utils.getProjectDir(projectId), "splash.jpg");
+    if (fs.existsSync(splashFile)) {
+        res.writeHead(200, { "Content-Type": "image/jpeg" });
+        return res.end(fs.readFileSync(splashFile), "binary");
+    } else {
+        res.writeHead(200, { "Content-Type": "image/jpeg" });
+        return res.end(fs.readFileSync(path.join(Utils.getProjectDir(projectId), "..", "..", "template", "splash.jpg")), "binary");
+    }
+};
+
+exports.updateSplashVideo = function(req, res){
+    var outputDir = Utils.getProjectDir(req.param("projectId"));
+    try {
+        if (req.files && req.files.file) {
+            fs.renameSync(req.files.file.path, path.join(outputDir, "splash.mp4"));
+            return res.json(200, {});
+        }
+    } catch(err) {
+        return res.json(500, {type: "REQUEST_FAILED", "message": err});
+    }
+};
+
+exports.getSplashVideo = function(req, res) {
+    var projectId = req.param("projectId");
+    var splashVideoFile = path.join(Utils.getProjectDir(projectId), "splash.mp4");
+    if (fs.existsSync(splashVideoFile)) {
+        res.writeHead(200, { "Content-Type": "video/mp4" });
+        return res.end(fs.readFileSync(splashVideoFile), "binary");
+    } else {
+        res.writeHead(200, { "Content-Type": "video/mp4" });
+        return res.end(fs.readFileSync(path.join(Utils.getProjectDir(projectId), "..", "..", "template", "splash.mp4")), "binary");
+    }
+};
 
 exports.getProject = function(req, res) {
     Project.getByProjectId(req.param("projectId"), function(err, project) {

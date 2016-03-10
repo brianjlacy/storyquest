@@ -49,12 +49,12 @@
     "bootstrap-sass-official": "^3.3.0",
     "ng-file-upload": "^2.2.2",
     "treema": "https://github.com/techtonik/treema.git#patch-1",
-    "joint": "0.9.3",
+    "joint": "0.9.6",
     "lodash": "~3.3.1",
     "jquery-hammerjs": "~2.0.0",
     "jquery-mousewheel": "~3.1.12",
     "backbone": "1.2.1",
-    "ngDraggable":"0.1.8",
+    "ngDraggable": "0.1.8",
     "tourist": "0.1.2"
   },
   "resolutions": {

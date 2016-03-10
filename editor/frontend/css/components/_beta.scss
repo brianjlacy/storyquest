@@ -8,22 +8,40 @@
     font-weight: bold;
 }
 
-.beta-timeline {
-    overflow-y: scroll;
-    height: 96%;
-}
-
 .betaurl {
     margin-bottom: 0.8em;
 }
 
 .sharebuttons {
     display: inline-block;
-    vertical-align: top;
-    margin-left: 1em;
+    margin-top: 0.5em;
 }
 
-.fb-share-button {
-    vertical-align: top;
-    margin-left: 1em;
+.beta-timeline {
+    overflow-y: hidden;
+    height: 100%;
 }
+
+.beta-feedback-box {
+    height: 99%;
+
+    .box-body {
+        text-align: center;
+        color: #888888;
+        height: 94%;
+    }
+
+    .messagecontainer {
+        height: 100%;
+        overflow-y: scroll;
+    }
+}
+
+.timeline-item {
+    text-align: left;
+
+    i.glyphicon {
+        top: 3px;
+    }
+}
+

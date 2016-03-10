@@ -68,25 +68,61 @@
 </div>
 <div style="height:65%" class="row">
     <div style="height:100%;overflow:hidden" class="col-md-6">
-        <div style="height:100%" class="box box-info">
-            <div style="height:10%" class="box-header"><h3 class="box-title">Project Info</h3></div>
-            <div style="height:80%" class="box-body">
-                <div class="form-group"><label>Name</label><input id="peName" type="text" placeholder="Enter ..."
-                                                                  ng-model="selectedProject.name" ng-disabled="!selectedProject"
-                                                                  class="form-control"/></div>
-                <div class="form-group"><label>Description</label><textarea id="peDesc" rows="6" placeholder="Enter ..."
-                                                                            ng-model="selectedProject.description"
-                                                                            ng-disabled="!selectedProject"
-                                                                            class="form-control"></textarea></div>
-                <div class="form-group"><label>Keywords</label><input id="peTags" type="text" placeholder="Enter ..."
-                                                                      ng-model="selectedProject.tags"
-                                                                      ng-disabled="!selectedProject" class="form-control"/></div>
-                <div class="form-group"><label>Chapter Sequence</label><select id="sequenceBehaviour"
-                                                                               ng-model="settings.sequence"
-                                                                               ng-disabled="!selectedProject" class="form-control">
-                    <option value="graph">Chapters are manually linked</option>
-                    <option value="sequence">Chapters are displayed in order of sequence</option>
-                </select></div>
+        <div style="height:100%" class="box">
+            <div style="height:90%" class="box-body">
+                <div style="height:100%" class="nav-tabs-custom">
+                    <ul class="nav nav-tabs setting-tabs">
+                        <li class="active"><a href="#projectsettings" data-toggle="tab" class="projectsettings">Basic Info</a></li>
+                        <li><a href="#appsettings" data-toggle="tab" class="appsettings">App Settings</a></li>
+                        <li><a href="#publishersettings" data-toggle="tab" class="publishersettings">Publisher Settings</a></li>
+                    </ul>
+                    <div class="tab-content project-content">
+                        <div id="projectsettings" class="tab-pane active">
+                            <div class="form-group"><label>Name</label><input id="peName" type="text" placeholder="Enter ..."
+                                                                              ng-model="selectedProject.name" ng-disabled="!selectedProject"
+                                                                              ng-change="settings.name=selectedProject.name"
+                                                                              class="form-control"/></div>
+                            <div class="form-group"><label>Description</label><textarea id="peDesc" rows="6" placeholder="Enter ..."
+                                                                                        ng-model="selectedProject.description"
+                                                                                        ng-disabled="!selectedProject"
+                                                                                        class="form-control"></textarea></div>
+                            <div class="form-group"><label>Keywords</label><input id="peTags" type="text" placeholder="Enter ..."
+                                                                                  ng-model="selectedProject.tags"
+                                                                                  ng-disabled="!selectedProject" class="form-control"/></div>
+                            <div class="form-group"><label>Chapter Sequence</label><select id="sequenceBehaviour"
+                                                                                           ng-model="settings.sequence"
+                                                                                           ng-disabled="!selectedProject" class="form-control">
+                                <option value="graph">Chapters are manually linked</option>
+                                <option value="sequence">Chapters are displayed in order of sequence</option>
+                            </select></div>
+                        </div>
+                        <div id="appsettings" class="tab-pane">
+                            <div class="form-group"><label>App Label</label><input id="peAppLabel" type="text" placeholder="Enter ..."
+                                                                              ng-model="settings.APP_LABEL" ng-disabled="!selectedProject"
+                                                                              class="form-control"/></div>
+                            <div class="form-group"><label>Google Services Id</label><input type="text" id="peGoogleServicesId" placeholder="Enter ..."
+                                                                                        ng-model="settings.GOOGLE_SERVICES_ID"
+                                                                                        ng-disabled="!selectedProject"
+                                                                                        class="form-control"></div>
+                            <div class="form-group"><label>App Id</label><input id="peAppId" type="text" placeholder="Enter ..."
+                                                                                  ng-disabled="!selectedProject" ng-model="settings.APP_ID"
+                                                                                  class="form-control"/></div>
+                            <div class="form-group"><label>App Version Code</label><input id="peAppVersionCode" type="number" min="0" step="1" placeholder="0"
+                                                                                ng-disabled="!selectedProject" ng-model="settings.APP_VERSION_CODE" class="form-control"/></div>
+                            <div class="form-group"><label>App Version Name</label><input id="peApVersionName" type="text" placeholder="Enter ..."
+                                                                                          ng-model="settings.APP_VERSION_NAME"
+                                                                                ng-disabled="!selectedProject" class="form-control"/></div>
+                        </div>
+                        <div id="publishersettings" class="tab-pane">
+                            <div class="form-group"><label>Author</label><input id="peAuthor" type="text" placeholder="Enter ..."
+                                                                                   ng-model="settings.author" ng-disabled="!selectedProject"
+                                                                                   class="form-control"/></div>
+                            <div class="form-group"><label>Publisher</label><input id="pePublisher" type="text" placeholder="Enter ..."
+                                                                                ng-model="settings.publisher" ng-disabled="!selectedProject"
+                                                                                class="form-control"/></div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div style="text-align:right;height:10%" class="box-footer">
                 <button id="peButton" ng-click="saveSelectedProject()" ng-disabled="!selectedProject" class="btn btn-primary">
@@ -96,21 +132,99 @@
         </div>
     </div>
     <div style="height:100%;overflow:hidden" class="col-md-6">
-        <div style="height:100%" class="box box-info">
-            <div class="box-header"><h3 class="box-title">Project Icon Image</h3>
-
-                <div style="padding-top:10px" class="box-tools pull-right">
-                    <button id="iconupload" class="btn btn-primary" ng-file-select ng-model="files"><i
-                            class="glyphicon glyphicon-plus"></i><span>&nbsp;Upload</span></button>
-                    &nbsp;&nbsp;<span
-                        id="showIcons" ng-click="openIconPreview()" class="btn btn-primary">Show Icons</span>
+        <div style="height:100%" class="box">
+            <div style="height:100%" class="box-body">
+                <div style="height:100%" class="nav-tabs-custom">
+                    <ul class="nav nav-tabs images-tabs">
+                        <li class="active"><a href="#iconandcover" data-toggle="tab" class="iconandcover">Icon and Cover Images</a></li>
+                        <li><a href="#splashimages" data-toggle="tab" class="splashimages">Splash Images</a></li>
+                    </ul>
+                    <div class="tab-content project-content">
+                        <div id="iconandcover" class="tab-pane active">
+                            <div class="projectimages imagestable">
+                                <div class="imagesrow" style="height:10%">
+                                    <div class="imagescell">
+                                        Icon
+                                    </div>
+                                    <div class="imagescell">
+                                        Cover
+                                    </div>
+                                </div>
+                                <div class="imagesrow" style="height:70%">
+                                    <div class="imagescell">
+                                        <img class="projecticon">
+                                    </div>
+                                    <div class="imagescell">
+                                        <img class="projectcover">
+                                    </div>
+                                </div>
+                                <div class="imagesrow" style="height:10%">
+                                    <div class="imagescell">
+                                        1024x1024px, PNG
+                                    </div>
+                                    <div class="imagescell">
+                                        500x312px, PNG
+                                    </div>
+                                </div>
+                                <div class="imagesrow" style="height:10%">
+                                    <div class="imagescell">
+                                        <button id="iconupload" class="btn btn-primary btn-xs" ng-file-select ng-model="iconFiles">
+                                            <span>&nbsp;Upload Icon</span>
+                                        </button>
+                                    </div>
+                                    <div class="imagescell">
+                                        <button id="coverimageupload" class="btn btn-primary btn-xs" ng-file-select ng-model="coverFiles">
+                                            <span>&nbsp;Upload Cover Image</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="splashimages" class="tab-pane">
+                            <div class="projectimages imagestable">
+                                <div class="imagesrow" style="height:10%">
+                                    <div class="imagescell">
+                                        Static Splash
+                                    </div>
+                                    <div class="imagescell">
+                                        Video Splash (optional)
+                                    </div>
+                                </div>
+                                <div class="imagesrow" style="height:70%">
+                                    <div class="imagescell">
+                                        <img class="projectsplash">
+                                    </div>
+                                    <div class="imagescell videocontainer">
+                                        <span class="novideo">NO VIDEO</span>
+                                        <video controls class="projectsplashvideo">
+                                        </video>
+                                    </div>
+                                </div>
+                                <div class="imagesrow" style="height:10%">
+                                    <div class="imagescell">
+                                        800x1280px, JPG
+                                    </div>
+                                    <div class="imagescell">
+                                        800x1280px, MP4
+                                    </div>
+                                </div>
+                                <div class="imagesrow" style="height:10%">
+                                    <div class="imagescell">
+                                        <button id="splashimageupload" class="btn btn-primary btn-xs" ng-file-select ng-model="splashImageFiles">
+                                            <span>&nbsp;Upload Splash Image</span>
+                                        </button>
+                                    </div>
+                                    <div class="imagescell">
+                                        <button id="splashvideoupload" class="btn btn-primary btn-xs" ng-file-select ng-model="splashVideoFiles">
+                                            <span>&nbsp;Upload Splash Video</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div style="height:100%" class="box-body"><p>Please use a square image for the icon image. Otherwise the
-                image will be distorted.</p>
-
-                <div ng-style="{'background-image': getIconImageStyle()}" class="iconimage"></div>
-            </div>
-        </div>
+       </div>
     </div>
 </div>

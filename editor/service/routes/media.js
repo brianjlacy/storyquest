@@ -34,6 +34,9 @@ exports.registerServices = function(config, app) {
 
 exports.getMediaList = function(req, res) {
     var outputDir = path.join(Utils.getProjectDir(req.param("projectId")), "images");
+    if (!fs.existsSync(outputDir)) {
+        fs.mkdirSync(outputDir);
+    }
     var files = fs.readdirSync(outputDir);
     var imageList = [];
     for (var i=0; i<files.length; i++) {
