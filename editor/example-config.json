@@ -3,14 +3,18 @@
     "port": 3000,
     "cookieSecret": "changeme",
     "projectsDir": "projects",
+    "androidBuildDir": "../client-android",
+    "androidArtifactPath": "storyquestclient/build/outputs/apk/storyquestclient-release.apk",
+    "templateDirFromAndroidContext": "../editor/template",
+    "projectsDirFromAndroidContext": "../editor/projects",
+    "artifactsPath": "artifacts",
     "tempDir": "/tmp",
     "logfile": "storyquest.log",
     "exceptionlogfile": "logs/exceptions.log",
+
     "redirectPort": 8080,
     "httpOnly": false,
     "httpPort": 3000,
-
-    "allowedNewUserContexts": [ "sqw2014" ],
 
     "dbHost": "http://localhost",
     "dbPort": 5984,
@@ -23,6 +27,7 @@
 
     "sslKeyFile": "ssl.key",
     "sslCertFile": "ssl.crt",
+    "sslCaFile": "sub.class1.server.ca.pem",
 
     "androidKeystore": "android.keystore",
     "androidKeyStoreAlias": "android.keystore",

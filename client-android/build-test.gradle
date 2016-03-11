@@ -2,3 +2,15 @@
 println 'Message 1'
 sleep(3 * 1000)
 println 'Message 2'
+println 'Message 3'
+sleep(3 * 1000)
+println 'Message 4'
+println 'Message 5'
+sleep(3 * 1000)
+println 'Message 6'
+println 'Message 7'
+sleep(3 * 1000)
+println 'Message 8'
+println 'Message 9'
+sleep(3 * 1000)
+println 'Message 0'

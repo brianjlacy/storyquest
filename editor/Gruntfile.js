@@ -177,6 +177,10 @@ module.exports = function (grunt) {
                 '/fonts',
                 connect.static('./frontend/fonts')
               ),
+              connect().use(
+                  '/artifacts',
+                  connect.static('./artifacts')
+              ),
               require('grunt-connect-proxy/lib/utils').proxyRequest,
               connect.static(appConfig.app)
               /*

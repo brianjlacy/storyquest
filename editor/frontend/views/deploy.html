@@ -8,7 +8,7 @@
                     <td valign="top"><img src="images/html5.png"/></td>
                     <td>
                         <p style="margin:0;padding:0">
-                            <a class="btn btn-primary" href="/api/deployment/web/{{project.data.id}}"><i class="glyphicon glyphicon-download"></i>&nbsp;&nbsp;Download Project Backup Archive</a>
+                            <a class="btn btn-primary" ng-click="buildWeb()" ng-disabled="buildId!=null"><i class="glyphicon glyphicon-download"></i>&nbsp;&nbsp;Create Backup Archive</a>
                         </p>
                     </td>
                 </tr>
@@ -16,115 +16,25 @@
                     <td valign="top"><img src="images/android.png"/></td>
                     <td>
                         <p style="margin:0;padding:0">
-                            <a class="btn btn-primary" href="/api/deployment/android/{{project.data.id}}"><i class="glyphicon glyphicon-cog"></i>&nbsp;&nbsp;Build Android App</a>
+                            <a class="btn btn-primary" ng-click="buildAndroid()" ng-disabled="buildId!=null"><i class="glyphicon glyphicon-cog"></i>&nbsp;&nbsp;Build Android App</a>
                         </p>
                     </td>
                 </tr>
             </table>
         </div>
     </div>
-    <div class="box box-info">
+    <div class="box box-info" style="min-height:50%;height:50%">
         <div class="box-header"><h3 class="box-title">Download Build Artifacts</h3></div>
-        <div class="box-body artifacts" style="height:89%;overflow-y: scroll">
+        <div class="box-body artifacts" style="height:87%;overflow-y: scroll">
             <table class="table table-hover table-condensed">
-                <tr>
-                    <td valign="top" width="20%"><img src="images/android.png"/></td>
-                    <td>Some Project Name</td>
-                    <td>com.example.app</td>
-                    <td>1.0.3 / 42</td>
+                <tr ng-repeat="artifact in artifacts">
+                    <td valign="top" width="7%"><img ng-show="artifact.type==='android'" src="images/android-icon.png"/><img ng-show="artifact.type==='web'" src="images/html5-icon.png"/></td>
+                    <td>{{artifact.label}}</td>
+                    <td>{{artifact.appId}}</td>
+                    <td>{{artifact.versionName}} / {{artifact.versionCode}}</td>
                     <td>
-                        <a class="btn btn-primary btn-xs" href="/api/deployment/web/{{project.data.id}}"><i class="glyphicon glyphicon-download"></i></a>
-                        <a class="btn btn-primary btn-xs" ng-click="openQRDialog('/api/deployment/android/')"><i class="glyphicon glyphicon-qrcode"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td valign="top" width="20%"><img src="images/android.png"/></td>
-                    <td>Some Project Name</td>
-                    <td>com.example.app</td>
-                    <td>1.0.3 / 42</td>
-                    <td>
-                        <a class="btn btn-primary btn-xs" href="/api/deployment/web/{{project.data.id}}"><i class="glyphicon glyphicon-download"></i></a>
-                        <a class="btn btn-primary btn-xs" ng-click="openQRDialog('/api/deployment/android/')"><i class="glyphicon glyphicon-qrcode"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td valign="top" width="20%"><img src="images/android.png"/></td>
-                    <td>Some Project Name</td>
-                    <td>com.example.app</td>
-                    <td>1.0.3 / 42</td>
-                    <td>
-                        <a class="btn btn-primary btn-xs" href="/api/deployment/web/{{project.data.id}}"><i class="glyphicon glyphicon-download"></i></a>
-                        <a class="btn btn-primary btn-xs" ng-click="openQRDialog('/api/deployment/android/')"><i class="glyphicon glyphicon-qrcode"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td valign="top" width="20%"><img src="images/android.png"/></td>
-                    <td>Some Project Name</td>
-                    <td>com.example.app</td>
-                    <td>1.0.3 / 42</td>
-                    <td>
-                        <a class="btn btn-primary btn-xs" href="/api/deployment/web/{{project.data.id}}"><i class="glyphicon glyphicon-download"></i></a>
-                        <a class="btn btn-primary btn-xs" ng-click="openQRDialog('/api/deployment/android/')"><i class="glyphicon glyphicon-qrcode"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td valign="top" width="20%"><img src="images/android.png"/></td>
-                    <td>Some Project Name</td>
-                    <td>com.example.app</td>
-                    <td>1.0.3 / 42</td>
-                    <td>
-                        <a class="btn btn-primary btn-xs" href="/api/deployment/web/{{project.data.id}}"><i class="glyphicon glyphicon-download"></i></a>
-                        <a class="btn btn-primary btn-xs" ng-click="openQRDialog('/api/deployment/android/')"><i class="glyphicon glyphicon-qrcode"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td valign="top" width="20%"><img src="images/android.png"/></td>
-                    <td>Some Project Name</td>
-                    <td>com.example.app</td>
-                    <td>1.0.3 / 42</td>
-                    <td>
-                        <a class="btn btn-primary btn-xs" href="/api/deployment/web/{{project.data.id}}"><i class="glyphicon glyphicon-download"></i></a>
-                        <a class="btn btn-primary btn-xs" ng-click="openQRDialog('/api/deployment/android/')"><i class="glyphicon glyphicon-qrcode"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td valign="top" width="20%"><img src="images/android.png"/></td>
-                    <td>Some Project Name</td>
-                    <td>com.example.app</td>
-                    <td>1.0.3 / 42</td>
-                    <td>
-                        <a class="btn btn-primary btn-xs" href="/api/deployment/web/{{project.data.id}}"><i class="glyphicon glyphicon-download"></i></a>
-                        <a class="btn btn-primary btn-xs" ng-click="openQRDialog('/api/deployment/android/')"><i class="glyphicon glyphicon-qrcode"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td valign="top" width="20%"><img src="images/android.png"/></td>
-                    <td>Some Project Name</td>
-                    <td>com.example.app</td>
-                    <td>1.0.3 / 42</td>
-                    <td>
-                        <a class="btn btn-primary btn-xs" href="/api/deployment/web/{{project.data.id}}"><i class="glyphicon glyphicon-download"></i></a>
-                        <a class="btn btn-primary btn-xs" ng-click="openQRDialog('/api/deployment/android/')"><i class="glyphicon glyphicon-qrcode"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td valign="top" width="20%"><img src="images/android.png"/></td>
-                    <td>Some Project Name</td>
-                    <td>com.example.app</td>
-                    <td>1.0.3 / 42</td>
-                    <td>
-                        <a class="btn btn-primary btn-xs" href="/api/deployment/web/{{project.data.id}}"><i class="glyphicon glyphicon-download"></i></a>
-                        <a class="btn btn-primary btn-xs" ng-click="openQRDialog('/api/deployment/android/')"><i class="glyphicon glyphicon-qrcode"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td valign="top" width="20%"><img src="images/android.png"/></td>
-                    <td>Some Project Name</td>
-                    <td>com.example.app</td>
-                    <td>1.0.3 / 42</td>
-                    <td>
-                        <a class="btn btn-primary btn-xs" href="/api/deployment/web/{{project.data.id}}"><i class="glyphicon glyphicon-download"></i></a>
-                        <a class="btn btn-primary btn-xs" ng-click="openQRDialog('/api/deployment/android/')"><i class="glyphicon glyphicon-qrcode"></i></a>
+                        <a class="btn btn-primary btn-xs" href="{{createWebPath(artifact.artifactWebPath)}}"><i class="glyphicon glyphicon-download"></i></a>
+                        <a class="btn btn-primary btn-xs" ng-click="openQRDialog(artifact.artifactWebPath)"><i class="glyphicon glyphicon-qrcode"></i></a>
                     </td>
                 </tr>
             </table>
@@ -134,32 +44,11 @@
 <div style="height:100%;overflow:hidden" class="col-md-6 deploy">
     <div style="height:100%" class="box box-info">
         <div class="box-header">
-            <h3 class="box-title">Build Progress</h3>
+            <h3 class="box-title"><i class="activityicon fa fa-refresh"></i>&nbsp;&nbsp;Build Progress</h3>
             <button class="btn btn-primary btn-xs pull-right" style="margin-top:10px;margin-right:10px" ng-click="clearConsole()"><i class="glyphicon glyphicon-remove-circle"></i></button>
         </div>
         <div style="height:95%" class="box-body">
-            <pre style="height:100%;font-family:monospace" class="console">
-Message 1
-Message 2
-:help
-
-Welcome to Gradle 2.10.
-
-To run a build, run gradlew
-
-To see a list of available tasks, run gradlew tasks
-
-To see a list of command-line options, run gradlew --help
-
-To see more detail about a task, run gradlew help --task
-
-    BUILD SUCCESSFUL
-
-    Total time: 5.947 secs
-
-    This build could be faster, please consider using the Gradle Daemon: https://docs.gradle.org/2.10/userguide/gradle_daemon.html
-    EXITCODE false
-            </pre>
+            <pre style="height:100%;font-family:monospace" class="console"></pre>
         </div>
     </div>
 </div>
