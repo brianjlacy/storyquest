@@ -59,6 +59,7 @@ function replaceAny(tokens, text) {
     return text;
 }
 
+/*
 function parseStoryQuestArticleML(html) {
     var regex = /\[.+\|[^\]]*\]/g;
     var out = html.match(regex);
@@ -81,6 +82,7 @@ function parseStoryQuestStatement(statement) {
     else
         return statement;
 }
+*/
 
 /**
  * Sideloads the given StoryQuest station.
@@ -109,7 +111,7 @@ function sideloadContent(stationIdx, config, configAsset, callback) {
             var linktext = node[2];
             if (href.lastIndexOf("node:")==0) {
                 node[1].href = "#";
-                node[1].onclick = "alert('HALLO')";
+                node[1].onclick = "console.log('link clicked')";
             }
         } else {
             for (var i=1; i<node.length; i++)
@@ -120,23 +122,37 @@ function sideloadContent(stationIdx, config, configAsset, callback) {
 
     // finalizing rendering
     var html = markdown.renderJsonML(htmlTree);
-    html = parseStoryQuestArticleML(html);
-    contentElem.html(html);
 
-    // register hooks for enabled choices
-    $(".choice.enabled").each(function(idx, elem) {
-        $(elem).hammer().on("tap", function(event) {
-            playButtonSound();
-            toStation($(event.target).attr("data-target"));
+    // parse the QuestML bindings
+    getQuestMLParser(function(questMLParser) {
+        html = questMLParser.parseQuestML(html);
+        contentElem.html(html);
+
+        // register hooks for enabled choices
+        $(".choice.enabled").each(function(idx, elem) {
+            $(elem).hammer().on("tap", function(event) {
+                playButtonSound();
+                toStation($(event.target).attr("data-target"));
+            });
         });
+
+        // register hooks for enabled switches
+        $(".switch.enabled").each(function(idx, elem) {
+            $(elem).hammer().on("tap", function(event) {
+                playButtonSound();
+                model.setFlag($(event.target).attr("data-flag"));
+                $(event.target).removeClass("enabled");
+                $(event.target).addClass("disabled");
+            });
+        });
+
+        // call callback
+        if (callback)
+            callback();
+
+        // finally call onEnter
+        onEnter();
     });
-
-    // call callback
-    if (callback)
-        callback();
-
-    // finally call onEnter
-    onEnter();
 }
 
 $(document).ready(function() {

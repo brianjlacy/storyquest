@@ -1,0 +1,144 @@
+/*
+ * StoryQuest 2
+ *
+ * Copyright (c) 2014 Questor GmbH
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+/*
+ * This is the input file for the parser generator that creates the questml language parser.
+ * This uses pegjs syntax.
+ */
+
+{
+  function extractList(list, index) {
+    var result = new Array(list.length);
+    for (var i = 0; i<list.length; i++) {
+      result[i] = list[i][index];
+    }
+    return result;
+  }
+
+  function uuid() {
+  	function s4() {
+    	return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+  	}
+  	return s4() + s4() + s4() + s4() + s4() + s4() + s4() + s4();
+  }
+}
+
+/* QUESTML COMMANDS */
+
+Content =
+	content:(Command / Expression / Markup)* {
+    	if (Array.isArray(content) && content.length==1)
+        	return content[0];
+     	return content;
+    }
+
+Markup =
+	chars:[^{}]+ { return chars.join("") }
+
+Expression =
+	"{" statement:ExpressionStatement "}" {
+		return {
+        	type: "expression",
+            id: uuid(),
+			body: statement
+		};
+	}
+
+ExpressionStatement =
+	(Sequence / Content)
+
+Sequence =
+	init:SequenceInitializer "|" sequence:SequenceParts "|" {
+		var sequenceType;
+		switch (init) {
+    		case "&": sequenceType = "cycle"; break;
+    		case "!": sequenceType = "once"; break;
+    		case "~": sequenceType = "random"; break;
+			default: sequenceType = "default";
+        }
+        return {
+        	type: "sequence",
+            id: uuid(),
+            mode: sequenceType,
+            content: sequence }
+        }
+
+SequenceInitializer =
+	"&" / "!" / "~" / ""
+
+SequenceParts =
+	list:(_ "|"? _ SequencePart)* { return extractList(list, 3) }
+
+SequencePart =
+	_ chars:[a-z0-9]+ _ { return chars.join(""); }
+
+Command =
+	commandName:CommandStart content:Content commandEnd:CommandEnd {
+		return {
+        	type: "command",
+            id: uuid(),
+			command: commandName,
+			body: content
+		};
+	}
+
+CommandStart =
+	"{" name:CommandName params:CommandParameters? ":" {
+    	if (params)
+	        return { name: name, params:params };
+        else
+	        return { name: name };
+    }
+
+CommandParameters =
+	"(" values:ArgumentList ")" { return values }
+
+ArgumentList =
+	list:(_ ","? _ ParameterValue)* { return extractList(list, 3) }
+
+CommandEnd =
+	"}" { return name; }
+
+ParameterValue =
+	_ chars:[a-zA-Z0-9]+ _ { return chars.join(""); }
+
+CommandName =
+	chars:[a-zA-Z0-9]+ { return chars.join(""); }
+
+Text =
+	chars:[^{}#*,]+  { return chars.join(""); }
+
+/* utility rules */
+
+_ "whitespace" =
+	[ \t\n\r]*
+
+LineTerminator =
+  "\n"
+  / "\r\n"
+  / "\r"
+  / "\u2028" // line spearator
+  / "\u2029" // paragraph separator
+

@@ -26,7 +26,10 @@
     <div class="box box-info" style="min-height:50%;height:50%">
         <div class="box-header"><h3 class="box-title">Download Build Artifacts</h3></div>
         <div class="box-body artifacts" style="height:87%;overflow-y: scroll">
-            <table class="table table-hover table-condensed">
+            <div class="noartifacts" ng-show="!artifacts || artifacts.length==0">
+                <span>No artifacts to download yet</span>
+            </div>
+            <table class="table table-hover table-condensed artifactstable" ng-show="artifacts && artifacts.length>0">
                 <tr ng-repeat="artifact in artifacts">
                     <td valign="top" width="7%"><img ng-show="artifact.type==='android'" src="images/android-icon.png"/><img ng-show="artifact.type==='web'" src="images/html5-icon.png"/></td>
                     <td>{{artifact.label}}</td>

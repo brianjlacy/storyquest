@@ -23,47 +23,161 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+var questMLParser;
+function getQuestMLParser(callback) {
+    if (!questMLParser)
+        $.get( "resources/questml.peg", function( data ) {
+            questMLParser = PEG.buildParser(data);
+            questMLParser.parseQuestML = parseQuestML;
+            console.log("QuestML parser active");
+            if (callback)
+                callback(questMLParser);
+        });
+    else
+        callback(questMLParser);
+}
+
+var parseQuestML = function(html) {
+
+    console.log("Starting QuestML parsing..");
+
+    function parseStatement(statement) {
+        if (typeof statement==="string") {
+            return statement;
+        }
+        else {
+            var result;
+            switch(statement.type) {
+                case "expression":
+                    result = parseQuestMLExpression(statement);
+                    break;
+                case "command":
+                    result = parseQuestMLCommand(statement);
+                    break;
+                case "sequence":
+                    result = parseQuestMLSequence(statement);
+                    break;
+            }
+            return result;
+        }
+    }
+
+    function parseQuestMLExpression(statement) {
+        var id = statement.id;
+        var body = statement.body; // may be array
+
+        var result = "";
+        if (Array.isArray(body))
+            for (var i=0; i<body.length; i++)
+                result += parseStatement(body[i]);
+        else
+            return executeStatement(id, body);
+    }
+
+    function parseQuestMLCommand(statement) {
+        var id = statement.id;
+        var commandName = statement.command.name;
+        var params = statement.command.params; // optional
+        var body = statement.body; // may be array
+        var result = "";
+        if (Array.isArray(body))
+            for (var i=0; i<body.length; i++)
+                result += parseStatement(body[i]);
+        else
+            return executeCommand(id, commandName, params, body);
+    }
+
+    function parseQuestMLSequence(statement) {
+        var id = statement.id;
+        var mode = statement.cycle;
+        var sequenceParts = statement.content;
+        // FIXME
+        return sequenceParts[0];
+    }
+
+    function executeStatement(id, body) {
+        return model.getValue(body);
+    }
+
+    function executeCommand(id, name, params, body) {
+        switch (name) {
+            case "image":
+                return "<div class='image " + params[0] + "'><img src='images/" + body + "'></div>";
+                break;
+            case "box":
+                return "<div class='box " + params[0] + "'>" + body + "</div>";
+                break;
+            case "link":
+                var buttonType = "choice";
+                var flag = "";
+                if (params[1]) {
+                    buttonType = "switch";
+                    flag = params[1].trim();
+                }
+                if (!params[2]) params[2] = "true";
+                if (!params[3]) params[3] = "true";
+                if (params[2]=="" || secureEvalBool(params[2])) {
+                    var state = "enabled";
+                    if (params[3]!="" && !secureEvalBool(params[3]))
+                        state = "disabled";
+                    if (buttonType=="switch" && model.hasFlag(flag))
+                        state = "disabled";
+                    return "<div class='" + buttonType + " " + state + "' data-flag='" + flag + "' data-target='" + params[0] + "' href='#'><i class='fa fa-external-link'></i>&nbsp;&nbsp;" + body + "</div>";
+                } else
+                    return "";
+                break;
+            case "ilink":
+                var buttonType = "choice";
+                var flag = "";
+                if (params[1]) {
+                    buttonType = "switch";
+                    flag = params[1].trim();
+                }
+                if (!params[2]) params[2] = "true";
+                if (!params[3]) params[3] = "true";
+                if (params[2]=="" || secureEvalBool(params[2])) {
+                    var state = "enabled";
+                    if (params[3]!="" && !secureEvalBool(params[3]))
+                        state = "disabled";
+                    if (buttonType=="switch" && model.hasFlag(flag))
+                        state = "disabled";
+                    return "<span class='" + buttonType + " " + state + "' data-flag='" + flag + "' data-target='" + params[0] + "' href='#'>" + body + "</span>";
+                } else
+                    return "";
+                break;
+            case "when":
+                if (params[0]==="true" || model.hasFlag(params[0]))
+                    return body;
+                else
+                    return "";
+                break;
+            case "set":
+                if (params)
+                    model.setValue(body, params[0]);
+                else
+                    model.setFlag(body);
+                return "";
+                break;
+            case "script":
+                return eval(body);
+                break;
+            default:
+                console.log("Unknown QuestML command " + name);
+                return "";
+        }
+    }
+
+    var parsedArray = this.parse(html);
+    var result = "";
+    for (var i=0; i<parsedArray.length; i++) {
+        result += parseStatement(parsedArray[i]);
+    }
+    return result;
+};
+
+/*
 var questML = {
 
-    // Images classes: left, center, right
-    "i": function(tokens) {
-        return replaceAny(tokens, "<div class='image $0'><img src='images/$1'></div>")
-    },
-
-    // Content Boxes classes: left, full, right
-    "b": function(tokens) {
-        // TODO: this is a hack
-        tokens[1] = tokens[1].replace("</p>", "");
-        var result = replaceAny(tokens, "<div class='box $0'>$1</div>")
-        return result.replace("<p></p>", "");
-    },
-
-    // Script Boxes classes: left, full, right
-    "m": function(tokens) {
-        // TODO: this is a hack
-        tokens[1] = tokens[1].replace("</p>", "");
-        var scriptResult = eval(tokens[1]);
-        var result = replaceAny(tokens, "<div class='$0'>" + scriptResult + "</div>")
-        return result.replace("<p></p>", "");
-    },
-
-    // Video classes: left, full, right
-    "v": function(tokens) {
-        return replaceAny(tokens, "<div class='$1'><a href='$2'><div class='videoicon'></div><div class='videotext'><b>Video</b><br> $3</div></a></div>")
-    },
-
-    // link boxes
-    "l": function(tokens) {
-        if (!tokens[2]) tokens[2] = "true";
-        if (!tokens[3]) tokens[3] = "true";
-        if (tokens[2]=="" || secureEvalBool(tokens[2]))
-            if (tokens[3]=="" || secureEvalBool(tokens[3]))
-                return replaceAny(tokens, "<div class='choice enabled' data-target='$0' href='#'><i class='fa fa-external-link'></i>&nbsp;&nbsp;$1</div>");
-            else
-                return replaceAny(tokens, "<div class='choice disabled' data-target='$0' href='#'><i class='fa fa-external-link'></i>&nbsp;&nbsp;$1</div>");
-        else
-            return "";
-    },
 
     // inline links
     "il": function(tokens) {
@@ -78,52 +192,6 @@ var questML = {
             return "";
     },
 
-    // task boxes
-    "t": function(tokens) {
-        if (tokens[5]=="" || secureEvalBool(tokens[5]))
-            return replaceAny(tokens, "<div class='task enabled' data-target='$0'>$4</div>");
-        else
-            return replaceAny(tokens, "<div class='task disabled' data-target='$0'>$4</div>");
-    },
 
-    // condition
-    "c": function(tokens) {
-        if (tokens[0]=="" || secureEvalBool(tokens[0]))
-            return tokens[1];
-        else
-            return tokens[2];
-    },
-
-    // script
-    "s": function(tokens) {
-        return eval(tokens[0]);
-    },
-
-    // decision
-    "k": function(tokens) {
-        if (tokens[0]=="" || secureEvalBool(tokens[0]))
-            return tokens[1];
-        else
-            return tokens[2];
-    },
-
-    // execute
-    "x": function(tokens) {
-        if (!tokens[2]) tokens[2] = "true";
-        if (!tokens[3]) tokens[3] = "true";
-        if (tokens[2]=="" || secureEvalBool(tokens[2]))
-            if (tokens[3]=="" || secureEvalBool(tokens[3]))
-                return replaceAny(tokens, "<div class=\x27exec enabled\x27 onclick=\x27$0;$(this).addClass(\x22disabled\x22);refreshPage()\x27>$1</div>");
-            else
-                return replaceAny(tokens, "<div class=\x27exec disabled\x27>$1</div>");
-        else
-            return "";
-    },
-
-    // script
-    "p": function(tokens) {
-        eval(tokens[0]);
-        return "";
-    }
 };
-
+*/

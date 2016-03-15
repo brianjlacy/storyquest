@@ -27,7 +27,8 @@
     "markdown-browser": "^0.6.0-beta2",
     "hammerjs": "hammer.js#^2.0.6",
     "font-awesome": "fontawesome#^4.5.0",
-    "knockout-mapping": "^2.4.1"
+    "knockout-mapping": "^2.4.1",
+    "pegjs": "^0.9.0"
   },
   "resolutions": {
     "jquery": ">= 1.6.2"
