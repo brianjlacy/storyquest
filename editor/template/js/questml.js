@@ -107,41 +107,46 @@ var parseQuestML = function(html) {
             case "box":
                 return "<div class='box " + params[0] + "'>" + body + "</div>";
                 break;
-            case "link":
-                var buttonType = "choice";
-                var flag = "";
-                if (params[1]) {
-                    buttonType = "switch";
-                    flag = params[1].trim();
-                }
+            case "button":
                 if (!params[2]) params[2] = "true";
                 if (!params[3]) params[3] = "true";
                 if (params[2]=="" || secureEvalBool(params[2])) {
-                    var state = "enabled";
+                    var buttonState = "enabled";
                     if (params[3]!="" && !secureEvalBool(params[3]))
-                        state = "disabled";
-                    if (buttonType=="switch" && model.hasFlag(flag))
-                        state = "disabled";
-                    return "<div class='" + buttonType + " " + state + "' data-flag='" + flag + "' data-target='" + params[0] + "' href='#'><i class='fa fa-external-link'></i>&nbsp;&nbsp;" + body + "</div>";
+                        buttonState = "disabled";
+                    if (model.hasFlag(params[1].trim()))
+                        buttonState = "disabled";
+                    return "<div class='switch " + buttonState + "' data-flag='" + params[1].trim() + "' href='#'>" + body + "</div>";
+                } else
+                    return "";
+                break;
+            case "link":
+                var linkFlag;
+                if (params[1]) linkFlag = params[1].trim();
+                if (!params[2]) params[2] = "true";
+                if (!params[3]) params[3] = "true";
+                if (params[2]=="" || secureEvalBool(params[2])) {
+                    var linkState = "enabled";
+                    if (params[3]!="" && !secureEvalBool(params[3]))
+                        linkState = "disabled";
+                    if (linkFlag && model.hasFlag(linkFlag))
+                        linkState = "disabled";
+                    return "<div class='choice " + linkState + "' data-flag='" + linkFlag + "' data-target='" + params[0] + "' href='#'><i class='fa fa-external-link'></i>&nbsp;&nbsp;" + body + "</div>";
                 } else
                     return "";
                 break;
             case "ilink":
-                var buttonType = "choice";
-                var flag = "";
-                if (params[1]) {
-                    buttonType = "switch";
-                    flag = params[1].trim();
-                }
+                var ilinkFlag;
+                if (params[1]) ilinkFlag = params[1].trim();
                 if (!params[2]) params[2] = "true";
                 if (!params[3]) params[3] = "true";
                 if (params[2]=="" || secureEvalBool(params[2])) {
-                    var state = "enabled";
+                    var ilinkState = "enabled";
                     if (params[3]!="" && !secureEvalBool(params[3]))
-                        state = "disabled";
-                    if (buttonType=="switch" && model.hasFlag(flag))
-                        state = "disabled";
-                    return "<span class='" + buttonType + " " + state + "' data-flag='" + flag + "' data-target='" + params[0] + "' href='#'>" + body + "</span>";
+                        ilinkState = "disabled";
+                    if (ilinkFlag && model.hasFlag(ilinkFlag))
+                        ilinkState = "disabled";
+                    return "<span class='choice " + ilinkState + "' data-flag='" + ilinkFlag + "' data-target='" + params[0] + "' href='#'>" + body + "</span>";
                 } else
                     return "";
                 break;
