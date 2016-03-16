@@ -123,6 +123,7 @@ div#content.default {
 }
 
 div.choice {
+    cursor: pointer;
     display: block;
     width: 100%;
     background-image: linear-gradient(to bottom, #3498db, #2980b9);
@@ -148,6 +149,7 @@ div.choice i {
 }
 
 div.switch {
+    cursor: pointer;
     display: block;
     width: 100%;
     background-image: linear-gradient(to bottom, #a3db80, #07b912);
