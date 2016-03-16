@@ -201,6 +201,14 @@ function uuid() {
     return s4() + s4() + s4() + s4();
 }
 
+function hashNumber(text) {
+    var hash = 0, i = 0, len = text.length;
+    while ( i < len ) {
+        hash  = ((hash << 5) - hash + text.charCodeAt(i++)) << 0;
+    }
+    return (hash + 2147483647) + 1;
+}
+
 /**
  * Generates a random number between 0 and the given range.
  *

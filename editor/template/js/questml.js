@@ -63,19 +63,20 @@ var parseQuestML = function(html) {
     }
 
     function parseQuestMLExpression(statement) {
-        var id = statement.id;
         var body = statement.body; // may be array
-
         var result = "";
-        if (Array.isArray(body))
+        if (Array.isArray(body)) {
             for (var i=0; i<body.length; i++)
                 result += parseStatement(body[i]);
+            return result;
+        }
+        else if (typeof body === "object")
+            return parseStatement(body);
         else
-            return executeStatement(id, body);
+            return executeStatement(body);
     }
 
     function parseQuestMLCommand(statement) {
-        var id = statement.id;
         var commandName = statement.command.name;
         var params = statement.command.params; // optional
         var body = statement.body; // may be array
@@ -84,28 +85,30 @@ var parseQuestML = function(html) {
             for (var i=0; i<body.length; i++)
                 result += parseStatement(body[i]);
         else
-            return executeCommand(id, commandName, params, body);
+            return executeCommand(commandName, params, body);
     }
 
     function parseQuestMLSequence(statement) {
-        var id = statement.id;
         var mode = statement.mode;
         var sequenceParts = statement.content;
-        var sequenceModelId = "sequence_" + id;
+        // note: this results in equal value lists being tracked as same list
+        var sequenceId = hashNumber(sequenceParts.join(""));
+        var sequenceModelId = "sequence_" + sequenceId;
         var currentSequenceIndex = model.getValue(sequenceModelId);
+        if (!currentSequenceIndex)
+            currentSequenceIndex = 0;
         switch (mode) {
-            case "!":
+            case "once":
                 if (currentSequenceIndex<=sequenceParts.length-1) {
-                    currentSequenceIndex++;
-                    model.setValue(sequenceModelId, currentSequenceIndex);
+                    model.setValue(sequenceModelId, currentSequenceIndex+1);
                     return sequenceParts[currentSequenceIndex];
                 }
                 break;
-            case "~":
+            case "random":
                 var random = random(sequenceParts.length-1);
                 return sequenceParts[random];
                 break;
-            case "&":
+            case "cycle":
                 if (currentSequenceIndex>sequenceParts.length-1)
                     currentSequenceIndex = 0;
                 else
@@ -115,18 +118,17 @@ var parseQuestML = function(html) {
                 break;
             default:
                 if (currentSequenceIndex<sequenceParts.length-1) {
-                    currentSequenceIndex++;
-                    model.setValue(sequenceModelId, currentSequenceIndex);
+                    model.setValue(sequenceModelId, currentSequenceIndex+1);
                 }
                 return sequenceParts[currentSequenceIndex];
         }
     }
 
-    function executeStatement(id, body) {
+    function executeStatement(body) {
         return model.getValue(body);
     }
 
-    function executeCommand(id, name, params, body) {
+    function executeCommand(name, params, body) {
         switch (name) {
             case "image":
                 return "<div class='image " + params[0] + "'><img src='images/" + body + "'></div>";

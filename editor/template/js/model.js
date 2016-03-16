@@ -76,8 +76,10 @@ function retrieveModel() {
     if (!model) {
         // retrieve JSON string from system (either native or html5)
         var modelStr = retrieveModelStr();
+        // if modelStr is null or "", knockout fails badly
+        if (!modelStr || modelStr==null || modelStr=="")
+            modelStr = "{}";
         // convert to knockout object, use mapping plugin to get an observable object
-
         model = ko.mapping.fromJSON(modelStr, mapping);
     }
     return model;
