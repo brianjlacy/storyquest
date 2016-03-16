@@ -107,7 +107,7 @@
 
         function loadStationInPreview(type, stationId) {
             console.log("Loading station " + stationId + " / " + type);
-            $("#preview").attr("src", "/api/p/" + projectId + "/station-html/" + type + ".html?station=" + stationId);
+            $("#preview").attr("src", "/api/p/" + projectId + "/index.html?station=" + stationId);
         }
 
         function reloadPreview() {

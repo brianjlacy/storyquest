@@ -38,8 +38,8 @@ editorModule.factory("Node", ["$resource",
     }]
 );
 
-editorModule.controller("editCoreController", ["$scope", "$http", "$timeout", "$interval", "Node", "UserService", "ProjectService", "TypeIcons",
-    function ($scope, $http, $timeout, $interval, Node, UserService, ProjectService, TypeIcons) {
+editorModule.controller("editCoreController", ["$scope", "$http", "$timeout", "$interval", "Node", "UserService", "ProjectService", "TypeIcons", "WebSocketService",
+    function ($scope, $http, $timeout, $interval, Node, UserService, ProjectService, TypeIcons, WebSocketService) {
         pageTitle("Edit", "Add and modify chapters");
         breadcrumb([{title:"Edit", url:"/edit"}, {title:"Chapters", url:""}]);
 
@@ -198,6 +198,7 @@ editorModule.controller("editCoreController", ["$scope", "$http", "$timeout", "$
                 // only enable configuration editor by default, all unknown node types only get configurations
                 $scope.setContentEditorEnabled(false);
                 $scope.setConfigurationEditorEnabled(true);
+                WebSocketService.loadNodeInPreview($scope.node);
             });
         };
 
