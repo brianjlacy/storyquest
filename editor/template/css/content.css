@@ -172,6 +172,11 @@ div.switch i {
     vertical-align: middle;
 }
 
+span.choice {
+    font-weight: bold;
+    cursor: pointer;
+}
+
 /* Alternate Style: fullwidth */
 
 div#content.fullwidth {

@@ -89,10 +89,37 @@ var parseQuestML = function(html) {
 
     function parseQuestMLSequence(statement) {
         var id = statement.id;
-        var mode = statement.cycle;
+        var mode = statement.mode;
         var sequenceParts = statement.content;
-        // FIXME
-        return sequenceParts[0];
+        var sequenceModelId = "sequence_" + id;
+        var currentSequenceIndex = model.getValue(sequenceModelId);
+        switch (mode) {
+            case "!":
+                if (currentSequenceIndex<=sequenceParts.length-1) {
+                    currentSequenceIndex++;
+                    model.setValue(sequenceModelId, currentSequenceIndex);
+                    return sequenceParts[currentSequenceIndex];
+                }
+                break;
+            case "~":
+                var random = random(sequenceParts.length-1);
+                return sequenceParts[random];
+                break;
+            case "&":
+                if (currentSequenceIndex>sequenceParts.length-1)
+                    currentSequenceIndex = 0;
+                else
+                    currentSequenceIndex++;
+                model.setValue(sequenceModelId, currentSequenceIndex);
+                return sequenceParts[currentSequenceIndex];
+                break;
+            default:
+                if (currentSequenceIndex<sequenceParts.length-1) {
+                    currentSequenceIndex++;
+                    model.setValue(sequenceModelId, currentSequenceIndex);
+                }
+                return sequenceParts[currentSequenceIndex];
+        }
     }
 
     function executeStatement(id, body) {
@@ -151,7 +178,7 @@ var parseQuestML = function(html) {
                     return "";
                 break;
             case "when":
-                if (params[0]==="true" || model.hasFlag(params[0]))
+                if (eval(params[0]))
                     return body;
                 else
                     return "";
@@ -179,24 +206,3 @@ var parseQuestML = function(html) {
     }
     return result;
 };
-
-/*
-var questML = {
-
-
-    // inline links
-    "il": function(tokens) {
-        if (!tokens[2]) tokens[2] = "true";
-        if (!tokens[3]) tokens[3] = "true";
-        if (tokens[2]=="" || secureEvalBool(tokens[2]))
-            if (tokens[3]=="" || secureEvalBool(tokens[3]))
-                return replaceAny(tokens, "<span class='choice enabled' data-target='$0'>$1</span>");
-            else
-                return replaceAny(tokens, "<span class='choice disabled' data-target='$0'>$1</span>");
-        else
-            return "";
-    },
-
-
-};
-*/

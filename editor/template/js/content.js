@@ -41,9 +41,9 @@ function switchContent(stationIdx) {
                 $("h1").addClass("accentColor").css("color", loadedStation.accentColor);
                 $("h3").addClass("accentColor").css("color", loadedStation.accentColor);
                 $(".box").css("background-color", loadedStation.boxBackgroundColor);
-                $(".choice.enabled").css("background-image", "linear-gradient(to bottom, " + loadedStation.choiceEnabledGradientStartColor + ", " + loadedStation.choiceEnabledGradientEndColor + ")");
-                $(".choice.disabled").css("background-image", "linear-gradient(to bottom, " + loadedStation.choiceDisabledGradientStartColor + ", " + loadedStation.choiceDisabledGradientEndColor + ")");
-                $(".choice").css("color", loadedStation.choiceTextColor);
+                $("div.choice.enabled").css("background-image", "linear-gradient(to bottom, " + loadedStation.choiceEnabledGradientStartColor + ", " + loadedStation.choiceEnabledGradientEndColor + ")");
+                $("div.choice.disabled").css("background-image", "linear-gradient(to bottom, " + loadedStation.choiceDisabledGradientStartColor + ", " + loadedStation.choiceDisabledGradientEndColor + ")");
+                $("div.choice").css("color", loadedStation.choiceTextColor);
             });
         });
     });
@@ -52,37 +52,6 @@ function switchContent(stationIdx) {
 function escapeRegExp(str) {
     return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
 }
-
-function replaceAny(tokens, text) {
-    for (var i=0; i<tokens.length; i++)
-        text = text.replace(new RegExp("\\$"+i,"g"), tokens[i]);
-    return text;
-}
-
-/*
-function parseStoryQuestArticleML(html) {
-    var regex = /\[.+\|[^\]]*\]/g;
-    var out = html.match(regex);
-    if (typeof out!="undefined" && out!=null)
-        for (var i=0; i<out.length; i++) {
-            var r = new RegExp(escapeRegExp(out[i]), "g");
-            html = html.replace(r, parseStoryQuestStatement(out[i]));
-        }
-    return html;
-}
-
-function parseStoryQuestStatement(statement) {
-    var nominalStmt = statement.substring(1, statement.length-1);
-    var token = nominalStmt.split("|");
-    if (typeof questML[token[0]] != "undefined") {
-        var command = token[0];
-        token.splice(0,1);
-        return questML[command](token);
-    }
-    else
-        return statement;
-}
-*/
 
 /**
  * Sideloads the given StoryQuest station.

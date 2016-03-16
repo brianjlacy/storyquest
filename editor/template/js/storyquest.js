@@ -212,6 +212,17 @@ function random(range) {
 }
 
 /**
+ * Generates a random number between start and the given range.
+ *
+ * @param start
+ * @param range
+ * @returns {number}
+ */
+function random(start, range) {
+    return Math.floor((Math.random() * range)) + start;
+}
+
+/**
  * Returns the text, regardless if it is a language object text or
  * direct text value.
  *

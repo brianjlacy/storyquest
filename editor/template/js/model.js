@@ -34,14 +34,22 @@ var mapping = {
                 value = true;
             if (!this.flags)
                 this.flags = {};
-            this.flags[key] = ko.observable(value);
+            if (typeof this.flags[key] === "function")
+                this.flags[key](value);
+            else
+                this.flags[key] = ko.observable(value);
         };
 
         innerModel.getValue = function(key) {
             if (!this.flags || typeof this.flags[key] == "undefined")
                 return false;
-            else
-                return this.flags[key]();
+            else {
+                var intValue = parseInt(this.flags[key]());
+                if (isNaN(intValue))
+                    return this.flags[key]();
+                else
+                    return intValue;
+            }
         };
 
         innerModel.setFlag = function(flagName) {
