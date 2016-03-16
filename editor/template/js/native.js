@@ -299,7 +299,7 @@ function stopMusicLoop() {
 function playSFXOnceHTML(soundfile) {
     var key = soundfile.replace("/", "_").replace(".", "_");
     if (typeof htmlSFXAudio[key] == "undefined") {
-        htmlSFXAudio[key] = new Audio("../" + soundfile);
+        htmlSFXAudio[key] = new Audio(soundfile);
         $("body").append(htmlSFXAudio[key]);
         $(htmlSFXAudio[key]).on("canplay", function() {
             htmlSFXAudio[key].play();
