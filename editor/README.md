@@ -103,6 +103,11 @@ StoryQuest runs on HTTPS by default. You will need a proper certificate and key
 for running the service. You may also be needing a proper CA certificate. Add
 the location of the SSL setup files to the config.json as usual.
 
+## Running Preconditions
+
+The Android SDK must be available on the path of the user running the server as well as the "keytool"
+utility from the Java SDK.
+
 ## Running using Docker
 
 If you are in an production environment, you should use Docker to start the StoryQuest service.

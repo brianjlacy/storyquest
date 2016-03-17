@@ -16,10 +16,19 @@ a, tr.clickable {
     text-align: center;
     font-weight: bold;
     height: 100%;
+    width: 50%;
     img {
         display: inline-block;
         max-height: 25%;
     }
+}
+
+.projectcover {
+    max-height: 40% !important;
+}
+
+.projecticon {
+    width: 50%;
 }
 
 .imagesrow {
@@ -37,4 +46,53 @@ video {
     position: fixed;
     width: 1px;
     height: 1px;
+}
+
+.keystatusblock {
+    text-align: center;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+.keystatusblock-positive {
+    i {
+        top: 3px;
+        color: green;
+    }
+}
+
+.keystatusblock-negative {
+    i {
+        top: 3px;
+        color: red;
+    }
+}
+
+.inner-addon {
+    position: relative;
+}
+
+.inner-addon .btn {
+    position: absolute;
+    right: 10px;
+    top: 6px;
+}
+
+.warning {
+    margin-bottom: 1em;
+    color: grey;
+}
+
+#modalKey {
+    .fileset {
+        color: black;
+        font-weight: bold;
+    }
+    .filenotset {
+        color: grey;
+    }
+}
+
+#keyPassword, #keyAlias {
+    color: black !important;
 }

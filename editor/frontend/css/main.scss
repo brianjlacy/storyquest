@@ -18,6 +18,17 @@ input.ng-invalid {
   color: #444444 !important;
 }
 
+#modalWait {
+  .modal-body {
+    height: 4em;
+    width: 100%;
+    .progress-bar {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
 // basic stuff
 @import "fonts";
 @import "components/login";

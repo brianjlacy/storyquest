@@ -23,8 +23,8 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-editorModule.controller("mediaCoreController", ["$scope", "$upload", "ProjectService",
-    function ($scope, $upload, ProjectService) {
+editorModule.controller("mediaCoreController", ["$scope", "Upload", "ProjectService",
+    function ($scope, Upload, ProjectService) {
         pageTitle("Media", "Manage your multimedia content");
         breadcrumb([{title:"Media", url:"/media"}, {title:"Library", url:""}]);
 
@@ -38,20 +38,23 @@ editorModule.controller("mediaCoreController", ["$scope", "$upload", "ProjectSer
         });
 
         // initialize asset upload
-        $scope.$watch("files", function() {
+        $scope.uploadFiles = function() {
             if ($scope.files)
-                $scope.upload = $upload.upload({
+                Upload.upload({
                     method: "PUT",
                     url: "/api/media/" + $scope.project.data.id,
-                    data: {},
-                    file: $scope.files
-                }).progress(function(evt) {
-                    // TODO: report proper progress with pace: parseInt(100.0 * evt.loaded / evt.total)
-                    Pace.restart();
-                }).success(function(data, status, headers, config) {
+                    data: {
+                        file: $scope.files
+                    }
+                }).then(function (resp) {
                     $scope.loadMediaList();
+                }, function (resp) {
+                    modalError("Error uploading key. Please try again.");
+                }, function (evt) {
+                    var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+                    Pace.restart();
                 });
-        });
+        };
 
         $scope.loadMediaList = function() {
             $.ajax({
@@ -65,8 +68,6 @@ editorModule.controller("mediaCoreController", ["$scope", "$upload", "ProjectSer
 
         $scope.deleteMedia = function(basename) {
             var mediaId = basename.replace(/.*\//, "");
-            console.log("DELETE " + basename);
-            console.log("mediaId " + mediaId);
             $.ajax({
                 url: "/api/media/" + $scope.project.data.id + "/" + mediaId,
                 type: "DELETE"

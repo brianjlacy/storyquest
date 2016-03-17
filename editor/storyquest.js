@@ -101,7 +101,9 @@ app.get(/^\/api\/p\/([^\/]+)\/(.+)/, global.authTokenOrUser, global.authProject,
         var reqPath = req.params[1];
         var projectPath = path.join(Utils.getProjectDir(projectName), reqPath);
         var templatePath = path.join(__dirname, "template", reqPath);
-        if (fs.existsSync(projectPath)) {
+        if (reqPath=="application.keystore" || reqPath=="storyquest.properties") {
+            res.status(404).send("Resource " + reqPath + " not found.");
+        } else if (fs.existsSync(projectPath)) {
             req.url = projectName + "/" + reqPath;
             projectStatic(req, res, next);
         } else if (fs.existsSync(templatePath)) {

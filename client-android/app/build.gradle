@@ -6,10 +6,10 @@ android {
 
     signingConfigs {
         release {
-            storeFile file(System.getenv("KEYSTORE")?:"../debug.keystore")
-            storePassword System.getenv("STORE_PASSWORD")?System.getenv("STORE_PASSWORD"):"debugKeystore"
-            keyAlias System.getenv("KEY_ALIAS")?System.getenv("KEY_ALIAS"):"debug"
-            keyPassword System.getenv("KEY_PASSWORD")?System.getenv("KEY_PASSWORD"):"debugKeystore"
+            storeFile file(project.KEYSTORE)
+            storePassword project.STORE_PASSWORD
+            keyAlias project.KEY_ALIAS
+            keyPassword project.KEY_PASSWORD
         }
     }
     defaultConfig {
@@ -68,6 +68,8 @@ task mergeStoryQuestResources(type: Copy) {
     from project.STORYQUEST_TEMPLATE_PATH
     from project.STORYQUEST_PROJECT_PATH
     into 'src/main/assets'
+    exclude '**/*.properties'
+    exclude '**/*.keystore'
 }
 preBuild.dependsOn mergeStoryQuestResources
 

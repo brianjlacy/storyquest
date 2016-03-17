@@ -29,6 +29,7 @@ var genicon = require("cordova-gen-icon");
 var async = require("async");
 var propertiesParser = require("properties-parser");
 var imageSize = require('image-size');
+var spawn = require('child_process').spawn;
 
 var Project = require("../model/project.js");
 var User = require("../model/user.js");
@@ -55,6 +56,9 @@ exports.registerServices = function(appConfig, app) {
     app.post("/api/sequence/:projectId", global.authUser, global.authProject, this.storeSequence);
     app.get("/api/settings/:projectId", global.authUser, global.authProject, this.getSettings);
     app.post("/api/settings/:projectId", global.authUser, global.authProject, this.storeSettings);
+    app.post("/api/settings/key/:projectId", global.authUser, global.authProject, this.createAppKey);
+    app.put("/api/settings/key", global.authUser, global.authProject, this.updateAppKey);
+    app.get("/api/settings/key/:projectId", global.authUser, global.authProject, this.getKey);
 };
 
 exports.generateAppIcons = function(destDir, sourceImagePath, done) {
@@ -437,4 +441,96 @@ exports.deleteProject = function(req, res) {
                     return res.json(200, {});
             }));
     });
+};
+
+exports.getKey = function(req, res) {
+    var projectId = req.param("projectId");
+    var keyFile = path.join(Utils.getProjectDir(projectId), "application.keystore");
+    if (fs.existsSync(keyFile)) {
+        res.download(keyFile);
+    } else {
+        return res.json(404, {});
+    }
+};
+
+exports.updateAppKey = function(req, res) {
+    var projectId = req.param("projectId");
+    var outputDir = Utils.getProjectDir(projectId);
+    var alias = req.param("alias");
+    var password = req.param("password");
+    try {
+        if (req.files && req.files.file) {
+            fs.renameSync(req.files.file.path, path.join(outputDir, "application.keystore"));
+        }
+        // update properties file
+        var propertiesFile = path.join(outputDir, "storyquest.properties");
+        var properties = {};
+        if (fs.existsSync(propertiesFile))
+            properties = propertiesParser.parse(fs.readFileSync(propertiesFile, "utf8"));
+        properties.KEYSTORE = config.projectsDirFromAndroidContext + "/" + projectId + "/" + "application.keystore";
+        properties.STORE_PASSWORD = password;
+        properties.KEY_PASSWORD = password;
+        properties.KEY_ALIAS = alias;
+        var propEditor = propertiesParser.createEditor();
+        for (var property in properties)
+            if (Object.hasOwnProperty.call(properties, property))
+                propEditor.set(property, properties[property]);
+        propEditor.save(propertiesFile, function() {
+            return res.json(200, {});
+        });
+    } catch(err) {
+        return res.json(500, {type: "REQUEST_FAILED", "message": err});
+    }
+};
+
+exports.createAppKey = function(req, res){
+    var projectId = req.param("projectId");
+    var outputDir = Utils.getProjectDir(projectId);
+    var alias = "storyquestkey";
+    var password = Utils.uuid();
+    try {
+        // initiate key generation
+        var filePath = path.join(outputDir, "application.keystore");
+        if (fs.existsSync(filePath))
+            fs.unlinkSync(filePath);
+        var child = spawn("keytool", [
+            "-genkey", "-v",
+            "-keystore", "application.keystore",
+            "-alias", alias,
+            "-keyalg", "RSA",
+            "-keysize", "2048",
+            "-validity", "10000",
+            "-storepass", password,
+            "-keypass", password,
+            "-dname", "cn=StoryQuest Developer, ou=None, o=None, c=DE",
+        ], { cwd: outputDir });
+        child.stdout.on("data", function(chunk) {
+            console.log(chunk.toString());
+        });
+        child.stdout.on("close", function(exitCode, signal) {
+            // update properties file
+            var propertiesFile = path.join(outputDir, "storyquest.properties");
+            var properties = {};
+            if (fs.existsSync(propertiesFile))
+                properties = propertiesParser.parse(fs.readFileSync(propertiesFile, "utf8"));
+            properties.KEYSTORE = config.projectsDirFromAndroidContext + "/" + projectId + "/" + "application.keystore";
+            properties.STORE_PASSWORD = password;
+            properties.KEY_PASSWORD = password;
+            properties.KEY_ALIAS = alias;
+            var propEditor = propertiesParser.createEditor();
+            for (var property in properties)
+                if (Object.hasOwnProperty.call(properties, property))
+                    propEditor.set(property, properties[property]);
+            propEditor.save(propertiesFile, function() {
+                return res.json(200, {});
+            });
+        });
+        child.stdout.on("error", function(error) {
+            console.log(error);
+            return res.json(500, {type: "REQUEST_FAILED", "message": "key generation failed."});
+        });
+    } catch (err) {
+        console.log(err);
+        return res.json(500, {type: "REQUEST_FAILED", "message": "key generation startup failed."});
+    }
 };

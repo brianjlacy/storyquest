@@ -24,7 +24,8 @@
  */
 
 var StoryQuestEditorApp = angular.module("StoryQuestEditorApp", [
-    "ngRoute", "ngResource",
+    "ngRoute",
+    "ngResource",
     "editorModule",
     "ngDraggable",
     "loginModule",
@@ -33,7 +34,17 @@ var StoryQuestEditorApp = angular.module("StoryQuestEditorApp", [
     "confirmModule"
 ]);
 
-var editorModule = angular.module("editorModule", [ "ngResource", "ui.ace", "angularSpectrumColorpicker", "ui.sortable", "xeditable", "ngResource", "angularFileUpload", "editorDefaultModule", "graphicalEditorModule" ]);
+var editorModule = angular.module("editorModule", [
+    "ngResource",
+    "ui.ace",
+    "angularSpectrumColorpicker",
+    "ui.sortable",
+    "xeditable",
+    "ngResource",
+    "ngFileUpload",
+    "editorDefaultModule",
+    "graphicalEditorModule"
+]);
 
 StoryQuestEditorApp.config(["$routeProvider",
         function($routeProvider) {

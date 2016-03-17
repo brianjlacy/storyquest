@@ -73,3 +73,9 @@ function modalError(text) {
     $("#modalWarningText").html(text);
     $("#modalWarning").modal();
 }
+
+function modalWait(text) {
+    $("#modalWaitLabel").html(text);
+    $("#modalWait").modal();
+    return $("#modalWait");
+}

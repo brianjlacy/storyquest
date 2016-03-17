@@ -15,6 +15,10 @@ if (propFile.canRead()) {
     project.ext.set("APP_VERSION_CODE", props["APP_VERSION_CODE"])
     project.ext.set("APP_VERSION_NAME", props["APP_VERSION_NAME"])
     project.ext.set("STORYQUEST_ICON_PATH", props["STORYQUEST_ICON_PATH"])
+    project.ext.set("KEYSTORE", props["KEYSTORE"])
+    project.ext.set("STORE_PASSWORD", props["STORE_PASSWORD"])
+    project.ext.set("KEY_PASSWORD", props["KEY_PASSWORD"])
+    project.ext.set("KEY_ALIAS", props["KEY_ALIAS"])
 } else {
     project.ext.set("APP_LABEL", "StoryQuest Client")
     project.ext.set("GOOGLE_SERVICES_ID", "123456")
@@ -24,6 +28,10 @@ if (propFile.canRead()) {
     project.ext.set("APP_VERSION_CODE", 1)
     project.ext.set("APP_VERSION_NAME", "1.0.0")
     project.ext.set("STORYQUEST_ICON_PATH", "../../editor/projects/sampleproject/icon.png")
+    project.ext.set("KEYSTORE", "notset")
+    project.ext.set("STORE_PASSWORD", "notset")
+    project.ext.set("KEY_PASSWORD", "notset")
+    project.ext.set("KEY_ALIAS", "notset")
 }
 
 buildscript {

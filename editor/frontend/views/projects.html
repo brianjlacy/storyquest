@@ -29,6 +29,33 @@
         </div>
     </div>
 </div>
+<div id="modalKey" tabindex="-1" role="dialog" aria-labelledby="modalKey" aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header"><h3 id="modalKeyLabel">Create Project</h3></div>
+            <div class="modal-body">
+                <form role="form" name="keyUploadForm">
+                    <div class="form-group">
+                        <label for="keyAliasInput">Key Alias</label>
+                        <input id="keyAliasInput" type="text" ng-model="appkey.alias" placeholder="Key alias.." class="form-control" required/>
+                    </div>
+                    <div class="form-group">
+                        <label for="keyPasswordInput">Key Password</label>
+                        <input id="keyPasswordInput" type="password" ng-model="appkey.password" placeholder="Key password.." class="form-control" required/>
+                    </div>
+                    <button id="keyFileUpload" class="btn btn-primary btn-sm" ngf-select ngf-keep="false" ng-model="appkey.file" required>
+                        <span>&nbsp;Select Key File</span>
+                    </button>
+                    <span ng-attr-class="{{appkey.file&&'fileset'||'filenotset'}}">&nbsp;&nbsp;{{appkey.file.name||'Not set'}}</span>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button data-dismiss="modal" aria-hidden="true" ng-disabled="keyUploadForm.$invalid" ng-click="doUploadKey()" class="btn btn-danger" >Upload Key</button>
+                <button data-dismiss="modal" aria-hidden="true" class="btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div style="height:30%;margin-bottom:1.5em" class="row">
     <div style="height:100%" class="col-xs-12">
         <div style="height:100%" id="projectsbox" class="box">
@@ -138,6 +165,7 @@
                     <ul class="nav nav-tabs images-tabs">
                         <li class="active"><a href="#iconandcover" data-toggle="tab" class="iconandcover">Icon and Cover Images</a></li>
                         <li><a href="#splashimages" data-toggle="tab" class="splashimages">Splash Images</a></li>
+                        <li><a href="#keysettings" data-toggle="tab" class="keysettings">App Signing Key</a></li>
                     </ul>
                     <div class="tab-content project-content">
                         <div id="iconandcover" class="tab-pane active">
@@ -167,15 +195,31 @@
                                     </div>
                                 </div>
                                 <div class="imagesrow" style="height:10%">
+                                        <div class="imagescell">
+                                            <form name="iconUploadForm">
+                                                <button name="file" id="iconupload" class="btn btn-primary btn-xs"
+                                                        ng-model="iconFile" ngf-pattern="'*.png'"
+                                                        ngf-accept="'*.png'" ngf-dimensions="$width==1024 && $height==1024"
+                                                        ngf-select="uploadIcon()">
+                                                    <span>&nbsp;Upload Icon</span>
+                                                </button>
+                                                <div ng-hide="!iconUploadForm.file.$error.dimensions" style="color:red;font-weight:bold;">
+                                                    Your selected file does not have<br>the required resolution!
+                                                </div>
+                                            </form>
+                                        </div>
                                     <div class="imagescell">
-                                        <button id="iconupload" class="btn btn-primary btn-xs" ng-file-select ng-model="iconFiles">
-                                            <span>&nbsp;Upload Icon</span>
-                                        </button>
-                                    </div>
-                                    <div class="imagescell">
-                                        <button id="coverimageupload" class="btn btn-primary btn-xs" ng-file-select ng-model="coverFiles">
-                                            <span>&nbsp;Upload Cover Image</span>
-                                        </button>
+                                        <form name="coverUploadForm">
+                                            <button name="file" id="coverimageupload" class="btn btn-primary btn-xs"
+                                                    ng-model="coverFile" ngf-pattern="'*.png'"
+                                                    ngf-accept="'*.png'" ngf-dimensions="$width==500 && $height==312"
+                                                    ngf-select="uploadCover()">
+                                                <span>&nbsp;Upload Cover Image</span>
+                                            </button>
+                                        </form>
+                                        <div ng-hide="!coverUploadForm.file.$error.dimensions" style="color:red;font-weight:bold;">
+                                            Your selected file does not have<br>the required resolution!
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -210,16 +254,57 @@
                                 </div>
                                 <div class="imagesrow" style="height:10%">
                                     <div class="imagescell">
-                                        <button id="splashimageupload" class="btn btn-primary btn-xs" ng-file-select ng-model="splashImageFiles">
-                                            <span>&nbsp;Upload Splash Image</span>
-                                        </button>
+                                        <form name="splashImageUploadForm">
+                                            <button name="file" id="splashimageupload" class="btn btn-primary btn-xs"
+                                                    ng-model="splashImageFile" ngf-pattern="'*.jpg'"
+                                                    ngf-accept="'*.jpg'" ngf-dimensions="$width==800 && $height==1280"
+                                                    ngf-select="uploadSplashImage()">
+                                                <span>&nbsp;Upload Splash Image</span>
+                                            </button>
+                                            <div ng-hide="!splashImageUploadForm.file.$error.dimensions" style="color:red;font-weight:bold;">
+                                                Your selected file does not have<br>the required resolution!
+                                            </div>
+                                        </form>
                                     </div>
                                     <div class="imagescell">
-                                        <button id="splashvideoupload" class="btn btn-primary btn-xs" ng-file-select ng-model="splashVideoFiles">
-                                            <span>&nbsp;Upload Splash Video</span>
-                                        </button>
+                                        <form name="splashVideoUploadForm">
+                                            <button name="file" id="splashvideoupload" class="btn btn-primary btn-xs"
+                                                    ng-model="splashVideoFile" ngf-pattern="'*.mp4'"
+                                                    ngf-accept="'*.mp4'"
+                                                    ngf-select="uploadSplashVideo()">
+                                                <span>&nbsp;Upload Splash Video</span>
+                                            </button>
+                                        </form>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div id="keysettings" class="tab-pane">
+                            <div class="keystatusblock keystatusblock-positive" ng-hide="!settings.KEY_ALIAS">
+                                <span class="keystatus"><i class="glyphicon glyphicon-ok-circle"></i>&nbsp;&nbsp;Key is available</span>&nbsp;&nbsp;
+                                <span class="keydownload"><a class="btn btn-default btn-xs" href="/api/settings/key/{{selectedProject.id}}">Download Key</a></span>
+                            </div>
+                            <div class="keystatusblock keystatusblock-negative" ng-hide="settings.KEY_ALIAS">
+                                <span class="keystatus"><i class="glyphicon glyphicon-alert"></i>&nbsp;&nbsp;Key is not available, please upload or create a key.</span>
+                            </div>
+                            <div class="form-group">
+                                <label>Key Alias</label>
+                                <input id="keyAlias" type="text" placeholder="No key alias available" ng-model="settings.KEY_ALIAS" class="disabled form-control"/>
+                            </div>
+                            <div class="form-group">
+                                <label>Key Password</label>
+                                <div class="inner-addon left-addon">
+                                    <button class="btn btn-default btn-xs" ng-click="showKeyPassword()">Show</button>
+                                    <input id="keyPassword" type="text" placeholder="Key password is hidden" ng-model="keyPassword" class="disabled form-control"/>
+                                </div>
+                            </div>
+                            <div class="warning">
+                                Please make sure you always keep a backup of your key, key alias and key password at a safe place, even when you created the key here. <em>If you loose your key or any of the noted data, you will not be able to upload app updates to Google Play anymore.</em>
+                            </div>
+                            <div class="pull-right">
+                                <button class="btn btn-danger" ng-click="createKey()">Create New Key</button>
+                                &nbsp;&nbsp;
+                                <button class="btn btn-danger" ng-click="uploadKey()">Upload Key</button>
                             </div>
                         </div>
                     </div>
