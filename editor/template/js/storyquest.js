@@ -253,6 +253,23 @@ function playButtonSound() {
     playSFXOnce("sounds/button.mp3");
 }
 
+function getDropin(dropinName, dropinParams, body, callback) {
+    jQuery.ajax({
+        url: "resources/" + dropinName + ".dropin",
+        success: function (result) {
+            if (!window._dropinParams) {
+                window._dropinParams = {};
+            }
+            if (!window._dropinBody) {
+                window._dropinBody = {};
+            }
+            window._dropinParams[dropinName] = dropinParams;
+            window._dropinBody[dropinName] = body;
+            callback(result);
+        }
+    });
+}
+
 $(document).ready(function() {
     applyI18n();
     retrieveModel();

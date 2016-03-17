@@ -93,7 +93,7 @@ var parseQuestML = function(html) {
         var sequenceParts = statement.content;
         // note: this results in equal value lists being tracked as same list
         var sequenceId = hashNumber(sequenceParts.join(""));
-        var sequenceModelId = "sequence_" + sequenceId;
+        var sequenceModelId = "_sequence" + sequenceId;
         var currentSequenceIndex = model.getValue(sequenceModelId);
         if (!currentSequenceIndex)
             currentSequenceIndex = 0;
@@ -194,6 +194,15 @@ var parseQuestML = function(html) {
                 break;
             case "script":
                 return eval(body);
+                break;
+            case "dropin":
+                var dropinName = params[0];
+                var dropinParams = params.slice(1, params.length);
+                var dropinId = hashNumber(dropinName + dropinParams.join(""));
+                getDropin(dropinName, dropinParams, body, function(content) {
+                    $("#dropin" + dropinId).html(content);
+                });
+                return "<div class='dropin' id='dropin" + dropinId + "'></div>";
                 break;
             default:
                 console.log("Unknown QuestML command " + name);

@@ -37,6 +37,14 @@ exports.uuid = function() {
     return s4() + s4() + s4() + s4();
 };
 
+exports.hashNumber = function(text) {
+    var hash = 0, i = 0, len = text.length;
+    while ( i < len ) {
+        hash  = ((hash << 5) - hash + text.charCodeAt(i++)) << 0;
+    }
+    return (hash + 2147483647) + 1;
+};
+
 exports.retrieveProjectFile = function(projectPath, reqPath) {
     var projectFile = path.join(projectPath, reqPath);
     var templateFile = path.join(__dirname, ".." , "template", reqPath);
@@ -46,6 +54,22 @@ exports.retrieveProjectFile = function(projectPath, reqPath) {
         return templateFile;
     else
         return undefined;
+};
+
+exports.retrieveDropinFiles = function(projectPath) {
+    var projectDropinDir = path.join(projectPath, "resources");
+    var templateDropinDir = path.join(__dirname, ".." , "template", "resources");
+    var candidates = [];
+    if (fs.existsSync(projectDropinDir))
+        fs.readdirSync(projectDropinDir).forEach(function(filename) {
+            if (filename.substr(filename.length-6)==="dropin")
+                candidates.push(path.join("resources", filename));
+        });
+    fs.readdirSync(templateDropinDir).forEach(function(filename) {
+        if (filename.substr(filename.length-6)==="dropin")
+            candidates.push(path.join("resources", filename));
+    });
+    return candidates;
 };
 
 exports.fileContentDifference = function(projectPath, reqPath, data) {

@@ -28,6 +28,7 @@ editorModule.factory("Frame", ["$resource",
         return $resource("/api/frame/:projectId/:id", {}, {
             get: { method:"GET", isArray:false },
             update: { method:"POST" },
+            create: { method:"PUT", url:"/api/frame/:projectId" },
             resourceList: { method:"GET", url:"/api/frame/:projectId", isArray:true }
         });
     }]
@@ -104,6 +105,20 @@ editorModule.controller("layoutCoreController", ["$scope", "$http", "$interval",
                 $scope.frameResourceEditor.getSession().setMode("ace/mode/" + $scope.frameResource.type);
                 $scope.frameResourceEditor.getSession().setUseWrapMode(false);
             });
+        };
+
+        $scope.newDropin = function() {
+            $("#modalDropin").modal();
+        };
+
+        $scope.createDropin = function(title, description) {
+            Frame.create({projectId: $scope.project.data.id, title: title, description: description},
+                function (newDropin) {
+                    $scope.refreshResourceList();
+                },
+                function () {
+                    modalWarning("Error Creating Dropin", "There was an error creating a new dropin, pleasy try again.");
+                });
         };
 
         $scope.aceFrameLoaded = function(editor) {

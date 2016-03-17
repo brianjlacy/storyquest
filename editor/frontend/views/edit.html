@@ -3,22 +3,14 @@
         <div style="height:100%" class="box box-info">
             <div style="height:5%" class="box-header">
                 <h3 class="box-title">Chapter List</h3>
-                <div style="float:right;margin:1em 1em 0 0">
-                    <input id="filterText" type="text" placeholder="Filter" ng-model="filterText"/>
+                <div style="float:right;margin:0.65em 1em 0 0">
+                    <input style="height:1.7em" id="filterText" type="text" placeholder="Filter" ng-model="filterText"/>
                     <span>&nbsp;&nbsp;</span>
-                    <a style="cursor:pointer">
-                        <span id="tool_node_refresh"
-                              title="Refresh chapters"
-                              ng-click="refreshNodeList()"
-                              class="glyphicon glyphicon-refresh">
-                        </span>
-                    </a>
-                    <span>&nbsp;&nbsp;</span>
-                    <span class="dropdown">
-                        <a href="" id="addchapter" class="dropdown-toggle" ng-click="createNode('default')">
-                            <span id="tool_node_add" title="Add chapter" class="glyphicon glyphicon-plus"></span>
-                        </a>
-                    </span>
+                    <button ng-click="refreshNodeList()" id="tool_node_refresh" class="btn btn-secondary btn-xs"><i
+                            class="glyphicon glyphicon-refresh"></i></button>
+                    <span>&nbsp;</span>
+                    <button ng-click="createNode('default')" id="addchapter" class="btn btn-secondary btn-xs"><i
+                            class="glyphicon glyphicon-plus"></i></button>
                 </div>
             </div>
             <div style="height:95%" class="box-body">

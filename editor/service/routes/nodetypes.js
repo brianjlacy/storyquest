@@ -26,7 +26,6 @@
 var fs = require("fs");
 var path = require("path");
 
-var Project = require("../model/project");
 var preview = require("./liveupdateserver");
 
 var editableFiles = [
@@ -46,39 +45,98 @@ var editableFiles = [
     }
 ];
 
+var dropinSkeleton = "<!--\n%NAME:$TITLE$\n%DESCRIPTION:$DESCRIPTION$\n-->\n";
+
+var dropins = {};
+
 exports.registerServices = function(config, app) {
     app.get("/api/frame/:projectId", authUser, authProject, this.getFrameResourceList);
+    app.put("/api/frame", authUser, authProject, this.createDropin);
     app.get("/api/frame/:projectId/:id", authUser, authProject, this.getFrameAsset);
     app.post("/api/frame/:projectId/:id", authUser, authProject, this.storeFrameAsset);
 };
 
-exports.getResourceEntry = function(id) {
+exports.getResourceEntry = function(id, projectId) {
     for (var i=0; i<editableFiles.length; i++)
         if (editableFiles[i].id===id)
             return editableFiles[i];
+    for (var j=0; j<dropins[projectId].length; j++)
+        if (dropins[projectId][j].id===id)
+            return dropins[projectId][j];
 };
 
 exports.getFrameResourceList = function(req, res) {
-    return res.json(200, editableFiles);
+    var projectId = req.param("projectId");
+    if (!dropins)
+        dropins = {};
+    // refresh dropin list index for this project
+    dropins[projectId] = [];
+    var outputDir = Utils.getProjectDir(req.param("projectId"));
+    var dropinsFileList = Utils.retrieveDropinFiles(outputDir);
+    for (var k=0; k<dropinsFileList.length; k++) {
+        var dropinText = fs.readFileSync(Utils.retrieveProjectFile(outputDir, dropinsFileList[k]), "utf8");
+        var dropinName = dropinText.match(/.*%NAME:(.*)$/gm);
+        var dropinDescription = dropinText.match(/.*%DESCRIPTION:(.*)$/gm);
+        dropins[projectId].push({
+            id: "dropin" + Utils.hashNumber(dropinsFileList[k]),
+            path: dropinsFileList[k],
+            title: ("Dropin: " + dropinName).replace("%NAME:", ""),
+            description: ("" + dropinDescription).replace("%DESCRIPTION:", ""),
+            type: "html"
+        });
+    }
+    var editableFilesWithDropins = [];
+    for (var i=0; i<editableFiles.length; i++)
+        editableFilesWithDropins.push(editableFiles[i]);
+    for (var j=0; j<dropins[projectId].length; j++)
+        editableFilesWithDropins.push(dropins[projectId][j]);
+    return res.json(200, editableFilesWithDropins);
 };
 
 exports.getFrameAsset = function(req, res) {
+    var projectId = req.param("projectId");
     var outputDir = Utils.getProjectDir(req.param("projectId"));
     var id = req.param("id");
-
-    var resourceEntry = exports.getResourceEntry(id);
+    var resourceEntry = exports.getResourceEntry(id, projectId);
     if (!resourceEntry)
         return res.json(500, {type:"REQUEST_FAILED", "message":"no such resource id"});
-
     resourceEntry.data = fs.readFileSync(Utils.retrieveProjectFile(outputDir, resourceEntry.path), "utf8");
     return res.json(200, resourceEntry);
 };
 
+exports.createDropin = function(req, res) {
+    var projectId = req.param("projectId");
+    var outputDir = Utils.getProjectDir(projectId);
+    var title = req.param("title");
+    var description = req.param("description");
+
+    try {
+        var newDropinText = dropinSkeleton.replace("$TITLE$", title).replace("$DESCRIPTION$", description);
+        var dropinPath = path.join("resources", title + ".dropin");
+        fs.writeFileSync(path.join(outputDir, dropinPath), newDropinText);
+        res.json(
+            {
+                id: "dropin" + Utils.hashNumber(dropinPath),
+                path: dropinPath,
+                title: title,
+                description: description,
+                type: "html",
+                data: newDropinText
+            }
+        );
+    } catch (err) {
+        console.log(err);
+        res.status(500);
+        res.json(err);
+    }
+};
+
 exports.storeFrameAsset = function(req, res) {
+    var projectId = req.param("projectId");
     var outputDir = Utils.getProjectDir(req.param("projectId"));
     var id = req.param("id");
 
-    var resourceEntry = exports.getResourceEntry(id);
+    var resourceEntry = exports.getResourceEntry(id, projectId);
     if (!resourceEntry)
         return res.json(500, {type:"REQUEST_FAILED", "message":"no such resource id"});
 
@@ -91,6 +149,8 @@ exports.storeFrameAsset = function(req, res) {
             fs.mkdirSync(path.join(outputDir, "js"));
         if (!fs.existsSync(path.join(outputDir, "css")))
             fs.mkdirSync(path.join(outputDir, "css"));
+        if (!fs.existsSync(path.join(outputDir, "resources")))
+            fs.mkdirSync(path.join(outputDir, "resources"));
 
         // store frame
         // TODO: only write files if they differ from the default template

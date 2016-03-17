@@ -1,0 +1,22 @@
+
+<!--
+    %NAME:Example Dropin
+    %DESCRIPTION:An example dropin to start with.
+
+    Dropin files must match the dropin name (name.dropin) and must be located
+    in the resources folder.
+    Params are available in _dropinParams.<nameOfDropin> as an array.
+    The body of the dropin statement is available in  _dropinBody.<nameOfDropin>.
+    It is encouraged to use id and class names that are guaranteed to be local to
+    the dropin. All script and css tags are global, access to model as usual.
+
+    For the editor: the string after %DESCRIPTION anywhere in the dropin text
+    is used as the description text for the file browser. Same with %NAME.
+-->
+
+<h1 id="_dropin_demo_headline"></h1>
+<h2 id="_dropin_demo_body"></h2>
+<script>
+    $("#_dropin_demo_headline").html("This dropin has the parameters " + _dropinParams.demo.join(","));
+    $("#_dropin_demo_body").html("And the body: " + _dropinBody.demo);
+</script>

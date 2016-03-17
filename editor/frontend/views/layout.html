@@ -1,7 +1,45 @@
+<div id="modalDropin" tabindex="-1" role="dialog" aria-labelledby="modalDropin" aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header"><h3 id="modalDropinLabel">New Dropin</h3></div>
+            <div class="modal-body">
+                <form role="form" name="newDropinForm">
+                    <div class="form-group">
+                        <label for="newDropinTitle">Dropin Name (no spaces, only letters)</label>
+                        <input type="text" ng-model="newDropinTitle"
+                               id="newDropinTitle" placeholder="Give your dropin a descriptive name"
+                               ng-pattern="/^[a-zA-Z]+$/" class="form-control" required/>
+                    </div>
+                    <div class="form-group">
+                        <label for="newDropinDesc">Dropin Description</label>
+                        <input type="text" ng-model="newDropinDesc"
+                               id="newDropinDesc" placeholder="Dropin description"
+                               class="form-control" required/>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button data-dismiss="modal" aria-hidden="true" id="modalDropinDoOk"
+                        ng-click="createDropin(newDropinTitle, newDropinDesc)" class="btn"
+                        ng-disabled="newDropinForm.$invalid">
+                    Ok
+                </button>
+                <button data-dismiss="modal" aria-hidden="true" id="modalDropinDoCancel" class="btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div style="height:100%" class="row">
     <div style="height:100%" class="col-md-4">
         <div style="height:100%" class="box box-info">
-            <div style="height:5%" class="box-header"><h3 class="box-title">Design Elements</h3></div>
+            <div style="height:5%" class="box-header">
+                <h3 class="box-title">Design Elements</h3>
+                <div style="float:right;margin:0.7em 1em 0 0">
+                    <button ng-click="newDropin()" id="newDropinButton" class="btn btn-secondary btn-xs"><i
+                            class="glyphicon glyphicon-plus"></i><span>&nbsp;New Dropin</span></button>
+                </div>
+            </div>
             <div style="height:95%" class="box-body">
                 <div style="width:100%;overflow-y:scroll;height:100%;overflow-x:hidden">
                     <ul id="frametypelist" style="height:95%;white-space:nowrap" class="list-group"></ul>
