@@ -30,19 +30,10 @@
         }
     </style>
     <script>
-        /*
-         input data format:
-         { giveItems: [ "id1", "id2" ], removeItems: [ "id1", "id2" ], playerData: [ { key: "key", value: "value" } ] }
-
-         output data format:
-         { items: itemAPI.items, ownedItems: itemAPI.ownedItems, playerData: [ { key: "key", value: "value", displayName: "displayName" } ]}
-
-         message format:
-         { type: "frame|node|load|getData|setData", node: node, data: see above }
-         */
-
         var projectId = null;
         var authtoken = null;
+
+        var socket = null;
 
         $(document).ready(function() {
 
@@ -64,13 +55,12 @@
                 var url = wssProtocol +"://" +wssHost + wssPort +
                         "/?project=" + projectId + "&authtoken=" + authtoken + "&type=preview";
                 console.log("Connecting to remote socket: " + url);
-                var socket = new eio.Socket(url);
+                socket = new eio.Socket(url);
 
                 socket.on("open", function() {
                     console.log("Connected to socket service.");
                     socket.on("close", function() { console.log("Socket service connection closed."); });
                     socket.on("message", function(data) {
-                        console.log("Received socket message: " + data);
                         var message = JSON.parse(data);
                         if (message.type=="frame")
                             reloadPreview();
@@ -86,7 +76,17 @@
                 });
             });
 
+
+            (function(){
+                var oldLog = console.log;
+                console.log = function (message) {
+                    if (socket)
+                        socket.send(JSON.stringify({ type: "log", message: message }));
+                    oldLog.apply(console, arguments);
+                };
+            })();
         });
+
 
         function queryGetParam(val) {
             var result = "Not found",
@@ -105,9 +105,9 @@
             return document.getElementById("preview").contentWindow;
         }
 
-        function loadStationInPreview(type, stationId) {
-            console.log("Loading station " + stationId + " / " + type);
-            $("#preview").attr("src", "/api/p/" + projectId + "/station-html/" + type + ".html?station=" + stationId);
+        function loadNode(node) {
+            console.log("Loading station " + node.id + " / " + node.type);
+            $("#preview").attr("src", "/api/p/" + projectId + "/index.html?station=" + node.id);
         }
 
         function reloadPreview() {
@@ -121,44 +121,19 @@
                 preview().sideloadContent(node.id, node, node.text[0].text);
         }
 
-        function loadNode(node) {
-            loadStationInPreview(node.type, node.id);
-        }
-
         function getData() {
-            console.log("Retrieving preview data.");
-            var data = { type: "setData", items: preview().itemAPI.items, ownedItems: preview().itemAPI.ownedItems, playerData: []};
-            for (var i=0; i<preview().playerDataAPI.length; i++)
-                data.playerData.push({
-                    key: preview().playerDataAPI[i].key,
-                    value: preview().playerDataAPI[i].getter(),
-                    displayName: preview().playerDataAPI[i].displayName
-                });
-            return data;
+            if (preview().getModelAsJS)
+                return { type: "setData", playerData: preview().getModelAsJS()};
+            else
+                return {};
         }
 
         function setData(socket, data) {
             console.log("Setting preview data: " + JSON.stringify(data));
-            if (preview().itemAPI && data.giveItems)
-                for (var i=0; i<data.giveItems.length; i++)
-                    preview().itemAPI.addItemToCharacter(data.giveItems[i]);
-            if (preview().itemAPI && data.removeItems)
-                for (var k=0; k<data.removeItems.length; k++)
-                    preview().itemAPI.removeItemFromCharacter(data.removeItems[k]);
-            if (preview().playerDataAPI && data.playerData) {
-                for (var j=0; j<data.playerData.length; j++)
-                    if (getSetter(data.playerData[j].key))
-                        getSetter(data.playerData[j].key)(data.playerData[j].value);
+            if (data.playerData && preview().setModelFromJS) {
+                preview().setModelFromJS(data.playerData);
             }
             sendData(socket);
-        }
-
-        function getSetter(attributeName) {
-            if (!preview().playerDataAPI)
-                return null;
-            for (var i=0; i<preview().playerDataAPI.length; i++)
-                if (preview().playerDataAPI[i].key==attributeName)
-                    return preview().playerDataAPI[i].setter;
         }
 
         function sendData(socket) {

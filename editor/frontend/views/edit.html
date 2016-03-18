@@ -60,14 +60,7 @@
                     <sqdefaulteditor id="sqdefaulteditor" ng-hide="node.type!='default'"></sqdefaulteditor>
                 </div>
                 <div id="editconfiguration" class="tab-pane" ng-show="configurationEditorEnabled">
-                    <div style="margin-top:0.5em" class="editmetadata">
-                        <span>Node Color (for your reference, used only in the editor):&nbsp;&nbsp;</span>
-                        <spectrum-colorpicker ng-model="editorNodeColor"
-                                              options="{showPaletteOnly: true, showPalette:true, color: 'black', palette: [ ['black', 'white', 'red', 'yellow', 'green', 'blue', 'violet'] ]}">
-                            &nbsp;
-                        </spectrum-colorpicker>
-                    </div>
-                    <div id="treemajson" class="editjson"></div>
+                    <div id="stationDataEditor"></div>
                 </div>
                 <div id="editonenter" style="height:100%" class="tab-pane">
                     <div ui-ace="{ onLoad: aceOnEnterLoaded, onChange: aceOnEnterChanged }"

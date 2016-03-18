@@ -1,10 +1,9 @@
 <div style="height:100%" class="row">
-    <div style="height:100%" class="col-md-8">
+    <div style="height:100%" class="col-md-3">
         <div style="height:100%" class="nav-tabs-custom">
             <ul class="nav nav-tabs pull-right">
                 <li class="active"><a href="#previewnodes" data-toggle="tab" class="edittab">Chapter List</a></li>
-                <li><a href="#nodetree" data-toggle="tab" id="treetab" class="edittab">Chapter Tree</a></li>
-                <li class="pull-left header"><span>Chapters&nbsp;&nbsp;</span></li>
+                <li class="pull-left header"><span>Jump to Chapter&nbsp;&nbsp;</span></li>
             </ul>
             <div class="tab-content">
                 <div id="previewnodes" class="tab-pane active">
@@ -31,21 +30,23 @@
             </div>
         </div>
     </div>
-    <div style="height:100%" class="col-md-4">
+    <div style="height:100%" class="col-md-9">
         <div style="height:100%" class="nav-tabs-custom">
             <ul class="nav nav-tabs pull-right">
-                <li class="active"><a href="#dataattributes" data-toggle="tab" class="edittab">Attributes</a></li>
-                <li><a href="#datainventory" data-toggle="tab" class="edittab">Inventory</a></li>
-                <li class="pull-left header"><span>Reader Data&nbsp;&nbsp;</span></li>
+                <li class="active"><a href="#dataattributes" data-toggle="tab" class="edittab">Data Storage</a></li>
+                <li><a href="#previewlogbox" data-toggle="tab" class="edittab">Client Log</a></li>
+                <li class="pull-left header"><span>Client Runtime Data&nbsp;&nbsp;</span></li>
             </ul>
             <div id="dataattributescontent" class="tab-content">
                 <div id="dataattributes" class="tab-pane active">
-                    <form role="form">
-                        <div id="dataattributeslist" class="box-body"></div>
-                    </form>
+                    <div id="dataattributeslist" class="box-body">
+                        <div id="previewDataEditor"></div>
+                    </div>
                 </div>
-                <div id="datainventory" class="tab-pane">
-                    <ul id="datainventorylist" class="list-group"></ul>
+                <div id="previewlogbox" style="height:97%" class="tab-pane">
+                    <div id="previewlog" style="height:100%" class="box-body">
+                        <pre style="height:100%;font-family:monospace;overflow:scroll" id="previewConsole" class="console"></pre>
+                    </div>
                 </div>
             </div>
         </div>

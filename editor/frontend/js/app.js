@@ -254,21 +254,21 @@ StoryQuestEditorApp.factory("WebSocketService", ["$http",
                     console.log("Remote socket connected.");
                     onMessageCallback({ type: "connect" });
                     self.socket.on("message", function(data) {
-                        console.log("Socket received message: " + data);
                         var message = JSON.parse(data);
                         onMessageCallback(message);
                     });
                 });
             },
             sendRaw: function(message, callback) {
-                self.socket.send(JSON.stringify(message), callback);
+                if (self.socket)
+                    self.socket.send(JSON.stringify(message), callback);
+                else
+                    console.log("Socket not yet available. Not sending data.");
             },
-            setRuntimeData: function(playerData, giveItems, removeItems, callback) {
+            setRuntimeData: function(playerData, callback) {
                 self.sendRaw({
                     type: "setData",
-                    playerData: playerData,
-                    giveItems: giveItems,
-                    removeItems: removeItems
+                    playerData: playerData
                 }, callback);
             },
             getRuntimeData: function(callback) {

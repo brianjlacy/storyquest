@@ -79,3 +79,12 @@ span.list-group-item.active, span.list-group-item.active:hover, span.list-group-
 .tab-content {
     height: 95%;
 }
+
+#stationDataEditor > div > h3 {
+    display: none;
+}
+
+#stationDataEditor {
+    margin-top:1em;
+    width: 98%;
+}

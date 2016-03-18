@@ -148,6 +148,30 @@ editorModule.controller("editCoreController", ["$scope", "$http", "$timeout", "$
         $scope.aceLangTools.addCompleter($scope.sqCompleter);
         ace.config.set("basePath", "js/");
 
+        // initialize json editor
+        $("#stationDataEditor").jsoneditor({
+            schema: stationconfigSchema,
+            theme: "bootstrap3",
+            iconlib: "bootstrap3",
+            disable_collapse: true
+        }).on("ready", function() {
+            $scope.jsonEditor = $(this);
+        }).on('change',function() {
+            var currentEditorModel = $scope.getEditorModel();
+            if ($scope.node) {
+                for (var i=0; i<propertiesAvailableInConfigEditor.length;i++)
+                    $scope.node[propertiesAvailableInConfigEditor[i]] = currentEditorModel[propertiesAvailableInConfigEditor[i]]
+                $scope.nodeChanged($scope.node);
+            }
+        });
+
+        $scope.filterCopyConfigEditorProperties = function(jsObj) {
+            var result = {};
+            for (var i=0; i<propertiesAvailableInConfigEditor.length;i++)
+                result[propertiesAvailableInConfigEditor[i]] = jsObj[propertiesAvailableInConfigEditor[i]]
+            return result;
+        };
+
         // refresh node list
         $scope.refreshNodeList = function() {
             if ($scope.project.data && $scope.project.data.id)
@@ -181,24 +205,21 @@ editorModule.controller("editCoreController", ["$scope", "$http", "$timeout", "$
                 // on enter/exit data
                 $scope.node = node;
                 $scope.editorNodeColor = $scope.node.nodeColor;
-                // JSON editor
-                var schema = stationconfigSchemaV1[$scope.node.type];
-                var options = { schema: schema, data: $scope.filtercopyNodeConfiguration(node), callbacks: {
-                    change: function(e, changes) {
-                        for (var entry in treema.data)
-                            if (treema.data.hasOwnProperty(entry) && $scope.filterProperties($scope.node, entry))
-                                $scope.node[entry] = treema.data[entry];
-                        nodeChanged($scope.node);
-                    }
-                }};
-                // treema is non-angular
-                var el = $("#treemajson");
-                var treema = el.treema(options);
-                treema.build();
+                // load configuration into json editor
+                $scope.setEditorModel($scope.filterCopyConfigEditorProperties(node));
                 // only enable configuration editor by default, all unknown node types only get configurations
                 $scope.setContentEditorEnabled(false);
                 $scope.setConfigurationEditorEnabled(true);
             });
+        };
+
+        $scope.getEditorModel = function() {
+            return $scope.jsonEditor.jsoneditor('value');
+        };
+
+        $scope.setEditorModel = function(jsObj) {
+            if ($scope.jsonEditor)
+                $scope.jsonEditor.jsoneditor('value', jsObj);
         };
 
         $scope.setContentEditorEnabled = function(enabled) {
@@ -229,40 +250,6 @@ editorModule.controller("editCoreController", ["$scope", "$http", "$timeout", "$
             }, function(error) {
                 modalError("Error while creating new chapter. Please try again. (" + error.data + ")");
             });
-        };
-
-        // filter properties for JSON settings editor
-        $scope.filterPropertyKeys = [];
-        $scope.registerFilterPropertyKeys = function(entries) {
-            $scope.filterPropertyKeys = $scope.filterPropertyKeys.concat(entries);
-        };
-        $scope.registerFilterPropertyKeys([
-            "$promise",
-            "$resolved",
-            "type",
-            "text",
-            "_id",
-            "_revision",
-            "onEnter",
-            "onExit",
-            "technicalName",
-            "id",
-            "x",
-            "y",
-            "title",
-            "nodeColor"
-        ]);
-        $scope.filterProperties = function(node, entry) {
-            return $.inArray(entry, $scope.filterPropertyKeys) == -1;
-        };
-        $scope.filtercopyNodeConfiguration = function(node) {
-            var nodeCopy = JSON.parse(JSON.stringify(node));
-            for (var property in nodeCopy) {
-                if (nodeCopy.hasOwnProperty(property) && !$scope.filterProperties(nodeCopy, property)) {
-                    delete nodeCopy[property];
-                }
-            }
-            return nodeCopy;
         };
 
         // save node title to server, used for editing in list sortable

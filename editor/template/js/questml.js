@@ -94,13 +94,13 @@ var parseQuestML = function(html) {
         // note: this results in equal value lists being tracked as same list
         var sequenceId = hashNumber(sequenceParts.join(""));
         var sequenceModelId = "_sequence" + sequenceId;
-        var currentSequenceIndex = model.getValue(sequenceModelId);
+        var currentSequenceIndex = model.getSequence(sequenceModelId);
         if (!currentSequenceIndex)
             currentSequenceIndex = 0;
         switch (mode) {
             case "once":
                 if (currentSequenceIndex<=sequenceParts.length-1) {
-                    model.setValue(sequenceModelId, currentSequenceIndex+1);
+                    model.setSequence(sequenceModelId, currentSequenceIndex+1, JSON.stringify(sequenceParts));
                     return sequenceParts[currentSequenceIndex];
                 }
                 break;
@@ -113,12 +113,12 @@ var parseQuestML = function(html) {
                     currentSequenceIndex = 0;
                 else
                     currentSequenceIndex++;
-                model.setValue(sequenceModelId, currentSequenceIndex);
+                model.setSequence(sequenceModelId, currentSequenceIndex, JSON.stringify(sequenceParts));
                 return sequenceParts[currentSequenceIndex];
                 break;
             default:
                 if (currentSequenceIndex<sequenceParts.length-1) {
-                    model.setValue(sequenceModelId, currentSequenceIndex+1);
+                    model.setSequence(sequenceModelId, currentSequenceIndex+1, JSON.stringify(sequenceParts));
                 }
                 return sequenceParts[currentSequenceIndex];
         }

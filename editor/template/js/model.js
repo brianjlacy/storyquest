@@ -52,6 +52,26 @@ var mapping = {
             }
         };
 
+        innerModel.setSequence = function(sequenceKey, value, description) {
+            if (typeof value == "undefined")
+                value = 0;
+            if (!this.sequences)
+                this.sequences = {};
+            this.sequences[sequenceKey] =  { value: value, description: description };
+        };
+
+        innerModel.getSequence = function(sequenceKey) {
+            if (!this.sequences || typeof this.sequences[sequenceKey] == "undefined")
+                return 0;
+            else {
+                var intValue = parseInt(this.sequences[sequenceKey].value);
+                if (isNaN(intValue))
+                    return this.sequences[sequenceKey].value;
+                else
+                    return intValue;
+            }
+        };
+
         innerModel.setFlag = function(flagName) {
             this.setValue(flagName, true);
         };
@@ -72,6 +92,20 @@ var mapping = {
     }
 };
 
+function setModelFromJS(jsObject) {
+    model = ko.mapping.fromJS(jsObject, mapping);
+}
+
+function getModelAsJS() {
+    // do not use the mapping plugin serializing here, because it does
+    // only serialize properties that it mapped in the first place!
+    var modelObj = ko.toJS(model);
+    // slight hack, delete the mapping metadata so that it doesn't
+    // interfere with de-serializing later.
+    delete modelObj.__ko_mapping__;
+    return modelObj;
+}
+
 function retrieveModel() {
     if (!model) {
         // retrieve JSON string from system (either native or html5)
@@ -80,14 +114,13 @@ function retrieveModel() {
         if (!modelStr || modelStr==null || modelStr=="")
             modelStr = "{}";
         // convert to knockout object, use mapping plugin to get an observable object
-        model = ko.mapping.fromJSON(modelStr, mapping);
+        var modelObj = JSON.parse(modelStr);
+        setModelFromJS(modelObj);
     }
     return model;
 }
 
 function storeModel() {
-    // do not use the mapping plugin serializing here, because it does
-    // only serialize properties that it mapped in the first place!
-    var modelStr = ko.toJSON(model);
+    var modelStr = ko.toJSON(getModelAsJS());
     storeModelStr(modelStr);
 }

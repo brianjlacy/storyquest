@@ -18,3 +18,27 @@ a.list-group-item:hover {
 .owneditementry {
     background: #b3d0e9;
 }
+
+#previewDataEditor {
+    margin-top: 1em;
+}
+
+#previewDataEditor > div > h3 {
+    margin-top: 1em;
+    display:none;
+}
+
+#previewDataEditor > div > div.well.well-sm > div > div > div:nth-child(1) > div > h3 {
+    margin-top: 0;
+}
+
+.previewlogbox {
+    height: 97%;
+}
+
+.previewlog {
+    height: 100%;
+    pre {
+        height: 100%;
+    }
+}

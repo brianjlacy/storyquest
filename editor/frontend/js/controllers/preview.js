@@ -26,31 +26,95 @@
 editorModule.controller("previewCoreController", [
     "$scope", "$http", "$interval", "Node", "UserService", "ProjectService", "WebSocketService",
     function ($scope, $http, $interval, Node, UserService, ProjectService, WebSocketService) {
-        pageTitle("Preview", "Try your book");
-        breadcrumb([{title:"Preview", url:"/preview"}, {title:"Chapters", url:""}]);
+        pageTitle("Debug", "Test and debug your book");
+        breadcrumb([{title:"Preview", url:"/preview"}, {title:"Debug", url:""}]);
 
         $scope.user = UserService;
         $scope.project = ProjectService;
+
+        $scope.defaultModelSchema = {
+            "title": "Preview Runtime Data",
+            "type": "object",
+            "options": {
+                "disable_properties": true,
+                "disable_collapse": true,
+                "disable_edit_json": true
+            },
+            "properties": {
+                "flags": {
+                    "type": "object",
+                    "title": "Flags and Values",
+                    "description": "This section contains flag and value states.",
+                    "options": {
+                        "collapsed": true,
+                        "disable_properties": false,
+                        "disable_collapse": false,
+                        "disable_edit_json": true
+                    },
+                    "format": "grid",
+                    "patternProperties": {
+                        "^.*$": {
+                            "type": "string"
+                        }
+                    }
+
+                },
+                "sequences": {
+                    "type": "object",
+                    "title": "Sequences",
+                    "description": "This section contains the sequence states. Each sequence contains a value indicating the current index of the sequence (staring with zero) and a description field. that describes the original sequence the entry refers to. Please note that random sequences are not contained in this section as they do not track state.",
+                    "options": {
+                        "collapsed": true,
+                        "disable_properties": true,
+                        "disable_collapse": false,
+                        "disable_edit_json": true
+                    },
+                    "patternProperties": {
+                        "^_sequence.*$": {
+                            "headerTemplate": "{{ self.description }}",
+                            "type": "object",
+                            "options": {
+                                "collapsed": true,
+                                "disable_properties": true,
+                                "disable_collapse": false,
+                                "disable_edit_json": true
+                            },
+                            "properties" : {
+                                "description": {
+                                    "type": "string",
+                                    "title": "Original sequence statement",
+                                    "options": {
+                                        "hidden": true
+                                    }
+                                },
+                                "value": {
+                                    "type": "number",
+                                    "title": "Current sequence index"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "required": ["flags", "sequences"]
+        };
 
         // initialize current project
         $scope.$watch("project.data.id", function() {
             if ($scope.project.data.id) {
                 // load nodelist
                 $scope.refreshPreviewNodeList();
-
-                // show tree
-                //$scope.showTree();
-
-                // store if the preview data has initialized
-                $scope.previewDataAvailable = false;
-
                 // connect to preview via WSS and server
                 WebSocketService.connect($scope.user.data.authtoken, $scope.project.data.id,
                     function(message) {
-                        console.log("Received message: " + JSON.stringify(message));
-                        if (message.type==="connect")
-                            // refresh player data
-                            $scope.refreshPreviewData();
+                        if (message.type==="connect") {
+                            console.log("Preview connected..");
+                            // start the preview update interval
+                            // FIXME: stop this job when the beta tab is left
+                            $scope.dataRefreshJob = $interval(function() {
+                                WebSocketService.getRuntimeData();
+                            }, 2000);
+                        }
                         else
                             $scope.handlePreviewMessage(message);
                     }
@@ -65,126 +129,65 @@ editorModule.controller("previewCoreController", [
         $(".nav-tabs").click(function (e) {
             e.preventDefault();
             $(this).tab("show");
-            // at least in chrome, the tree is not displayed without a forced reload
-            // must be an issue with iFrames using display:none initially.
-            // Force the reload on tab click
-            // FIXME: this should only happen when the tree tab is klicked. Otherwise this results in errors when the tabs are switched fast!
-            $scope.showTree($scope, Node);
         });
 
-        $scope.openTreeWindow = function() {
-            window.open("/api/nodetree/" + $scope.project.data.id + "?window=true", null, "status=no,toolbar=no,menubar=no,location=no");
+        // initialize json editor
+        $("#previewDataEditor").jsoneditor({
+            schema: $scope.defaultModelSchema,
+            theme: "bootstrap3",
+            iconlib: "bootstrap3",
+            disable_collapse: true
+        }).on("ready", function() {
+            $scope.jsonEditor = $(this);
+        }).on('change',function() {
+            $scope.jsonEditorChanged();
+        });
+
+        $scope.getEditorModel = function() {
+            return $scope.jsonEditor.jsoneditor('value');
         };
 
-        $scope.handlePreviewMessage = function(message) {
-            if (message.type=="setData") {
-                $scope.resetDataAttributeUI();
-                $scope.previewDataAvailable = true;
-                $scope.previewData = message;
-                $scope.previewData.giveItems = [];
-                $scope.previewData.removeItems = [];
-                for (var i=0; i<message.playerData.length; i++) {
-                    $scope.addDataAttributeToUI(message.playerData[i].displayName, message.playerData[i].key, message.playerData[i].value);
-                }
-                $scope.refreshItemList(message.items, message.ownedItems);
-            }
-            console.log("RECEIVED MESSAGE: " + JSON.stringify(message));
-        };
-
-        $scope.addDataAttributeToUI = function(name, attribute, value) {
-            // FIXME: use angular tempating for this - check also if the nodelists could be made using angular
-            $("#dataattributeslist").append("<div class='form-group'>" +
-            "<label for='"+ attribute + "'>" + name + "</label>" +
-            "<input type='text' class='form-control' id='" + attribute + "' placeholder='Enter Value' value='" + value + "'>" +
-            "</div>");
-            $("#" + attribute).change(function() {
-                for (var i=0; i<$scope.previewData.playerData.length; i++)
-                    if ($scope.previewData.playerData[i].key==attribute)
-                        $scope.previewData.playerData[i].value = $(this).val();
-                $scope.sendPreviewData();
-            });
-        };
-
-        $scope.resetDataAttributeUI = function() {
-            $("#dataattributeslist").empty();
-        };
-
-        // giveItems array of ids
-        // removeItems array of ids
-        // attributeData array of {key, value}
-        $scope.sendPreviewData = function() {
-            WebSocketService.setRuntimeData($scope.previewData.playerData, $scope.previewData.giveItems, $scope.previewData.removeItems);
-        };
-
-        $scope.refreshItemList = function(items, ownedItems) {
-            $("#datainventorylist").empty();
-            var html = "";
-            // FIXME: uses only de lang field!
-            for (var i=0; i<items.length; i++) {
-                var owned = "";
-                for (var j=0; j<ownedItems.length; j++)
-                    if (items[i].id==ownedItems[j].id)
-                        owned = "<div class='owneditem'>OWNED</div>";
-                html="<a data-itemid='" + items[i].id + "' class='list-group-item " + (owned.length>0?"owneditementry":"") + "'>"
-                + "<span class='glyphicon glyphicon-tower' style='font-weight:bold'></span>&nbsp;&nbsp;&nbsp;"
-                + items[i].name.de
-                + " - "
-                + items[i].desc.de
-                + owned
-                + "</a>"
-                + html;
-            }
-            $("#datainventorylist").html(html);
-            $("#datainventorylist .list-group-item")
-                .on("click", function(e) {
-                    var itemId = $(this).attr("data-itemid");
-                    for (var i=0; i<$scope.previewData.ownedItems.length; i++)
-                        if ($scope.previewData.ownedItems[i].id==itemId && $scope.previewData.removeItems.indexOf(itemId)==-1)
-                            $scope.previewData.removeItems.push(itemId);
-                        else if ($scope.previewData.giveItems.indexOf(itemId)==-1)
-                            $scope.previewData.giveItems.push(itemId);
-                    $scope.sendPreviewData();
-                });
+        $scope.setEditorModel = function(jsObj) {
+            if ($scope.jsonEditor)
+                $scope.jsonEditor.jsoneditor('value', jsObj);
         };
 
         $scope.refreshPreviewNodeList = function() {
             if ($scope.project.data && $scope.project.data.id)
-            $http({method: "GET", url: "/api/nodelist/" + $scope.project.data.id}).
+                $http({method: "GET", url: "/api/nodelist/" + $scope.project.data.id}).
                 success(function(nodes, status, headers, config) {
                     $scope.nodelist = nodes;
                     if ($scope.nodelist.length>0)
                         $scope.previewNode(nodes[nodes.length-1].id);
                 }).
                 error(function(data, status, headers, config) {
-                    modalError("Error " + status + " while reading data. Please try again.");
+                        modalError("Error " + status + " while reading data. Please try again.");
+                    }
+                );
+        };
+
+        $scope.handlePreviewMessage = function(message) {
+            if (message.type=="setData") {
+                var modelData = message.playerData;
+                if ($scope.jsonEditor && modelData && JSON.stringify($scope.getEditorModel())!=JSON.stringify(modelData)) {
+                    console.log("Updated model data available from preview, updating editor..");
+                    $scope.setEditorModel(modelData);
                 }
-            );
+            } else if (message.type=="log") {
+                var div = document.getElementById("previewConsole");
+                div.innerHTML = div.innerHTML + message.message + "\n";
+            }
         };
 
-        $scope.showTree = function() {
-            // load content
-            $("#treeframe").attr("src", "/api/nodetree/" + $scope.project.data.id);
-
-            // register listener with iFrame
-            $("#treeframe").load(function () {
-                setTimeout(function() {
-                    document.getElementById("treeframe").contentWindow.setListener(function(nodeId) {
-                        $scope.previewNode(nodeId);
-                    });
-                }, 1000);
-            });
-        };
-
-        $scope.refreshPreviewData = function() {
-            $interval(function() {
-                if (!$scope.previewDataAvailable)
-                    WebSocketService.getRuntimeData();
-            }, 2000);
+        $scope.jsonEditorChanged = function() {
+            console.log("Preview data changed, sending to previews.");
+            if ($scope.jsonEditor)
+                WebSocketService.setRuntimeData($scope.getEditorModel());
         };
 
         $scope.previewNode = function(nodeId) {
             Node.get({ projectId: $scope.project.data.id, nodeIdOrType: nodeId}, function(node) {
-                console.log("LOAD IN PREVIEW: " + nodeId + " / " + node.type);
+                console.log("Loading station " + nodeId + " in preview..");
                 $scope.node = node;
                 WebSocketService.loadNodeInPreview($scope.node);
             });
