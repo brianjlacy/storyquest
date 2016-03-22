@@ -274,6 +274,9 @@ StoryQuestEditorApp.factory("WebSocketService", ["$http",
             getRuntimeData: function(callback) {
                 self.sendRaw({ type: "getData" }, callback);
             },
+            execInPreview: function(command, callback) {
+                self.sendRaw({ type: "exec", command: command }, callback);
+            },
             loadNodeInPreview: function(node, callback) {
                 self.sendRaw({
                     type: "load",

@@ -80,7 +80,7 @@ exports.getFrameResourceList = function(req, res) {
         dropins[projectId].push({
             id: "dropin" + Utils.hashNumber(dropinsFileList[k]),
             path: dropinsFileList[k],
-            title: ("Dropin: " + dropinName).replace("%NAME:", ""),
+            title: ("Dropin (" + dropinsFileList[k].replace("resources/", "").replace(".dropin", "") + "): " + dropinName).replace("%NAME:", ""),
             description: ("" + dropinDescription).replace("%DESCRIPTION:", ""),
             type: "html"
         });

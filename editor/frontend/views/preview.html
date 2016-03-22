@@ -44,6 +44,10 @@
                     </div>
                 </div>
                 <div id="previewlogbox" style="height:97%" class="tab-pane">
+                    <div class="consolepromptcontainer">
+                        <span class="consolecaret">&gt;</span>
+                        <input type="text" class="consoleprompt" ng-keydown="onConsoleKey($event)" ng-model="consolePrompt">
+                    </div>
                     <div id="previewlog" style="height:100%" class="box-body">
                         <pre style="height:100%;font-family:monospace;overflow:scroll" id="previewConsole" class="console"></pre>
                     </div>

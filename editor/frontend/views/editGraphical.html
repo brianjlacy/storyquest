@@ -1,9 +1,10 @@
 <div style="height:100%" class="row">
-    <span class="drag-object" ng-repeat="type in project.data.nodetypes" style="background-color: #cccccc; border-radius: 1em;">
-        {{type}}&nbsp
-        <span ng-drag="true" ng-drag-data="type" ></span>
-    </span>
-    <div ng-drop="true" ng-drop-success="onDropComplete($data,$event)">
+    <div class="graphedit-menu">
+        <button ng-drag="true" ng-drag-data="type" class="btn btn-xs" ng-repeat="type in project.data.nodetypes">
+            <i class="glyphicon glyphicon-plus" style="top:1px"></i>&nbsp;&nbsp;Drag to create new Chapter
+        </button>
+    </div>
+    <div ng-drop="true" ng-drop-success="onDropComplete($data, $event)">
         <sqgraphicaleditor configure-node="configureNode(nodeId)"
                            configure-script-on-exit="onExitNode(nodeId)"
                            configure-script-on-enter="onEnterNode(nodeId)"
@@ -11,98 +12,54 @@
                            edit-node="editNode(nodeId)"
                            open-node="openNode(nodeId)"></sqgraphicaleditor>
     </div>
+
     <div ng-drag-clone="">
         {{clonedData.name}}
     </div>
-    <div id="modalConfiguration" tabindex="-1" role="dialog" aria-labelledby="modalConfiguration" aria-hidden="true" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 id="modalConfigurationLabel">Configuration</h3>
-                </div>
-                <div class="modal-body">
-                    <div style="margin-top:0.5em" class="editmetadata">
-                        <span>Node Color (for your reference, used only in the editor):&nbsp;&nbsp;</span>
-                        <spectrum-colorpicker ng-model="node.nodeColor"
-                                              on-change="changeNodeColor(color)"
-                                              options="{showPaletteOnly: true, showPalette:true, color: 'black', palette: [ ['black', 'white', 'red', 'yellow', 'green', 'blue', 'violet'] ]}">
-                            &nbsp;
-                        </spectrum-colorpicker>
-                        <div id="treemajson" class="editjson"></div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button data-dismiss="modal" aria-hidden="true" id="modalConfigurationDoCancel" class="btn">Finish</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <div id="modalEditOnEnter" tabindex="-1" role="dialog" aria-labelledby="modalEditOnEnter" aria-hidden="true" class="modal fade" >
-        <div class="modal-dialog" style="height: 85%">
-            <div class="modal-content" style="height: 100%">
-                <div class="modal-header">
-                    <h3 id="modalEditOnEnterLabel">Script on Enter</h3>
-                </div>
-                <div class="modal-body" style="height: 70%">
-                    <div ui-ace="{ onLoad: aceOnEnterLoaded, onChange: aceOnEnterChanged }"
-                         ng-model="node.onEnter"></div>
-                </div>
-                <div class="modal-footer">
-                    <button data-dismiss="modal" aria-hidden="true" id="modalEditOnEnterDoCancel" class="btn">Finish</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="modalEditOnExit" tabindex="-1" role="dialog" aria-labelledby="modalEditOnExit" aria-hidden="true" class="modal fade" >
-        <div class="modal-dialog" style="height: 85%">
-            <div class="modal-content" style="height: 100%">
-                <div class="modal-header">
-                    <h3 id="modalEditOnEnterLabel">Script on Exit</h3>
-                </div>
-                <div class="modal-body" style="height: 70%">
-                    <div id="editonexit" style="height:100%" class="tab-pane">
-                        <div ui-ace="{ onLoad: aceOnExitLoaded, onChange: aceOnExitChanged }" ng-model="node.onExit"></div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button data-dismiss="modal" aria-hidden="true" id="modalEditOnEnterDoCancel" class="btn">Finish</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="modalContent" tabindex="-1" role="dialog" aria-labelledby="modalContent" aria-hidden="true" class="modal fade" >
+    <div id="modalContent-graph" tabindex="-1" role="dialog" aria-labelledby="modalContent" aria-hidden="true" class="modal fade" >
         <div class="modal-dialog" style="height: 90%; width: 90%">
             <div class="modal-content" style="height: 100%">
-                <div class="modal-header">
-                    <h3 id="modalContent">Content</h3>
-                </div>
-                <div class="modal-body" style="height: 75%">
-                    <sqbookeditor id="sqbookeditor" ng-hide="node.type!='book'"></sqbookeditor>
-                    <sqwebeditor id="sqwebeditor" ng-hide="node.type!='web'"></sqwebeditor>
-                    <sqyoutubeeditor id="sqyoutubeeditor" ng-hide="node.type!='youtube'"></sqyoutubeeditor>
-                    <sqgeoeditor id="sqgeoeditor" ng-hide="node.type!='geo'"></sqgeoeditor>
-                    <sqbareboneeditor id="sqbareboneeditor" ng-hide="node.type!='barebone'"></sqbareboneeditor>
-                </div>
-                <div class="modal-footer">
-                    <button data-dismiss="modal" aria-hidden="true" id="modalContent" class="btn">Finish</button>
+                <div class="modal-body" style="height:100%">
+                    <div style="height:100%" class="nav-tabs-custom">
+                        <ul class="nav nav-tabs pull-right edit-header">
+                            <li class="active"><a href="#editcontent-graph" data-toggle="tab" class="edittab">Text</a></li>
+                            <li><a href="#editconfiguration-graph" data-toggle="tab" class="edittab">Configuration</a></li>
+                            <li><a href="#editonenter-graph" data-toggle="tab" class="edittab">Script on Enter</a></li>
+                            <li><a href="#editonexit-graph" data-toggle="tab" class="edittab">Script on Leave</a></li>
+                            <li class="pull-left header">
+                                <div class="input-group" style="display:inline-block">
+                                    <input type="text" class="form-control" ng-model="node.title" ng-change="nodeChanged(node)" style="width:35em;font-size: 0.8em">
+                                    <button ng-click="deleteNode()" class="btn btn-danger" style="margin-left:0.5em;margin-right:0.5em;margin-bottom:6px"><i class="glyphicon glyphicon-remove-circle"></i></button>
+                                </div>
+                                <span class="editorsynced" ng-show="editorSyncReady" style="vertical-align: top;display: inline-block">
+                                    <i style="color:green;opacity:0.5;font-size:0.7em" class="ion-checkmark-circled"></i>
+                                    <span style="color:#999;font-size:0.7em">&nbsp;Changes saved</span>
+                                </span>
+                                <span style="display:none" class="editorsyncing" ng-show="!editorSyncReady" style="vertical-align: top;display: inline-block">
+                                    <i style="color:green;opacity:0.5;font-size:0.7em" class="ion-looping"></i>
+                                    <span style="color:#999;font-size:0.7em">&nbsp;Saving..</span>
+                                </span>
+                            </li>
+                        </ul>
+                        <div class="tab-content edit-content">
+                            <div id="editcontent-graph" class="tab-pane active" style="height:100%">
+                                <sqdefaulteditor id="sqdefaulteditor" ng-hide="node.type!='default'"></sqdefaulteditor>
+                            </div>
+                            <div id="editconfiguration-graph" class="tab-pane" style="height:100%">
+                                <div id="stationDataEditor-graph"></div>
+                            </div>
+                            <div id="editonenter-graph" class="tab-pane" style="height:100%">
+                                <div ui-ace="{ onLoad: aceOnEnterLoaded, onChange: aceOnEnterChanged }" ng-model="node.onEnter"></div>
+                            </div>
+                            <div id="editonexit-graph" class="tab-pane" style="height:100%">
+                                <div ui-ace="{ onLoad: aceOnExitLoaded, onChange: aceOnExitChanged }" ng-model="node.onExit"></div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
 </div>
-<style>
-    html{
-        min-width: 3500px;
-    }
-    html, body {
-        overflow: auto!important;
-        min-height: 2500px!important;
-    }
-    div#diagram svg {
-        width: 3250px;
-        height: 2325px;
-    }
-</style>

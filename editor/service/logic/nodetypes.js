@@ -32,7 +32,7 @@ var nodeSkeletons = {
     default: {
         "id": "001",
         "type": "default",
-        "title": "Internal Editor Title",
+        "title": "Chapter Title",
         "style": "fullwidth",
         "isStartNode": false,
         "backgroundImage": "background.jpg",
@@ -69,7 +69,23 @@ NodeTypes.prototype.parseDefaultNodeConnections = function(configDir, node) {
     var result = [];
     // FIXME: works only for DE lang text
     var text = fs.readFileSync(path.join(configDir, node.text.de), "utf8");
-    var matches = text.match(/\[l[^\\\]]*\]/g);
+
+
+    ////NEW
+    var re = /\{link\(([^)]+)\):(.*)\}/g;
+    var str = 'Lahlah\n\n{link(002, someKey, true, true):Go to 002}\n\nblahfasel\n\n{link(003):Go to 003}\n\nblahblubb';
+    var m;
+
+    while ((m = re.exec(str)) !== null) {
+        if (m.index === re.lastIndex) {
+            re.lastIndex++;
+        }
+        // View your result using the m-variable.
+        // eg m[0] etc.
+    }
+    //NEW END
+
+    var matches = text.match(/\{link\(([^)]+)\):(.*)\}/g);
     if (matches)
         for (var i=0; i<matches.length; i++) {
             var tokens = matches[i].split("|");
@@ -114,11 +130,11 @@ NodeTypes.prototype.createNode = function(type, configDir) {
     if (nodeSkeleton!=null) {
         nodeSkeleton.id = newId;
         nodeSkeleton.type = type;
-        fs.writeFileSync(configDir + "/" + newId + ".json", JSON.stringify(nodeSkeleton));
         if (type=="default") {
             nodeSkeleton.text.de = newId + "_de.txt";
             fs.writeFileSync(configDir + "/" + nodeSkeleton.text.de, "Chapter Text starts here...");
         }
+        fs.writeFileSync(configDir + "/" + newId + ".json", JSON.stringify(nodeSkeleton));
         return nodeSkeleton;
     } else
         return null;

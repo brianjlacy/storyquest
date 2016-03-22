@@ -72,6 +72,8 @@
                             sendData(socket);
                         else if (message.type=="setData")
                             setData(socket, message);
+                        else if (message.type=="exec")
+                            execConsole(socket, message);
                     });
                 });
             });
@@ -134,6 +136,10 @@
                 preview().setModelFromJS(data.playerData);
             }
             sendData(socket);
+        }
+
+        function execConsole(socket, data) {
+            console.log(preview().eval("try { (" + data.command + ") } catch (error) { console.log(error) }"));
         }
 
         function sendData(socket) {

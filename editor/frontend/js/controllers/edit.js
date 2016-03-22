@@ -191,11 +191,11 @@ editorModule.controller("editCoreController", ["$scope", "$http", "$timeout", "$
                                     $scope.loadNode(nodes[nodes.length-1].id);
                             }).
                             error(function(data, status, headers, config) {
-                                modalError("Fehler " + status + " beim Lesen von Daten. Bitte noch einmal versuchen.");
+                                modalError("Error " + status + " when reading data. Please try again.");
                             });
                     }).
                     error(function(data, status, headers, config) {
-                        modalError("Fehler " + status + " beim Lesen von Daten. Bitte noch einmal versuchen.");
+                        modalError("Error " + status + " when reading data. Please try again.");
                     });
         };
 

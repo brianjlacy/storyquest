@@ -9,7 +9,7 @@
     pointer-events: auto;
     display: inline;
 }
-.joint-html-element idholder {
+.joint-html-element .idholder {
     display: none;
 }
 .link-tools .tool-remove {
@@ -70,4 +70,67 @@
 }
 [ng-drag].dragging{
     opacity: 0.5;
+}
+
+rect.body {
+  rx: 10;
+  ry: 30;
+}
+
+rect.header {
+  rx: 5;
+  ry: 20;
+  fill: #3c8dbc;
+}
+
+.marker-arrowhead {
+  fill: #3c8dbc;
+}
+
+.marker-arrowhead:hover {
+  fill: darkgrey;
+  stroke: none;
+}
+
+.connection-wrap {
+  stroke: darkgrey;
+}
+
+.marker-vertex {
+  fill: #3c8dbc;
+}
+
+.marker-vertex:hover {
+  fill: darkgrey;
+  stroke: none;
+}
+
+.marker-vertex-remove-area {
+  color: #3c8dbc;
+}
+
+text.highlighted {
+  fill: #3c8dbc;
+}
+
+/* `outline` doesn't work in Firefox, Opera and IE9+.
+   The only engine supporting outlines on SVG elements is Webkit. */
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  .highlighted {
+    outline: 2px solid #3c8dbc;
+    opacity: initial;
+  }
+}
+
+.graphedit-menu {
+  background: #eeeeee;
+  padding-top: 3px;
+  padding-bottom: 6px;
+  margin-left: 0px;
+  padding-left: 20px;
+  text-align: center;
+}
+
+#sqdefaulteditor {
+  height: 96%;
 }

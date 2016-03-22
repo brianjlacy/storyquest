@@ -23,17 +23,174 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-editorModule.controller("editGraphicalCoreController", ["$scope", "$http", "$interval", "$timeout","ProjectService", "NodeConfigurationService", "Node",
-    function ($scope, $http, $interval, $timeout, ProjectService, NodeConfigurationService, Node) {
+editorModule.controller("editGraphicalCoreController", ["$scope", "$http", "$interval", "$timeout","ProjectService", "NodeConfigurationService", "Node", "WebSocketService",
+    function ($scope, $http, $interval, $timeout, ProjectService, NodeConfigurationService, Node, WebSocketService) {
         pageTitle("Edit", "Add and modify chapters");
-        breadcrumb([{title:"Edit Graphical", url:"#/editGraphical"}, {title:"Chapters", url:""}]);
+        breadcrumb([{title:"Edit Story Graph", url:"#/editGraphical"}, {title:"Chapters", url:""}]);
 
         $scope.project = ProjectService;
         $scope.nodes = {};
         $scope.nodelist = [];
-        $scope.node;
-        var graph = new joint.dia.Graph;
+        $scope.node = null;
 
+        // Boostrap hacks: enable tabs, prevent active links on disabled tabs
+        $(".edittab").click(function (e) {
+            e.preventDefault();
+            $(this).tab("show");
+        });
+
+        $scope.$watch("project.data.id", function() {
+            if ($scope.project.data.id) {
+                console.log("Loading editor framework for project " + $scope.project.data.id);
+                $scope.refreshNodeList();
+            }
+        });
+
+        // initialize json editor
+        $("#stationDataEditor-graph").jsoneditor({
+            schema: stationconfigSchema,
+            theme: "bootstrap3",
+            iconlib: "bootstrap3",
+            disable_collapse: true
+        }).on("ready", function() {
+            $scope.jsonEditor = $(this);
+        }).on('change',function() {
+            var currentEditorModel = $scope.getEditorModel();
+            if ($scope.node) {
+                for (var i=0; i<propertiesAvailableInConfigEditor.length;i++)
+                    $scope.node[propertiesAvailableInConfigEditor[i]] = currentEditorModel[propertiesAvailableInConfigEditor[i]]
+                $scope.nodeChanged($scope.node);
+                $scope.refreshNodeList();
+            }
+        });
+
+        $scope.filterCopyConfigEditorProperties = function(jsObj) {
+            var result = {};
+            for (var i=0; i<propertiesAvailableInConfigEditor.length;i++)
+                result[propertiesAvailableInConfigEditor[i]] = jsObj[propertiesAvailableInConfigEditor[i]]
+            return result;
+        };
+
+        $scope.setContentEditorEnabled = function(enabled) {
+            $scope.contentEditorEnabled = enabled;
+        };
+
+        $scope.setConfigurationEditorEnabled = function(enabled) {
+            $scope.configurationEditorEnabled = enabled;
+        };
+
+        $scope.aceOnEnterLoaded = function(editor) {
+            editor.setFontSize(20);
+            editor.setShowPrintMargin(false);
+            editor.getSession().setMode("ace/mode/javascript");
+            editor.getSession().setUseWrapMode(false);
+        };
+
+        $scope.aceOnEnterChanged = function(e) {
+            $scope.saveNode($scope.node);
+        };
+
+        $scope.aceOnExitLoaded = function(editor) {
+            editor.setFontSize(20);
+            editor.setShowPrintMargin(false);
+            editor.getSession().setMode("ace/mode/javascript");
+            editor.getSession().setUseWrapMode(false);
+        };
+
+        $scope.aceOnExitChanged = function(e) {
+            $scope.saveNode($scope.node);
+        };
+
+        $scope.editNode = function(nodeId){
+            Node.get({ projectId: $scope.project.data.id, nodeIdOrType: nodeId}, function(node) {
+                // on enter/exit data
+                $scope.node = node;
+                $scope.editorNodeColor = $scope.node.nodeColor;
+                // load configuration into json editor
+                $scope.setEditorModel($scope.filterCopyConfigEditorProperties(node));
+                // only enable configuration editor by default, all unknown node types only get configurations
+                $scope.setContentEditorEnabled(false);
+                $scope.setConfigurationEditorEnabled(true);
+                WebSocketService.loadNodeInPreview($scope.node);
+                // finally, open modal dialog
+                $("#modalContent-graph").modal();
+            });
+        };
+
+        $scope.getEditorModel = function() {
+            return $scope.jsonEditor.jsoneditor('value');
+        };
+
+        $scope.setEditorModel = function(jsObj) {
+            if ($scope.jsonEditor)
+                $scope.jsonEditor.jsoneditor('value', jsObj);
+        };
+
+        $scope.deleteNode = function() {
+            $("#modalContent-graph").modal("hide");
+            modalYesNo("Delete Node", "You are deleting node \"" + $scope.node.title + "\" (" + $scope.node.id + "). This operation can not be undone. Are you sure?", function(result) {
+                if (result)
+                    Node.delete({ projectId: $scope.project.data.id, nodeIdOrType: $scope.node.id}, function() {
+                        $scope.refreshNodeList();
+                    }, function(error) {
+                        modalError("Error while deleting node: " + error.data);
+                    });
+            });
+        };
+
+        $scope.nodeChanged = function(node){
+            $scope.savequeue[node.id] = JSON.parse(JSON.stringify(node));
+        };
+
+        // enable auto saving of node content
+        $scope.savequeue = {};
+        var editorSyncDebounce = function() {
+            if (Object.keys($scope.savequeue).length > 0) {
+                for (var entry in $scope.savequeue) {
+                    if ($scope.savequeue.hasOwnProperty(entry) && $scope.savequeue[entry]) {
+                        var thisNode = $scope.savequeue[entry];
+                        delete $scope.savequeue[entry];
+                        $scope.saveNode(thisNode);
+                    }
+                }
+            }
+        };
+        $interval(editorSyncDebounce, 1000);
+
+        // refresh graph when the modal is closed
+        $("#modalContent-graph").on('hidden.bs.modal', function () {
+            $scope.refreshNodeList();
+        });
+
+        $scope.saveNode = function(node) {
+            console.log("Storing node info on server for node " + node.id);
+            $http.post("/api/node/" + $scope.project.data.id + "/" + node.id, node)
+                .success(function(data, status, headers, config) {
+                    console.log("Finished storing node info for node " + node.id);
+                    if (Object.keys($scope.savequeue).length==0)
+                        $scope.editorSynced();
+                })
+                .error(function(data, status, headers, config) {
+                    modalError("Error storing data on server. Please try again. (" + status + ")");
+                    if (Object.keys($scope.savequeue).length==0)
+                        $scope.editorSynced();
+                });
+        };
+
+        // toggles the save indicator
+        $scope.editorSyncing = function() {
+            $scope.editorSyncReady = false;
+        };
+
+        // toggles the save indicator
+        $scope.editorSynced = function() {
+            $scope.editorSyncReady = true;
+        };
+
+        //////////////////////////////////////////////////////////////
+        // GRAPH DISPLAY STUFF FOLLOWS - KEEP CLEAR
+
+        var graph = new joint.dia.Graph;
         var paper = new joint.dia.Paper({
             el: $('#diagram'),
             width: $(window).width(),
@@ -74,7 +231,42 @@ editorModule.controller("editGraphicalCoreController", ["$scope", "$http", "$int
              }
          );
 
-         graph.on('change:source change:target', function(link) {
+        // DRAG PAPER START
+
+        paper.on('blank:pointerdown',
+            function(event, x, y) {
+                $scope.originDelta = { x: paper.options.origin.x, y: paper.options.origin.y };
+                $scope.scale = V(paper.viewport).scale();
+                $scope.dragStartPosition = { x: x * $scope.scale.sx, y: y * $scope.scale.sy};
+            }
+        );
+
+        $("#diagram")
+            .mousemove(function(event) {
+                if ($scope.dragStartPosition) {
+                    $scope.dragStartPosition.currentX = event.offsetX;
+                    $scope.dragStartPosition.currentY = event.offsetY;
+                    $scope.dragStartPosition.deltaX = event.offsetX - $scope.dragStartPosition.x;
+                    $scope.dragStartPosition.deltaY = event.offsetY - $scope.dragStartPosition.y;
+                    paper.setOrigin((event.offsetX - $scope.dragStartPosition.x), (event.offsetY - $scope.dragStartPosition.y));
+                }
+            });
+
+        paper.on('cell:pointerup blank:pointerup', function(cellView, x, y) {
+            if ($scope.dragStartPosition) {
+                $scope.originDelta = { x: (paper.options.origin.x - $scope.originDelta.x), y: (paper.options.origin.y - $scope.originDelta.y) };
+                $(".joint-html-element").each(function() {
+                    var newLeft = parseInt($(this).css("left")) + $scope.originDelta.x;
+                    var newTop = parseInt($(this).css("top")) + $scope.originDelta.y;
+                    $(this).css({top: newTop, left: newLeft });
+                });
+                delete $scope.dragStartPosition;
+            }
+        });
+
+        // DRAG PAPER END
+
+        graph.on('change:source change:target', function(link) {
              var linkSourceId = link.get('source').id;
              var linkTargetId = link.get('target').id;
 
@@ -90,41 +282,11 @@ editorModule.controller("editGraphicalCoreController", ["$scope", "$http", "$int
                     }
                 });
                 Node.get({ projectId: $scope.project.data.id, nodeIdOrType: sourceId}, function(node) {
-                    node.text[0].text += "[l|"+targetId+"| New Link]"
+                    node.text[0].text += "\n{link(" + targetId + "):Link to Chapter " + targetId + "}\n";
                     $scope.saveNode(node);
                 });
-             };
+             }
          });
-
-        $scope.$watch("project.data.id", function() {
-            if ($scope.project.data.id) {
-                console.log("Loading editor framework for project " + $scope.project.data.id);
-                $scope.refreshNodeList();
-            }
-        });
-
-        // on enter/exit editors
-        $scope.aceOnEnterLoaded = function(editor) {
-            editor.setFontSize(20);
-            editor.setShowPrintMargin(false);
-            editor.getSession().setMode("ace/mode/javascript");
-            editor.getSession().setUseWrapMode(false);
-        };
-
-        $scope.aceOnEnterChanged = function(e) {
-            $scope.saveNode($scope.node);
-        };
-
-        $scope.aceOnExitLoaded = function(editor) {
-            editor.setFontSize(20);
-            editor.setShowPrintMargin(false);
-            editor.getSession().setMode("ace/mode/javascript");
-            editor.getSession().setUseWrapMode(false);
-        };
-
-        $scope.aceOnExitChanged = function(e) {
-            $scope.saveNode($scope.node);
-        };
 
         $scope.onDropComplete=function(nodetype, event) {
             Node.create({ projectId: $scope.project.data.id, nodeIdOrType: nodetype }, function(node) {
@@ -134,19 +296,22 @@ editorModule.controller("editGraphicalCoreController", ["$scope", "$http", "$int
             }, function(error) {
                 modalError("Error while creating new chapter. Please try again. (" + error.data + ")");
             });
-        }
+        };
 
         $scope.refreshNodeList = function() {
             if ($scope.project.data && $scope.project.data.id){
                 $http({method: "GET", url: "/api/nodetree/" + $scope.project.data.id}).
                     success(function(nodeTree, status, headers, config) {
+                        // remove all content of graph and build a new graph
+                        $("div[data-id]").remove();
+                        $("g[model-id]").remove();
                         $scope.buildNodes(nodeTree);
                     }).
                     error(function(data, status, headers, config) {
                         modalError("Fehler " + status + " beim Lesen von Daten. Bitte noch einmal versuchen.");
                     });
             }
-        }
+        };
 
         $scope.buildNodes = function(nodeTree) {
             var nodes = nodeTree.nodes;
@@ -162,7 +327,7 @@ editorModule.controller("editGraphicalCoreController", ["$scope", "$http", "$int
                 }
             }
             $scope.addLinks(nodeTree.edges, linkVertices);
-        }
+        };
 
         $scope.buildNode  = function(node){
            return joint.shapes.storyquest.createNode(
@@ -172,7 +337,7 @@ editorModule.controller("editGraphicalCoreController", ["$scope", "$http", "$int
                     node.color,
                     node.x,
                     node.y);
-        }
+        };
 
         $scope.addLinks = function(edges, linkVertices) {
             for (var key in edges) {
@@ -199,157 +364,15 @@ editorModule.controller("editGraphicalCoreController", ["$scope", "$http", "$int
                     graph.addCells([link]);
                 }
             }
-        }
-
-        // filter properties for JSON settings editor
-        $scope.registerFilterPropertyKeys = function(entries){
-            $scope.filterPropertyKeys = NodeConfigurationService.registerFilterPropertyKeys(entries);
-        }
-
-        $scope.filterPropertyKeys = NodeConfigurationService.registerFilterPropertyKeys([
-                    "$promise",
-                    "$resolved",
-                    "type",
-                    "text",
-                    "_id",
-                    "_revision",
-                    "onEnter",
-                    "onExit",
-                    "technicalName",
-                    "id",
-                    "x",
-                    "y",
-                    "nodeColor"
-                ]);
-
-        $scope.configureNode = function(nodeId){
-            Node.get({ projectId: $scope.project.data.id, nodeIdOrType: nodeId}, function(node) {
-                $scope.node = node;
-                // JSON editor
-                var schema = stationconfigSchemaV1[node.type];
-                var options = { schema: schema, data: NodeConfigurationService.filtercopyNodeConfiguration(node, $scope.filterPropertyKeys), callbacks: {
-                    change: function(e, changes) {
-                        $scope.configurationChanged(treema, node)
-                    }
-                }};
-                // treema is non-angular
-                var el = $("#treemajson");
-                var treema = el.treema(options);
-                treema.build();
-
-                $("#modalConfiguration").modal();
-            });
-        }
-
-        $scope.onExitNode = function(nodeId){
-            Node.get({ projectId: $scope.project.data.id, nodeIdOrType: nodeId}, function(node) {
-               $scope.node = node;
-               $("#modalEditOnExit").modal();
-           });
-        }
-
-        $scope.onEnterNode = function(nodeId){
-            Node.get({ projectId: $scope.project.data.id, nodeIdOrType: nodeId}, function(node) {
-                $scope.node = node;
-                $("#modalEditOnEnter").modal();
-            });
-        }
-
-        $scope.editNode = function(nodeId){
-            Node.get({ projectId: $scope.project.data.id, nodeIdOrType: nodeId}, function(node) {
-                if(!(node.type == "cutscene" ||
-                    node.type == "settings" ||
-                    node.type == "quiz")) {
-                        $scope.node = node;
-                        $("#modalContent").modal();
-                }
-            });
-        }
-
-        $scope.deleteNode = function(nodeId) {
-            Node.delete({ projectId: $scope.project.data.id, nodeIdOrType: nodeId}, function() {
-                }, function(error) {
-                    modalError("Error while deleting node: " + error.data.message);
-                });
-        }
-
-        $scope.configurationChanged = function(treema, node){
-            for (var entry in treema.data){
-                if (treema.data.hasOwnProperty(entry) &&
-                        NodeConfigurationService.filterProperties(entry, $scope.filterPropertyKeys)) {
-                    node[entry] = treema.data[entry];
-                 }
-            }
-            $scope.nodes[$scope.node.id].attr({
-                '.label': { text: node.title }
-            });
-            $scope.saveNode(node, function(){
-                 console.log("Finished storing node info for node " + node.id);
-                 $("div[data-id]").remove();
-                 $("g[model-id]").remove();
-                 $scope.refreshNodeList();
-            });
-        }
-
-        $scope.changeNodeColor = function(color){
-            if($scope.node) {
-                $scope.node.nodeColor = color;
-                $scope.saveNode($scope.node);
-                if($scope.nodes[$scope.node.id]) {
-                    $scope.nodes[$scope.node.id].attr({
-                        '.header': { fill: color }
-                    });
-                }
-            }
-        }
-
-        $scope.setContentEditorEnabled = function(enabled){}
-        $scope.setConfigurationEditorEnabled = function(enabled){}
-
-        $scope.nodeChanged = function(node){
-            $scope.savequeue[node.id] = JSON.parse(JSON.stringify(node));
-        }
-
-        // enable auto saving of node content
-        $scope.savequeue = {};
-        var editorSyncDebounce = function() {
-            if (Object.keys($scope.savequeue).length > 0) {
-                for (var entry in $scope.savequeue) {
-                    if ($scope.savequeue.hasOwnProperty(entry) && $scope.savequeue[entry]) {
-                        var thisNode = $scope.savequeue[entry];
-                        delete $scope.savequeue[entry];
-                        $scope.saveNode(thisNode);
-                    }
-                }
-            }
-        };
-        $interval(editorSyncDebounce, 1000);
-
-        $scope.saveNode = function(node, callback) {
-            if($scope.project.data.id && node.id){
-                if(!callback){
-                    callback = function(){
-                         console.log("Finished storing node info for node " + node.id);
-                    }
-                }
-                console.log("Storing node info on server for node " + node.id);
-                $http.post("/api/node/" + $scope.project.data.id + "/" + node.id, node).
-                    success(callback).
-                    error(function(data, status, headers, config) {
-                        modalError("Error storing data on server. Please try again. (" + status + ")");
-                    });
-            }
         };
 
         scale = 1;
         paper.scale(1);
         $('#diagram').on('mousewheel', function(event) {
+            event.preventDefault();
             var deltay = (event.originalEvent.detail < 0 || event.originalEvent.wheelDelta > 0) ? 1 : -1;
             scale = scale + deltay * 0.1;
             paper.scale(scale);
-            for (var index = 0; index < joint.shapes.storyquest.nodes.length; ++index) {
-                joint.shapes.storyquest.nodes[index].updateBox();
-            }
         });
     }]
 );

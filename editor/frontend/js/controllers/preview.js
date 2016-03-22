@@ -174,8 +174,10 @@ editorModule.controller("previewCoreController", [
                     $scope.setEditorModel(modelData);
                 }
             } else if (message.type=="log") {
+                console.log("received log.");
                 var div = document.getElementById("previewConsole");
                 div.innerHTML = div.innerHTML + message.message + "\n";
+                $("#previewConsole").scrollTop($("#previewConsole")[0].scrollHeight);
             }
         };
 
@@ -192,6 +194,39 @@ editorModule.controller("previewCoreController", [
                 WebSocketService.loadNodeInPreview($scope.node);
             });
         };
+
+        $scope.consoleHistory = [];
+        $scope.consoleHistoryPosition = -1;
+        $scope.onConsoleKey = function(event) {
+            if (event.which===13) {
+                // enter
+                $scope.consoleHistory.push($scope.consolePrompt);
+                $scope.consoleHistoryPosition = -1;
+                WebSocketService.execInPreview($scope.consolePrompt);
+                $scope.consolePrompt = "";
+            } else if (event.which===38) {
+                // arrow up
+                if ($scope.consoleHistory.length>0) {
+                    if ($scope.consoleHistoryPosition==-1)
+                        $scope.consoleHistoryPosition = $scope.consoleHistory.length-1;
+                    else if ($scope.consoleHistoryPosition>0)
+                        $scope.consoleHistoryPosition--;
+                    $scope.consolePrompt = $scope.consoleHistory[$scope.consoleHistoryPosition];
+                }
+            } else if (event.which===40) {
+                // arrow down
+                if ($scope.consoleHistory.length>0) {
+                    if ($scope.consoleHistoryPosition == $scope.consoleHistory.length - 1)
+                        $scope.consoleHistoryPosition = -1;
+                    else if ($scope.consoleHistoryPosition!=-1)
+                        $scope.consoleHistoryPosition++;
+                    if ($scope.consoleHistoryPosition == -1)
+                        $scope.consolePrompt = "";
+                    else
+                        $scope.consolePrompt = $scope.consoleHistory[$scope.consoleHistoryPosition];
+                }
+            }
+        }
     }
 ]);
 
