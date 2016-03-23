@@ -8,7 +8,9 @@ before_install:
   - gem install compass
   - gem install susy
 install: npm install
-before_script: grunt build
+before_script:
+  - npm install -g grunt-cli
+  - grunt build
 after_success:
   - eval "$(ssh-agent -s)" # start the ssh agent
   - chmod 600 .travis/deploy_key.pem # this key should have push access
