@@ -1,5 +1,7 @@
 # StoryQuest
 
+[![Build Status](https://semaphoreci.com/api/v1/storyquest/storyquest/branches/master/badge.svg)](https://semaphoreci.com/storyquest/storyquest)
+
 With StoryQuest, you can create adventure e-books and interactive fiction that contain branching 
 storylines, audio, images, illustrations, video, and interactive JavaScript-based content. 
 StoryQuest delivers ready-to-deploy app archives in a platform-independend format. Clients 
