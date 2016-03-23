@@ -400,13 +400,26 @@ module.exports = function (grunt) {
               'service/**/*',
               'template/**/*',
               'storyquest.js',
-              'package.json',
+              'package.json'
+          ],
+          dest: '<%= appConfig.distNode %>'
+        }, {
+            expand: true,
+            cwd: './',
+            src: [
               'Dockerfile',
               'README.md',
               'LICENSE'
-          ],
-          dest: '<%= appConfig.distNode %>'
-        }]
+            ],
+            dest: '<%= appConfig.distNode %>'
+          }, {
+            expand: true,
+            cwd: './',
+            src: [
+              'client-android/**/*', '!**/build/**', '!**/gradle/**'
+            ],
+            dest: '<%= appConfig.distNode %>'
+          }]
       },
       styles: {
         expand: true,
