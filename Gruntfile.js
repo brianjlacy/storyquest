@@ -12,7 +12,6 @@ module.exports = function (grunt) {
   require('time-grunt')(grunt);
 
   // load tasks for wait-server
-  grunt.loadNpmTasks('grunt-wait-server');
   grunt.loadNpmTasks('grunt-shell');
 
   // Configurable paths for the application
