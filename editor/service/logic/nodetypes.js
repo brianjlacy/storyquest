@@ -70,33 +70,21 @@ NodeTypes.prototype.parseDefaultNodeConnections = function(configDir, node) {
     // FIXME: works only for DE lang text
     var text = fs.readFileSync(path.join(configDir, node.text.de), "utf8");
 
-
-    ////NEW
-    var re = /\{link\(([^)]+)\):(.*)\}/g;
-    var str = 'Lahlah\n\n{link(002, someKey, true, true):Go to 002}\n\nblahfasel\n\n{link(003):Go to 003}\n\nblahblubb';
+    var matcher = /\{link\(([^)]+)\):(.*)\}/g;
     var m;
-
-    while ((m = re.exec(str)) !== null) {
-        if (m.index === re.lastIndex) {
-            re.lastIndex++;
+    while ((m = matcher.exec(text)) !== null) {
+        if (m.index === matcher.lastIndex) {
+            matcher.lastIndex++;
         }
-        // View your result using the m-variable.
-        // eg m[0] etc.
-    }
-    //NEW END
-
-    var matches = text.match(/\{link\(([^)]+)\):(.*)\}/g);
-    if (matches)
-        for (var i=0; i<matches.length; i++) {
-            var tokens = matches[i].split("|");
-            var targetId = tokens[1];
-            result.push({
-                id: node.id + "%" + targetId,
-                target: targetId,
-                source: node.id
-            });
-        }
+        var tokens = m[1].split(",");
+        var targetId = tokens[0];
+        result.push({
+            id: node.id + "%" + targetId,
+            target: targetId,
+            source: node.id
+        });
     return result;
+    }
 };
 
 NodeTypes.prototype.getNewNodeId = function(configDir) {

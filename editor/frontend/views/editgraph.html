@@ -5,12 +5,12 @@
         </button>
     </div>
     <div ng-drop="true" ng-drop-success="onDropComplete($data, $event)">
-        <sqgraphicaleditor configure-node="configureNode(nodeId)"
+        <grapheditor configure-node="configureNode(nodeId)"
                            configure-script-on-exit="onExitNode(nodeId)"
                            configure-script-on-enter="onEnterNode(nodeId)"
                            delete-node="deleteNode(nodeId)"
                            edit-node="editNode(nodeId)"
-                           open-node="openNode(nodeId)"></sqgraphicaleditor>
+                           open-node="openNode(nodeId)"></grapheditor>
     </div>
 
     <div ng-drag-clone="">

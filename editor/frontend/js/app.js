@@ -62,7 +62,7 @@ StoryQuestEditorApp.config(["$routeProvider",
                     controller: "editCoreController"
                 }).
                 when("/editGraphical", {
-                    templateUrl: "views/editGraphical.html",
+                    templateUrl: "views/editgraph.html",
                     controller: "editGraphicalCoreController"
                 }).
                 when("/edit/:nodeId", {

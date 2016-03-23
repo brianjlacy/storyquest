@@ -133,7 +133,6 @@ exports.createNode = function(req, res){
     var outputDir = path.join(Utils.getProjectDir(req.param("projectId")), "stationconfig");
     var newNodeSkeleton = null;
     try {
-        // FIXME: check if the type is contained in the project's types
         newNodeSkeleton = nodetypes.createNode(req.param("nodeIdOrType"), outputDir);
         if (newNodeSkeleton==null)
             throw ("Unknown node type " + req.param("nodeIdOrType"));

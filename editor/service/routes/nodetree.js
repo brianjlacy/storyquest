@@ -44,6 +44,7 @@ exports.renderNodeTree = function(req, res){
 
     fs.readdir(configDir, function (err, list) {
         list.forEach(function (file) {
+            var nodeIdList = [];
             if (file.indexOf(".json")!=-1) {
                 var node = JSON.parse(fs.readFileSync(path.join(configDir, file)));
                 // parse node
@@ -63,20 +64,24 @@ exports.renderNodeTree = function(req, res){
                     }
                 };
                 tree.nodes.push(thisNode);
+                nodeIdList.push(thisNode.id);
                 // parse edges
                 var edges = nodetypes.parseNodeConnections(configDir, node);
                 if(edges){
                     for (var i=0; i < edges.length; i++) {
                         var thisEdge = edges[i];
-                        thisEdge.size = 1;
-                        thisEdge.color = "#ccc";
-                        thisEdge.type = "curvedArrow";
-                        tree.edges.push(thisEdge);
+                        // only add the edge if the target node actually exists
+                        if (nodeIdList.indexOf(thisEdge.target)!=-1) {
+                            thisEdge.size = 1;
+                            thisEdge.color = "#ccc";
+                            thisEdge.type = "curvedArrow";
+                            tree.edges.push(thisEdge);
+                        }
                     }
                 }
             }
         });
         res.json(tree);
     });
-}
+};
 
