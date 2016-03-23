@@ -1,11 +1,5 @@
 'use strict';
 
-// # Globbing
-// for performance reasons we're only matching one level down:
-// 'test/spec/{,*/}*.js'
-// use this if you want to recursively match all subfolders:
-// 'test/spec/**/*.js'
-
 module.exports = function (grunt) {
 
   // Disables annoying terminal icon bounces on OSX.
@@ -23,7 +17,7 @@ module.exports = function (grunt) {
 
   // Configurable paths for the application
   var appConfig = {
-    app: require('./bower.json').appPath || 'frontend',
+    app: 'editor/frontend',
     dist: 'dist/static',
     distNode: 'dist'
   };
@@ -37,7 +31,7 @@ module.exports = function (grunt) {
     // Watches files for changes and runs tasks based on the changed files
     watch: {
       bower: {
-        files: ['bower.json'],
+        files: ['editor/frontend/bower.json'],
         tasks: ['wiredep']
       },
       js: {
@@ -46,10 +40,6 @@ module.exports = function (grunt) {
         options: {
           livereload: '<%= connect.options.livereload %>'
         }
-      },
-      jsTest: {
-        files: ['test/spec/{,*/}*.js'],
-        tasks: ['newer:jshint:test', 'karma']
       },
       compass: {
         files: ['<%= appConfig.app %>/css/{,*/}*.{scss,sass}'],
@@ -79,64 +69,15 @@ module.exports = function (grunt) {
       }
     },
 
-    waitServer: {
-      waitForSeleniumServer: {
-        options: {
-          url: 'http://localhost:4444',
-          fail: function () { console.error('Failed to start Selenium service.'); },
-          timeout: 10 * 1000,
-          isforce: false,
-          interval: 800,
-          print: true
-        }
-      }
-    },
-
     shell: {
       options: {
         stdout: true
       },
-      seleniumStart: {
-        command: 'node ./node_modules/protractor/bin/webdriver-manager start --seleniumPort <%= protractor.auto.options.args.seleniumPort %>',
-        options: {
-          stdout: false,
-          async: true,
-          // failOnError is not ok, if selenium is already running.
-          // On real errors, it will fall in a timeout on waitServer:waitForSeleniumServer
-          failOnError: false
-        }
-      },
-      seleniumStop: {
-        command: 'curl -s -L http://localhost:<%= protractor.auto.options.args.seleniumPort %>/selenium-server/driver/?cmd=shutDownSeleniumServer',
-        options: {
-          stdout: false,
-          async: true
-        }
-      },
-      protractorInstall: {
-        command: 'node ./node_modules/protractor/bin/webdriver-manager update --standalone'
-      },
       npmInstall: {
-        command: 'npm install'
+        command: 'npm install && cd editor && npm install'
       },
       bowerInstall: {
-        command: 'bower install && cd template && bower install'
-      },
-      buildOpenLayers: {
-        command: 'cd bower_components/openlayers/build && ./build.py'
-      }
-    },
-
-    styledocco: {
-      dist: {
-        options: {
-          name: 'styleguide',
-          cmd: './node_modules/.bin/styledocco',
-          include: ['.tmp/css/main.css']
-        },
-        files: {
-          'doc/styleguide': '<%= appConfig.app %>/css'
-        }
+        command: 'cd editor/frontend && bower install && cd ../template && bower install'
       }
     },
 
@@ -171,80 +112,21 @@ module.exports = function (grunt) {
               connect.static('.tmp'),
               connect().use(
                 '/bower_components',
-                connect.static('./bower_components')
+                connect.static('./editor/frontend/bower_components')
               ),
               connect().use(
                 '/fonts',
-                connect.static('./frontend/fonts')
+                connect.static('./editor/frontend/fonts')
               ),
               connect().use(
                   '/artifacts',
-                  connect.static('./artifacts')
+                  connect.static('./editor/artifacts')
               ),
               require('grunt-connect-proxy/lib/utils').proxyRequest,
               connect.static(appConfig.app)
-              /*
-              function(req, res) {
-                  if (req.url.match(/\/api\/.*$/)) {
-                    // serve /api fixtures from dev_fixtures/
-                    res.end(grunt.file.read("dev_fixtures/" + req.url.replace("/api/","")));
-                  } else if (! req.url.match(/\/$|\./)) {
-                      // always return index, if not a file or directory is requested
-                      res.end(grunt.file.read('.tmp/index.html'));
-                  } else {
-                    res.statusCode = 404;
-                    // use index also on 404:
-                    // Our client side routing takes care of displaying an apropriate error 
-                    // message
-                    res.end(grunt.file.read('.tmp/index.html'));
-                  }
-              }
-              */
             ];
           }
         }
-      },
-      test: {
-        options: {
-          port: 9002,
-          middleware: function (connect) {
-            return [
-              connect.static('.tmp'),
-              connect.static('test'),
-              connect().use(
-                '/bower_components',
-                connect.static('./bower_components')
-              ),
-              connect.static(appConfig.app)
-            ];
-          }
-        }
-      },
-      dist: {
-        options: {
-          open: false, // Open default browser after grunt start
-          base: '<%= appConfig.dist %>'
-        }
-      }
-    },
-
-    // Make sure code styles are up to par and there are no obvious mistakes
-    jshint: {
-      options: {
-        jshintrc: '.jshintrc',
-        reporter: require('jshint-stylish')
-      },
-      all: {
-        src: [
-          'Gruntfile.js',
-          '<%= appConfig.app %>/js/{,*/}*.js'
-        ]
-      },
-      test: {
-        options: {
-          jshintrc: 'test/.jshintrc'
-        },
-        src: ['test/spec/{,*/}*.js']
       }
     },
 
@@ -256,46 +138,26 @@ module.exports = function (grunt) {
           src: [
             '.tmp',
             '<%= appConfig.dist %>/{,*/}*',
-            '!<%= appConfig.dist %>/.git{,*/}*',
-            'doc/styleguide'
+            '!<%= appConfig.dist %>/.git{,*/}*'
           ]
         }]
       },
       server: '.tmp'
     },
 
-    // Add vendor prefixed styles
-    autoprefixer: {
-      options: {
-        browsers: ['last 1 version', 'ie >= 9', 'android >= 4']
-      },
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '.tmp/css/',
-          src: '{,*/}*.css',
-          dest: '.tmp/css/'
-        }]
-      }
-    },
-
     // Automatically inject Bower components into the app
     wiredep: {
       app: {
+        cwd: 'editor/frontend',
         src: ['<%= appConfig.app %>/{index,404,header,footer}.{html,ejs}'],
         ignorePath:  /\.\.\//,
         exclude: [/bootstrap-sass-official\//]
       },
       sass: {
+        cwd: 'editor/frontend',
         src: ['<%= appConfig.app %>/css/{,*/}*.{scss,sass}'],
         ignorePath: /(\.\.\/){1,2}bower_components\//,
         exclude: [/bootstrap-sass-official\//]
-      }
-    },
-
-    ngTemplateCache: {
-      views: {
-        files: []
       }
     },
 
@@ -310,7 +172,7 @@ module.exports = function (grunt) {
         },
         files: [{
           expand: true,
-          cwd: 'frontend',
+          cwd: 'editor/frontend/',
           src: '*.ejs',
           dest: '.tmp/',
           ext: '.html'
@@ -327,7 +189,7 @@ module.exports = function (grunt) {
           optimization: 2
         },
         files: {
-          ".tmp/css/AdminLTE.css": "frontend/css/AdminLTE/AdminLTE.less" // destination file and source file
+          ".tmp/css/AdminLTE.css": "editor/frontend/css/AdminLTE/AdminLTE.less" // destination file and source file
         }
       }
     },
@@ -341,7 +203,7 @@ module.exports = function (grunt) {
         imagesDir: '<%= appConfig.app %>/images',
         javascriptsDir: '<%= appConfig.app %>/js',
         fontsDir: '<%= appConfig.app %>/fonts',
-        importPath: './bower_components',
+        importPath: './editor/frontend/bower_components',
         httpImagesPath: '/images',
         httpGeneratedImagesPath: '/images/generated',
         httpFontsPath: '/fonts',
@@ -410,28 +272,10 @@ module.exports = function (grunt) {
          files: {
            '<%= appConfig.dist %>/css/main.css': [
              '.tmp/css/main.css'
-           ],
-           '<%= appConfig.dist %>/css/unsupported.css': [
-             '.tmp/css/unsupported.css'
-           ],
-           '<%= appConfig.dist %>/css/vendor.css': [
-             '.tmp/css/vendor.css'
            ]
          }
        }
      },
-     //uglify: {
-     //  dist: {
-     //    files: {
-     //      '<%= appConfig.dist %>/js/scripts.js': [
-     //        '<%= appConfig.dist %>/js/scripts.js'
-     //      ]
-     //    }
-     //  }
-     //},
-     //concat: {
-     //  dist: {}
-     //},
 
     imagemin: {
       dist: {
@@ -439,17 +283,6 @@ module.exports = function (grunt) {
           expand: true,
           cwd: '<%= appConfig.app %>/images',
           src: '{,*/}*.{png,jpg,jpeg,gif}',
-          dest: '<%= appConfig.dist %>/images'
-        }]
-      }
-    },
-
-    svgmin: {
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '<%= appConfig.app %>/images',
-          src: '{,*/}*.svg',
           dest: '<%= appConfig.dist %>/images'
         }]
       }
@@ -536,32 +369,32 @@ module.exports = function (grunt) {
             'register.html']
         }, {
           expand: true,
-          cwd: './bower_components/bootstrap-sass-official/assets/fonts/bootstrap/',
+          cwd: './editor/frontend/bower_components/bootstrap-sass-official/assets/fonts/bootstrap/',
           src: '*',
           dest: '<%= appConfig.dist %>/fonts/'
         }, {
           expand: true,
-          cwd: './bower_components/ionicons/fonts/',
+          cwd: './editor/frontend/bower_components/ionicons/fonts/',
           src: '*',
           dest: '<%= appConfig.dist %>/fonts/'
         },{
           expand: true,
-          cwd: './frontend/fonts/',
+          cwd: './editor/frontend/fonts/',
           src: '*',
           dest: '<%= appConfig.dist %>/fonts/'
         }, {
           expand: true,
-          cwd: './bower_components/font-awesome/fonts/',
+          cwd: './editor/frontend/bower_components/font-awesome/fonts/',
           src: '*',
           dest: '<%= appConfig.dist %>/fonts/'
         }, {
           expand: true,
-          cwd: './bower_components/open-sans-fontface/fonts/',
+          cwd: './editor/frontend/bower_components/open-sans-fontface/fonts/',
           src: '*/*',
           dest: '<%= appConfig.dist %>/fonts/'
         }, {
           expand: true,
-          cwd: './',
+          cwd: './editor/',
           src: [
               'mailtemplates/*',
               'service/**/*',
@@ -593,86 +426,25 @@ module.exports = function (grunt) {
                 {expand: true, cwd: 'dist/', src: '**/*', dest: '/'}
             ]
         }
-    },
-
-    // Run some tasks in parallel to speed up the build process
-    concurrent: {
-      server: [
-        'less',
-        'compass:server'
-      ],
-      test: [
-        'less',
-        'compass'
-      ],
-      dist: [
-        'less',
-        'compass:dist',
-        'imagemin',
-        'svgmin'
-      ]
-    },
-
-    // Test settings
-    karma: {
-      unit: {
-        configFile: 'test/karma.conf.js',
-        singleRun: true
-      }
-    },
-
-    protractor: {
-      options: {
-        configFile: 'test/protractor.conf.js'
-      },
-      singlerun: {
-        singleRun: true
-      },
-      auto: {
-        keepAlive: true,
-        options: {
-          args: {
-            seleniumPort: 4444
-          }
-        }
-      }
     }
 
   });
-
 
   grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
     if (target === 'dist') {
       return grunt.task.run(['build', 'connect:dist:keepalive']);
     }
-
     grunt.task.run([
       'clean:server',
       'wiredep',
       'template',
-      'concurrent:server',
-      'autoprefixer',
+      'less',
+      'compass:server',
       'configureProxies',
       'connect:livereload',
       'watch'
     ]);
   });
-
-  grunt.registerTask('test', [
-    'clean:server',
-    'concurrent:test',
-    'autoprefixer',
-    'connect:test',
-    'karma'
-  ]);
-
-  grunt.registerTask('test:e2e', [
-    'connect:test',
-    'shell:seleniumStart',
-    'waitServer:waitForSeleniumServer',
-    'protractor:singlerun',
-    'shell:seleniumStop'
-  ]);
 
   grunt.registerTask('build', [
     'clean:dist',
@@ -680,8 +452,9 @@ module.exports = function (grunt) {
     'wiredep',
     'template',
     'useminPrepare',
-    'concurrent:dist',
-    'autoprefixer',
+    'less',
+    'compass:dist',
+    'imagemin',
     'concat', // Task created by useminPrepare
     'ngAnnotate',
     'copy:dist',
@@ -700,18 +473,12 @@ module.exports = function (grunt) {
 
   grunt.registerTask('update', [
     'shell:npmInstall',
-    'shell:bowerInstall',
-    'shell:buildOpenLayers'
+    'shell:bowerInstall'
   ]);
 
   grunt.registerTask('default', [
     'newer:jshint',
-    'test',
     'build'
   ]);
 
-  grunt.registerTask('build-styleguide', [
-    'compass:dist',
-    'styledocco'
-  ]);
 };

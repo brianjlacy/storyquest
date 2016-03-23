@@ -37,7 +37,6 @@ var StoryQuestEditorApp = angular.module("StoryQuestEditorApp", [
 var editorModule = angular.module("editorModule", [
     "ngResource",
     "ui.ace",
-    "angularSpectrumColorpicker",
     "ui.sortable",
     "xeditable",
     "ngResource",

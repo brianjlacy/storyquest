@@ -19,12 +19,24 @@ ADD package.json /tmp/package.json
 RUN rm -rf ~/.npm && npm cache clean && rm -rf /root/.npm
 RUN cd /tmp && npm install
 RUN mkdir -p /opt/app && cp -a /tmp/node_modules /opt/app/
- 
+
+# install java
+RUN \
+  apt-get update && \
+  apt-get install -y openjdk-7-jdk && \
+  rm -rf /var/lib/apt/lists/*
+ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64
+
+# install android sdk to /opt/android
+RUN curl -o /tmp/android.tgz http://dl.google.com/android/android-sdk_r24.4.1-linux.tgz
+RUN tar xfz android.tgz -C /opt
+RUN ( sleep 5 && while [ 1 ]; do sleep 1; echo y; done ) | /tmp/opt/android-sdk-linux/tools/android update sdk -u -t 1,4,27,49,50,52,53
+
 # From here we load our application's code in, therefore the previous docker
 # "layer" thats been cached will be used if possible
 WORKDIR /opt/app
 ADD . /opt/app
- 
+
 EXPOSE 3001
 EXPOSE 3000
 EXPOSE 8080

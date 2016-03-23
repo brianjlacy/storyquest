@@ -1,3 +1,17 @@
+/editor/template/bower_components
+/editor/ssl.crt
+/editor/sub.class1.server.ca.pem
+/editor/config.json
+/editor/ssl.key
+/editor/node_modules
+/editor/.tmp
+/editor/frontend/bower_components
+/editor/.sass-cache
+/.idea
+/.sass-cache
+/builds
+/dist
+/.tmp
 # ide files
 .idea/
 
