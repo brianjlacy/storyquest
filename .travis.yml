@@ -2,18 +2,17 @@ language: node_js
 env:
   global:
   - secure: "QzDieB3Amjfp9I0pOjr8hkfcl3C2mEh9RJBzOoZJwBGOzsuF7+DhViuRMcyNxTZniXutsWrMGlnG2B+HfttGjupMydWjmVLjcuxSlFyvitI5xa0YLhrCoA1w2gMlWkRTlcbKslCzynxlhHr+jhLuZfi+bAkIZfukvnmK1zkgt7FvmSjp2aeXCm7Hbm8mXmsRqPcRxkQJ6R7aTumyDXvFX+fkXf0cI4bq+/ox3LUm8ym+47/z642tBTmnCaTxS5dbJynEamTiTOwcyVj+PKBzyiy3XUwRL+ggHkTsNpnouCnfOTOcTWaS2plfGRjonbionSPwyTAoLskTZKRaZUqkhuEecoPSt/5qE6MLMuP/X5krsQk2mn4tRRDAAJozWFEJnQ06DlLmpVSbZMKK3EUbSSVF63H2WYMFdEeQrINc66cWMQhyXgQFrnmgdwVit+xOaX010xHN9Lb2qC9aaxwH+FdSOqgvmDsGSUVuviaYHhH5RhwKCNfLY/h7UeAqn2d4sPcSUwYPi61ZheXW3KPF9cxTGH6A5SVRnccv+SDS5xJLPDpoN4jujHfraPTT8EE/MEZPJm4NpmTEvBxlNW+ALNDvTmGI/U0UJUfUqc2VE9Wnu9BXyxuEkFBp4nUFOCIVb66EhG22VFjycFpVzAd6j5cBcCncvOVYCRa0JDMuT9w="
-addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    packages:
-    - gcc-5
-    - g++-5
 node_js:
   - "stable"
 before_install:
   - gem install compass
   - gem install susy
+  - sudo apt-get install python-software-properties
+  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+  - sudo apt-get update
+  - sudo apt-get install gcc-5 g++-5
+  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 80 --slave /usr/bin/g++ g++ /usr/bin/g++-5
+  - sudo update-alternatives --set gcc /usr/bin/gcc-5
 install: npm install
 before_script:
   - npm install -g grunt-cli
