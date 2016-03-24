@@ -32,7 +32,6 @@ WORKDIR /opt/app
 # get release zip from github, change archive url if a different release is needed
 RUN curl -L -o /tmp/storyquest.tgz https://github.com/michaelkleinhenz/storyquest/releases/download/v3.0.0-alpha/storyquest-3.0.0-alpha.tar.gz
 RUN tar xfz /tmp/storyquest.tgz -C /opt/app
-#ADD . /opt/app
 
 EXPOSE 3001
 EXPOSE 3000

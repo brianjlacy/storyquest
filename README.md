@@ -15,11 +15,6 @@ builds for e-readers like Kindle or Kobo.
 StoryQuest is currently in development and has reached beta stage. Feel free to comment or try.
 Caution: documentation is somewhat sparse at the moment, we're woking on this. 
 
-The following text describes the build process for StoryQuest. If you pulled this release either
-from the storyquest-builds repository or the Docker registry, you usually does not need
-to build the source as you are already using a built version. In this case, skip to the
-chapter "Configuration".
-
 ## Build Preconditions
 
 For the following steps, you will need nave.sh, grunt and bower installed. If you don't use
