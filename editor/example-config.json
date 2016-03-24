@@ -29,11 +29,6 @@
     "sslCertFile": "ssl.crt",
     "sslCaFile": "sub.class1.server.ca.pem",
 
-    "androidKeystore": "android.keystore",
-    "androidKeyStoreAlias": "android.keystore",
-    "androidKeyStoreStorePass": "123456",
-    "androidKeyStoreKeyPass": "123456",
-
     "smtpServer": "smtp.mail.server",
     "smtpPort": 587,
     "smtpUsername": "username",

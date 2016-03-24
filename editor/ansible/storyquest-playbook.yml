@@ -27,7 +27,7 @@
       apt: upgrade=full
 
     - name: upload project backup script
-      copy: src=scripts/ProjectBackup.sh dest=/usr/local/bin/ProjectBackup.sh owner=ubuntu group=ubuntu mode=0744
+      copy: src=ProjectBackup.sh dest=/usr/local/bin/ProjectBackup.sh owner=ubuntu group=ubuntu mode=0744
 
     - name: create cron job for project backup
       cron: name="storyquest project backup" minute="*/10" job="/usr/local/bin/ProjectBackup.sh"
@@ -71,7 +71,7 @@
     - name: Start storyquest-docker
       docker: 
         docker_api_version: 1.18
-        image: kleinhenz/storyquest
+        image: kleinhenz/storyquest-builds
         name: storyquest
         restart_policy: always
         pull: always

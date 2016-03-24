@@ -1,27 +1,25 @@
-== Update Storyquest == 
-Für ein Update von dem Storyquest Docker Containern sowie dem Couchdb Docker Container muss
-Ansibe (http://www.ansible.com/home) mit der Version 1.9 oder höher ausgecket werden.
-Nun muss nur noch folgender Befehl ausgeführt werden:
+# Installing StoryQuest using Ansible
 
-$ ansible-playbook storyquest-playbook.yml -i ansible_hosts -s --private-key <PATH_TO>/QuestorDevEU.pem
+If you are using Docker as a deployment method for StoryQuest, you'll need
+at least a CouchDB image and the StoryQuest image running. To make
+deployment easier, StoryQuest includes an Ansible playbook to install
+StoryQuest/Docker with all needed dependencies on a fresh Ubuntu server.
 
-Anschließend verbindet sich ansible mit den Servern die in ansible_hosts definiert sind
-und führt das update aus.
-ACHTUNG: Wenn neue Docker images heruntergeladen werden müssen kann dies etwas dauern. 
-Unterbrechen sie den Prozess in dieser Zeit nicht, sonst wartet Docker das das image fertig heruntergeladen
-worden ist bis es ein neues Docker image herunterlädt was aber nicht passieren kann da der Prozess schon gekillt ist.
+This works out-of-the-box with a fresh AWS Ubuntu VM.
 
-=== Ansible Tasks ===
-Folgende tasks führt ansible aus wenn sie noch nicht erledigt sind.
+## Prerequisites
 
-* apt install apt-transport-https
-* Docker repository key hinzufügen
-* Add Docker repository and update apt cache
-* apt update
-* apt upgrade
-* Install the dependencies lxc-docker, python-dev and python-pip
-* Update pip
-* pip install Docker-py
-* Start docker
-* Run the latest docker image couchdb-docker
-* Run the latest docker image storyquest-docker
+You'll nee Ansible 1.9+ on your local machine.
+
+## Installing StoryQuest
+
+Inspect the `ansible_hosts` file and set your deployment host names.
+Then issue the following command on your local machine:
+
+$ ansible-playbook storyquest-playbook.yml -i ansible_hosts -s --private-key <PATH_TO>/<YOUR_KEY_>.pem
+
+This will install the system on the given hosts. CAUTION: installing
+requires to download several GB ob data from the Docker registry and
+takes a while. DO NOT INTERRUPT THE ANSIBLE PROCESS. This might 
+cause the Docker daemon on the target machine to go bonkers.
+
