@@ -13,13 +13,6 @@ RUN DEBIAN_FRONTEND=noninteractive curl -sL https://deb.nodesource.com/setup_5.x
 RUN DEBIAN_FRONTEND=noninteractive apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install nodejs
 
-# use changes to package.json to force Docker not to use the cache
-# when we change our application's nodejs dependencies:
-ADD package.json /tmp/package.json
-RUN rm -rf ~/.npm && npm cache clean && rm -rf /root/.npm
-RUN cd /tmp && npm install
-RUN mkdir -p /opt/app && cp -a /tmp/node_modules /opt/app/
-
 # install java
 RUN \
   apt-get update && \
@@ -35,7 +28,11 @@ RUN ( sleep 5 && while [ 1 ]; do sleep 1; echo y; done ) | /opt/android-sdk-linu
 # From here we load our application's code in, therefore the previous docker
 # "layer" thats been cached will be used if possible
 WORKDIR /opt/app
-ADD . /opt/app
+
+# get release zip from github, change archive url if a different release is needed
+RUN curl -L -o /tmp/storyquest.tgz https://github.com/michaelkleinhenz/storyquest/releases/download/v3.0.0-alpha/storyquest-3.0.0-alpha.tar.gz
+RUN tar xfz /tmp/storyquest.tgz -C /opt/app
+#ADD . /opt/app
 
 EXPOSE 3001
 EXPOSE 3000

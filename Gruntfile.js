@@ -432,7 +432,8 @@ module.exports = function (grunt) {
     compress: {
         main: {
             options: {
-                archive: 'builds/storyquest-git-' + new Date().getTime() + '.zip'
+                archive: 'builds/storyquest-git-' + new Date().getTime() + '.tar.gz',
+                mode: 'tgz'
             },
             files: [
                 {expand: true, cwd: 'dist/', src: '**/*', dest: '/'}
