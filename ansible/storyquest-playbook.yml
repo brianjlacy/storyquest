@@ -3,18 +3,18 @@
   remote_user: ubuntu
   sudo: true
   tasks:
-    - name: Make sure apt-transport-https is installed
+    - name: make sure apt-transport-https is installed
       apt:
         pkg: "apt-transport-https"
         state: installed
 
-    - name: Add Docker repository key
+    - name: add Docker repository key
       apt_key:
         id: "36A1D7869245C8950F966E92D8576A8BA88D21E9"
         keyserver: "hkp://keyserver.ubuntu.com:80"
         state: present
 
-    - name: Add Docker repository and update apt cache
+    - name: add Docker repository and update apt cache
       apt_repository:
         repo: "deb http://get.docker.io/ubuntu docker main"
         update_cache: yes
@@ -23,7 +23,7 @@
     - name: update server
       apt: update_cache=yes
     
-    - name: upgrad server
+    - name: upgrade server
       apt: upgrade=full
 
     - name: upload project backup script
@@ -34,7 +34,7 @@
       become: yes
       become_user: ubuntu
 
-    - name: Install dependencies
+    - name: install dependencies
       apt:
         pkg: "{{ item }}"
         state: installed
@@ -43,19 +43,19 @@
         - python-dev
         - python-pip
       
-    - name: Make sure pip is upgraded
+    - name: make sure pip is upgraded
       command: easy_install -U pip
 
-    - name: Make sure Docker-py is installed 
+    - name: make sure Docker-py is installed
       pip:
         name: docker-py
         
-    - name: Make sure docker is running
+    - name: make sure docker is running
       service:
         name: docker
         state: started
     
-    - name: Start couchdb-docker
+    - name: start couchdb-docker
       docker: 
         docker_api_version: 1.18
         image: klaemo/couchdb 
@@ -68,10 +68,10 @@
           - "/data/couchdb/couchdb-data:/usr/local/var/lib/couchdb"
           - "/data/couchdb/couchdb-logs:/usr/local/var/log/couchdb"
 
-    - name: Start storyquest-docker
+    - name: start storyquest-docker
       docker: 
         docker_api_version: 1.18
-        image: kleinhenz/storyquest-builds
+        image: kleinhenz/storyquest:v3.0.0-alpha
         name: storyquest
         restart_policy: always
         pull: always
@@ -94,5 +94,5 @@
         env:
           CONFIGFILE: /opt/app/config.json
 
-    - name: Remove all untagged docker images
+    - name: remove all untagged docker images
       shell: docker rmi $(docker images -q -f dangling=true)

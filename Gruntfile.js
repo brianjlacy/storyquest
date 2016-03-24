@@ -136,8 +136,12 @@ module.exports = function (grunt) {
           dot: true,
           src: [
             '.tmp',
-            '<%= appConfig.dist %>/{,*/}*',
-            '!<%= appConfig.dist %>/.git{,*/}*'
+            './dist',
+            './builds',
+            './node_modules',
+            './editor/node_modules',
+            './editor/template/bower_components',
+            './editor/frontend/bower_components'
           ]
         }]
       },
@@ -349,7 +353,7 @@ module.exports = function (grunt) {
            cwd: './frontend/js',
            dest: '<%= appConfig.dist %>/js/',
            src: ['snippets/markdown.js']
-        }, {
+        },{
           expand: true,
           cwd: '.tmp/images',
           dest: '<%= appConfig.dist %>/images',
@@ -398,6 +402,7 @@ module.exports = function (grunt) {
               'mailtemplates/*',
               'service/**/*',
               'template/**/*',
+              'node_modules/**/*',
               'storyquest.js',
               'package.json'
           ],
