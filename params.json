@@ -1,0 +1,6 @@
+{
+  "name": "Storyquest",
+  "tagline": "A game book development platform with web based editor and mobile client.",
+  "body": "This is StoryQuest, A game book development platform complete with a web \r\nbased editor and a mobile client.\r\n\r\nIt is a feature-rich web based development suite and mobile client for\r\nmobile augmented books. With StoryQuest, you can create adventure e-books and interactive \r\nfiction that contain branching storylines, audio, images, illustrations, video, and \r\ninteractive JavaScript-based content. StoryQuest delivers ready-to-deploy app archives \r\nfor various platforms, including iOS, Android, FirefoxOS, Chrome, and can export\r\nbuilds for e-readers like Kindle or Kobo.\r\n\r\nStoryQuest is currently in development and has reached beta stage. Feel free to comment or try.\r\nCaution: documentation is somewhat sparse at the moment, we're woking on this. ",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
