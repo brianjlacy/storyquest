@@ -24,6 +24,7 @@
  */
 
 var fs = require("fs");
+var fse = require("fs-extra");
 var path = require("path");
 
 exports.registerServices = function(config, app) {
@@ -63,8 +64,11 @@ exports.putMedia = function(req, res){
     try {
         logger.info("req.files.file.length " + JSON.stringify(req.files));
         if(req.files.file.length) {
-           for (var i=0; i<req.files.file.length; i++)
-                fs.renameSync(req.files.file[i].path, path.join(outputDir, req.files.file[i].originalFilename));
+            for (var i=0; i<req.files.file.length; i++) {
+               // dont use rename here, because rename breaks when files are on different filesystems
+               fse.copySync(req.files.file[i].path, path.join(outputDir, req.files.file[i].originalFilename));
+               fse.removeSync(req.files.file[i].path);
+            }
             res.json(200, {});
         } else {
             // we need to copy and unlink when moving files across different partitions

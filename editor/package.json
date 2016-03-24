@@ -17,6 +17,7 @@
     "engine.io": "1.6.4",
     "express": "3.5.1",
     "express-winston": "0.4.1",
+    "fs-extra": "^0.26.7",
     "image-size": "^0.4.0",
     "jade": "1.11.0",
     "lunr": "0.6.0",

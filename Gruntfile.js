@@ -420,7 +420,7 @@ module.exports = function (grunt) {
             expand: true,
             cwd: './',
             src: [
-              'client-android/**/*', '!**/build/**', '!**/gradle/**'
+              'client-android/**/*', '!**/build/**'
             ],
             dest: '<%= appConfig.distNode %>'
           }]

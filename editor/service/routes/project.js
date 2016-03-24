@@ -25,6 +25,7 @@
 
 var path = require("path");
 var fs = require("fs");
+var fse = require("fs-extra");
 var genicon = require("cordova-gen-icon");
 var async = require("async");
 var propertiesParser = require("properties-parser");
@@ -262,7 +263,9 @@ exports.updateIconImage = function(req, res){
         if (req.files && req.files.file) {
             var dimensions = imageSize(req.files.file.path);
             if (dimensions.width===1024 && dimensions.height===1024) {
-                fs.renameSync(req.files.file.path, path.join(outputDir, "icon.png"));
+                // dont use rename here, because rename breaks when files are on different filesystems
+                fse.copySync(req.files.file.path, path.join(outputDir, "icon.png"));
+                fse.removeSync(req.files.file.path);
                 return res.json(200, {});
             } else
                 return res.json(500, {type: "REQUEST_FAILED", "message": "Image does not have the right size."});
@@ -296,7 +299,9 @@ exports.updateCoverImage = function(req, res){
         if (req.files && req.files.file) {
             var dimensions = imageSize(req.files.file.path);
             if (dimensions.width===500 && dimensions.height===312) {
-                fs.renameSync(req.files.file.path, path.join(outputDir, "cover.png"));
+                // dont use rename here, because rename breaks when files are on different filesystems
+                fse.copySync(req.files.file.path, path.join(outputDir, "cover.png"));
+                fse.removeSync(req.files.file.path);
                 return res.json(200, {});
             } else
                 return res.json(500, {type: "REQUEST_FAILED", "message": "Image does not have the right size."});
@@ -324,7 +329,9 @@ exports.updateSplashImage = function(req, res){
         if (req.files && req.files.file) {
             var dimensions = imageSize(req.files.file.path);
             if (dimensions.width===800 && dimensions.height===1280) {
-                fs.renameSync(req.files.file.path, path.join(outputDir, "splash.jpg"));
+                // dont use rename here, because rename breaks when files are on different filesystems
+                fse.copySync(req.files.file.path, path.join(outputDir, "splash.jpg"));
+                fse.removeSync(req.files.file.path);
                 return res.json(200, {});
             } else
                 return res.json(500, {type: "REQUEST_FAILED", "message": "Image does not have the right size."});
@@ -350,7 +357,9 @@ exports.updateSplashVideo = function(req, res){
     var outputDir = Utils.getProjectDir(req.param("projectId"));
     try {
         if (req.files && req.files.file) {
-            fs.renameSync(req.files.file.path, path.join(outputDir, "splash.mp4"));
+            // dont use rename here, because rename breaks when files are on different filesystems
+            fse.copySync(req.files.file.path, path.join(outputDir, "splash.mp4"));
+            fse.removeSync(req.files.file.path);
             return res.json(200, {});
         }
     } catch(err) {
@@ -460,7 +469,9 @@ exports.updateAppKey = function(req, res) {
     var password = req.param("password");
     try {
         if (req.files && req.files.file) {
-            fs.renameSync(req.files.file.path, path.join(outputDir, "application.keystore"));
+            // dont use rename here, because rename breaks when files are on different filesystems
+            fse.copySync(req.files.file.path, path.join(outputDir, "application.keystore"));
+            fse.removeSync(req.files.file.path);
         }
         // update properties file
         var propertiesFile = path.join(outputDir, "storyquest.properties");

@@ -24,6 +24,7 @@
  */
 
 var fs = require("fs");
+var fse = require("fs-extra");
 var path = require("path");
 var archiver = require("archiver");
 var ncp = require("ncp").ncp;
@@ -86,7 +87,9 @@ var finishBuildJob = function(buildId, projectId, exitCode, signal, tempDirOrFil
                 builds[buildId].error = null;
             } else {
                 var artifactName = path.join(config.artifactsPath, buildId + ".apk");
-                fs.renameSync(apkPath, artifactName);
+                // dont use rename here, because rename breaks when files are on different filesystems
+                fse.copySync(apkPath, artifactName);
+                fse.removeSync(apkPath);
                 builds[buildId].artifactPath = artifactName;
                 builds[buildId].artifactWebPath = "/api/download/" + projectId + "/" + buildId;
             }
@@ -99,7 +102,9 @@ var finishBuildJob = function(buildId, projectId, exitCode, signal, tempDirOrFil
                 builds[buildId].error = null;
             } else {
                 var artifactName = path.join(config.artifactsPath, buildId + ".zip");
-                fs.renameSync(tempDirOrFile, artifactName);
+                // dont use rename here, because rename breaks when files are on different filesystems
+                fse.copySync(tempDirOrFile, artifactName);
+                fse.removeSync(tempDirOrFile);
                 builds[buildId].artifactPath = artifactName;
                 builds[buildId].artifactWebPath = "/api/download/" + projectId + "/" + buildId;
             }
@@ -134,6 +139,7 @@ exports.deployState = function(req, res) {
         text: incrementText,
         percent: percent,
         state: builds[buildId].state,
+        error: builds[buildId].error,
         artifactPath: builds[buildId].artifactPath,
         artifactWebPath: builds[buildId].artifactWebPath,
         label: builds[buildId].label,
