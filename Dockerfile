@@ -30,7 +30,7 @@ RUN ( sleep 5 && while [ 1 ]; do sleep 1; echo y; done ) | /opt/android-sdk-linu
 WORKDIR /opt/app
 
 # get release zip from github, change archive url if a different release is needed
-RUN curl -L -o /tmp/storyquest.tgz https://github.com/michaelkleinhenz/storyquest/releases/download/v3.0.1-alpha/storyquest-3.0.1-alpha.tar.gz
+RUN curl -L -o /tmp/storyquest.tgz https://github.com/michaelkleinhenz/storyquest/releases/download/v3.0.2-alpha/storyquest-3.0.2-alpha.tar.gz
 RUN tar xfz /tmp/storyquest.tgz -C /opt/app
 RUN chmod a+x /opt/app/client-android/gradlew
 

@@ -41,7 +41,7 @@ exports.registerServices = function(config, app) {
 };
 
 exports.createIndexHTML = function(outputDir, type, nodeId) {
-    var html = '<html><head><script> window.location = "station-html/' + type + '.html?station=' + nodeId + '";\n</script></head></html>';
+    var html = '<html><head><script> window.location = "index.html?station=' + nodeId + '";\n</script></head></html>';
     fs.writeFileSync(outputDir + "/index.html", html);
 };
 
