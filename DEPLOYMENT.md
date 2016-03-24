@@ -49,6 +49,13 @@ the release `tar.gz` from GitHub.
 
 ## Step 4: Updating the Production Server with Ansible
 
+Update the version string in the playbook:
+
+    - name: start storyquest-docker
+      docker: 
+        docker_api_version: 1.18
+        image: kleinhenz/storyquest:<new version name>
+
 To deploy StoryQuest, issue the following command in the `ansible` directory:
 
     ansible-playbook storyquest-playbook.yml -i ansible_hosts -s --private-key <PATH_TO>/<YOUR_KEY_>.pem
