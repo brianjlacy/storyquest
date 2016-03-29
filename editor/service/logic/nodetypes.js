@@ -45,6 +45,7 @@ var nodeSkeletons = {
         "choiceDisabledGradientStartColor": "#3498db",
         "choiceDisabledGradientEndColor": "#2980b9",
         "choiceTextColor": "white",
+        "editorColor": "#3498db",
         "text": {
             "de": "001_de.txt"
         }

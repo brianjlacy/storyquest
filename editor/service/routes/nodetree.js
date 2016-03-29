@@ -57,7 +57,7 @@ exports.renderNodeTree = function(req, res){
                     y: node.y || Math.random(),
                     size: 1,
                     linkVertices: node.linkVertices,
-                    color: node.nodeColor || "#666",
+                    color: node.editorColor || "#3c8dbc",
                     type: node.type,
                     image: {
                         url: "/images/icons/" + node.type + ".png",

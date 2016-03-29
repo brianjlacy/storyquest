@@ -26,7 +26,7 @@
 var propertiesAvailableInConfigEditor = [
     "style", "isStartNode", "backgroundImage", "backgroundImage", "paddingTop", "backgroundColor",
     "accentColor", "boxBackgroundColor", "choiceEnabledGradientStartColor", "choiceEnabledGradientEndColor",
-    "choiceDisabledGradientStartColor", "choiceDisabledGradientEndColor", "choiceTextColor"
+    "choiceDisabledGradientStartColor", "choiceDisabledGradientEndColor", "choiceTextColor", "editorColor"
 ];
 
 var stationconfigSchema = {
@@ -93,6 +93,11 @@ var stationconfigSchema = {
         },
         "choiceTextColor": {
             "title": "Text Color for Links",
+            "type": "string",
+            "format": "color"
+        },
+        "editorColor": {
+            "title": "Color for Editor Display",
             "type": "string",
             "format": "color"
         }
