@@ -384,6 +384,7 @@ exports.getProject = function(req, res) {
         if (err) {
             return res.json(500, {type:"REQUEST_FAILED", "message":err});
         } else {
+            project.blogFeed = config.blogFeed;
             return res.json(200, project)
         }
     });

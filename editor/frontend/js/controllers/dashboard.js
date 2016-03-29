@@ -40,6 +40,13 @@ editorModule.controller("dashboardCoreController", ["$scope", "$http", "UserServ
                 pageTitle($scope.project.data.name, "Project Overview");
                 console.log("Loading project stats for " + $scope.project.data.id);
                 $scope.updateStats();
+                // load project blog feed
+                window.Feed({
+                    url: $scope.project.data.blogFeed,
+                    number: 3,
+                    callback: $scope.feedLoaded
+                });
+
             }
         });
 
@@ -77,11 +84,5 @@ editorModule.controller("dashboardCoreController", ["$scope", "$http", "UserServ
                 $scope.blogPosts.push(posts.feed.entries[i]);
             $scope.$apply();
         };
-        window.Feed({
-            url: "http://storyquestblog.blogspot.com/feeds/posts/default",
-            number: 3,
-            callback: $scope.feedLoaded
-        });
-
     }]);
 

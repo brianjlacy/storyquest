@@ -90,7 +90,6 @@ exports.renderNodeTree = function(req, res){
                 }
             }
         });
-
         res.json(tree);
     });
 };
