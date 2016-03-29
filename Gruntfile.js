@@ -118,6 +118,10 @@ module.exports = function (grunt) {
                 connect.static('./editor/frontend/fonts')
               ),
               connect().use(
+                  '/questml.peg',
+                  connect.static('./editor/template/resources/questml.peg')
+              ),
+              connect().use(
                   '/artifacts',
                   connect.static('./editor/artifacts')
               ),

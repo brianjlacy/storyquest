@@ -33,12 +33,60 @@ editorModule.directive("sqdefaulteditor", function() {
     };
 });
 
+// configure snippets for the editor
+ace.define('ace/snippets/markdown', ['require', 'exports', 'module' ], function(require, exports, module) {
+    exports.snippetText = "# Markdown\n\
+\n\
+# Includes octopress (http://octopress.org/) snippets\n\
+# IMPORTANT: USE TAB CHARACTER BEFORE RECEIPE - OTHERWISE THE SNIPPET WILL NOT BE REGISTERED\n\
+\n\
+snippet Node Link\n\
+	{link(${1:target node id}, ${2:flag name}, ${3:is visible condition}, ${4:is enabled condition}):${5:link text}}\n\
+\n\
+snippet Inline Node Link\n\
+	{link(${1:target node id}, ${2:flag name}, ${3:is visible condition}, ${4:is enabled condition}):${5:link text}}\n\
+\n\
+snippet Text Box\n\
+	{box(${1:styling class}):${2:box text}}\n\
+\n\
+snippet Image\n\
+	{image(${1:styling class}):${2:image filename}}\n\
+\n\
+snippet Button\n\
+	{button(${1:flag name}, ${2:is visible condition}, ${3:is enabled condition}):${4:button text}}\n\
+\n\
+snippet Condition\n\
+	{when(${1:flag or expression}:${2:text}}\n\
+\n\
+snippet Dropin\n\
+	{dropin(${1:dropin name}:${2:body text}}\n\
+\n\
+snippet Set Variable\n\
+	{set(${1:value}:${2:variable name}}\n\
+\n\
+snippet Insert Variable\n\
+	{${1:variable name}}\n\
+\n\
+snippet Insert List Value\n\
+	{|${1:value 1}|${2:value 2}|}\n\
+\n\
+";
+    exports.scope = "markdown";
+
+});
+
 var editorDefaultModule = angular.module("editorDefaultModule", [ "ngResource", "ui.ace" ]);
 
 editorDefaultModule.controller("editorDefaultController", ["$scope", "TypeIcons",
     function ($scope, TypeIcons) {
 
         TypeIcons.registerType("default", "glyphicon-globe");
+
+        // initializing ace completer for markdown
+        // note: completers are global for all ace instances
+        $scope.aceLangTools = ace.require("ace/ext/language_tools");
+        $scope.aceLangTools.addCompleter($scope.sqCompleter);
+        ace.config.set("basePath", "js/");
 
         $scope.$watch("node", function() {
             if ($scope.node && $scope.node.type == "default") {
@@ -73,12 +121,146 @@ editorDefaultModule.controller("editorDefaultController", ["$scope", "TypeIcons"
         };
 
         $scope.insertLink = function() {
-            $scope.webnodeeditor.insert("[l|Enter chapter id here| Enter link text here]");
+            $scope.webnodeeditor.insert("{link(Enter chapter id here):Enter link text here}");
         };
 
         $scope.insertImage = function() {
-            $scope.webnodeeditor.insert("[i|Enter alignment here|Enter image name here|Enter caption here]");
+            $scope.webnodeeditor.insert("{image(Enter alignment here):Enter image name here}");
         };
+
+        // setup questML parser
+        if (!$scope.questMLParser)
+            $.get( "/questml.peg", function( data ) {
+                $scope.questMLParser = PEG.buildParser(data);
+                console.log("QuestML parser active");
+                if (callback)
+                    callback($scope.questMLParser);
+            });
+        else
+            callback($scope.questMLParser);
+
+        // autocompleter configuration
+        $scope.sqCompleter = {
+            getCompletions: function(editor, session, pos, prefix, callback) {
+
+                var row = pos.row;
+                var col = pos.column;
+                var line = session.getLine(row);
+
+                console.log("Completion requested..");
+
+                // determine command name
+                var command = "";
+                var commandStartIndex = col;
+                var stack = 0;
+                var currentRow = row;
+                var currentIdx = col;
+                var currentLine = "" + line;
+                // backtrace
+                while (!(currentLine.charAt(currentIdx)=="{" && stack==0) && !(currentRow<=0 && currentIdx<=0)) {
+                    var currentChar = currentLine.charAt(currentIdx);
+                    if (currentChar=="}" && currentIdx!=col)
+                        stack++;
+                    else if (currentChar=="{")
+                        stack--;
+                    command = currentChar + command;
+                    commandStartIndex--;
+                    if (currentIdx<=0) {
+                        currentLine = session.getLine(--currentRow);
+                        currentIdx = currentLine.length-1;
+                    } else
+                        currentIdx--;
+                }
+                // forward trace
+                stack = 0;
+                currentRow = row;
+                currentIdx = col;
+                currentLine = "" + line;
+                while (!(currentLine.charAt(currentIdx)=="}" && stack==0) && !(currentRow==session.getLength()-1 && currentIdx>currentLine.length-1)) {
+                    currentChar = currentLine.charAt(currentIdx);
+                    if (currentChar=="{" && currentIdx!=col)
+                        stack++;
+                    else if (currentChar=="}")
+                        stack--;
+                    command = command + currentChar;
+                    if (currentIdx>currentLine.length-1) {
+                        currentLine = session.getLine(++currentRow);
+                        currentIdx = 0;
+                    } else
+                        currentIdx++;
+                }
+                // add parentheses if they were cut off
+                if (command.charAt(0)!="{")
+                    command = "{" + command;
+                if (command.charAt(command.length-1)!="}")
+                    command = command + "}";
+                // parse the command
+                var commandObj = $scope.questMLParser.parse(command);
+                // if this is a command for which we support completion, continue
+                if (typeof commandObj=="object" && commandObj.type=="command") {
+                    // find out position inside of command
+                    var colInCommand = col - commandStartIndex;
+                    var commandPosition = "outside";
+                    var paramNumber = 0;
+                    var idx = colInCommand;
+                    while (idx>0 && commandPosition=="outside") {
+                        if (command.charAt(idx)==":")
+                            commandPosition = "body";
+                        else if (command.charAt(idx)=="(") {
+                            commandPosition = "params";
+                            // find out which param we're in
+                            // trick: we're counting the ',' left of cursor position
+                            for (var i=idx; i<colInCommand; i++)
+                                if (command.charAt(i)==",")
+                                    paramNumber++;
+                        }
+                        idx--;
+                    }
+                    console.log("Command: " + commandObj.command.name);
+                    console.log("Scope in Command: " + commandPosition);
+                    if (commandPosition=="params")
+                        console.log("Parameter context index: " + paramNumber);
+                    // display matching completion boxes
+                    switch (commandObj.command.name) {
+                        case "image":
+                            if (commandPosition=="body") {
+                                $.ajax({
+                                    url: "/api/media/" + $scope.project.data.id
+                                }).done(function (list) {
+                                    var completions = [];
+                                    if (list)
+                                        for (var i = 0; i < list.length; i++)
+                                            completions.push({name: list[i].replace(/.*\//, ""), value: list[i].replace(/.*\//, ""), score: 10000, meta: "Media Asset"});
+                                    callback(null, completions);
+                                });
+                            } else if (commandPosition=="params" && paramNumber==0)
+                                callback(null, [{name: "Left", value: "left", score: 90000, meta: "Alignment"},
+                                    {name: "Center", value: "center", score: 90000, meta: "Alignment"},
+                                    {name: "Right", value: "right", score: 90000, meta: "Alignment"}]);
+                            break;
+                        case "link":
+                        case "ilink":
+                            if (commandPosition=="params" && paramNumber==0) {
+                                var completions = [];
+                                completions.push({name: "NEW", value: "NEW", score: 90000, meta: "Create new chapter"});
+                                $.ajax({
+                                    url: "/api/nodelist/" + $scope.project.data.id
+                                }).done(function(list) {
+                                    if (list)
+                                        for (var i=0; i<list.length; i++)
+                                            completions.push({name: list[i].id, value: list[i].id, score: 10000, meta: list[i].title});
+                                    callback(null, completions);
+                                });
+                            }
+                            break;
+                    }
+                } else {
+                    console.log("Completion outside of allowed scope.");
+                    callback(null, []);
+                }
+            }
+        };
+
     }]
 );
 

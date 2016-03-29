@@ -1,3 +1,5 @@
+/gen
+/editor/projects
 /ansible/storyquest-playbook.retry
 /editor/template/bower_components
 /editor/ssl.crt

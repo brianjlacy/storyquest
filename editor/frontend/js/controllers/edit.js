@@ -142,12 +142,6 @@ editorModule.controller("editCoreController", ["$scope", "$http", "$timeout", "$
         };
         $interval(editorSyncDebounce, 1000);
 
-        // initializing ace completer for markdown
-        // note: completers are global for all ace instances
-        $scope.aceLangTools = ace.require("ace/ext/language_tools");
-        $scope.aceLangTools.addCompleter($scope.sqCompleter);
-        ace.config.set("basePath", "js/");
-
         // initialize json editor
         $("#stationDataEditor").jsoneditor({
             schema: stationconfigSchema,
@@ -331,92 +325,6 @@ editorModule.controller("editCoreController", ["$scope", "$http", "$timeout", "$
             $scope.editorSyncReady = true;
         };
 
-        // autocompleter configuration
-        $scope.sqCompleter = {
-            getCompletions: function(editor, session, pos, prefix, callback) {
-                var row = pos.row;
-                var col = pos.column;
-                var line = session.getLine(row);
-                var outer = false;
-                var statementStart = col;
-                while (line.charAt(statementStart)!="[" && statementStart>=0)
-                    statementStart--;
-                if (line.charAt(statementStart)!="[")
-                    outer = true;
-                var statementEnd = col;
-                while (line.charAt(statementEnd)!="]" && line.charAt(statementEnd)!="[" && statementEnd<line.length)
-                    statementEnd++;
-                if (line.charAt(statementEnd)!="]")
-                    outer = true;
-                // we only support one line statements right now
-                if (statementStart==-1 || statementEnd==-1 || outer) { callback(null, []); return }
-                // token position
-                var tokenCol = 0;
-                for (var i=statementStart; i<col; i++)
-                    if (line.charAt(i)=="|")
-                        tokenCol++;
-                // nominal statement
-                var statement = line.substring(statementStart+1, statementEnd);
-                // calculate position in tokens
-                var tokens = statement.split("|");
-                // retrieve autocompletion list
-                if (tokenCol==0)
-                    // command type alignment
-                    callback(null, [
-                        {name: "l", value: "l", score: 10000, meta: "Node Link"},
-                        {name: "i", value: "i", score: 10000, meta: "Image Block"},
-                        {name: "b", value: "b", score: 10000, meta: "Text Block"},
-                        {name: "v", value: "v", score: 10000, meta: "Video Block"}
-                    ]);
-                else if (tokens[0]=="i") {
-                    if (tokenCol==1) {
-                        $.ajax({
-                            url: "/media"
-                        }).done(function (list) {
-                            var completions = [];
-                            if (list)
-                                for (var i = 0; i < list.length; i++)
-                                    completions.push({name: list[i].replace(/.*\//, ""), value: list[i].replace(/.*\//, ""), score: 10000, meta: "Media Asset"});
-                            callback(null, completions);
-                        });
-                    }
-                } else if (tokens[0]=="j") {
-                    if (tokenCol==1)
-                    // image alignment
-                        callback(null, [
-                            {name: "left", value: "left", score: 10000, meta: "Align Left"},
-                            {name: "full", value: "full", score: 10000, meta: "Full Width"},
-                            {name: "right", value: "right", score: 10000, meta: "Align Right"}
-                        ]);
-                    else if (tokenCol==2) {
-                        $.ajax({
-                            url: "/media"
-                        }).done(function(list) {
-                            var completions = [];
-                            if (list)
-                                for (var i=0; i<list.length; i++)
-                                    completions.push({name: list[i].replace(/.*\//,""), value: list[i].replace(/.*\//,""), score: 10000, meta: "Media Asset"});
-                            callback(null, completions);
-                        });
-                    }
-                } else if (tokens[0]=="l") {
-                    if (tokenCol==1) {
-                        // target node list
-                        var completions = [];
-                        completions.push({name: "NEW", value: "NEW", score: 90000, meta: "Create new chapter"});
-                        $.ajax({
-                            url: "/nodelist"
-                        }).done(function(list) {
-                            if (list)
-                                for (var i=0; i<list.length; i++)
-                                    completions.push({name: list[i].id, value: list[i].id, score: 10000, meta: list[i].title});
-                            callback(null, completions);
-                        });
-                    }
-                } else
-                    callback(null, []);
-            }
-        };
     }]
 );
 

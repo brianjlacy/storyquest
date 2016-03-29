@@ -117,12 +117,19 @@ app.get(/^\/api\/p\/([^\/]+)\/(.+)/, global.authTokenOrUser, global.authProject,
         return res.redirect('/login');
     }
 });
+app.get("/questml.peg", function (req, res, next) {
+    var pegFile = "template/resources/questml.peg";
+    if (fs.existsSync(pegFile)) {
+        res.writeHead(200, { "Content-Type": "application/octet-stream" });
+        return res.end(fs.readFileSync(pegFile), "binary");
+    } else
+        return res.status(404).send();
+});
 app.get("/api/config/:key", global.authTokenOrUser, function (req, res, next) {
     var value = config[req.param("key")];
     if(value && req.param("key") == "youtubeApiKey"){
         return res.send(value);
     }
-
     return res.status(404).send();
 });
 app.get(/^\/api\/beta\/([^\/]+)\/(.+)/, function (req, res, next) {
