@@ -43,8 +43,10 @@ exports.renderNodeTree = function(req, res){
     };
 
     fs.readdir(configDir, function (err, list) {
+        var nodeIdList = [];
+
+        // pass 1: parse nodes
         list.forEach(function (file) {
-            var nodeIdList = [];
             if (file.indexOf(".json")!=-1) {
                 var node = JSON.parse(fs.readFileSync(path.join(configDir, file)));
                 // parse node
@@ -65,9 +67,16 @@ exports.renderNodeTree = function(req, res){
                 };
                 tree.nodes.push(thisNode);
                 nodeIdList.push(thisNode.id);
+            }
+        });
+
+        // pass 2: parse edges, has to be done after indexing all node id's above
+        list.forEach(function (file) {
+            if (file.indexOf(".json")!=-1) {
+                var node = JSON.parse(fs.readFileSync(path.join(configDir, file)));
                 // parse edges
                 var edges = nodetypes.parseNodeConnections(configDir, node);
-                if(edges){
+                if (edges) {
                     for (var i=0; i < edges.length; i++) {
                         var thisEdge = edges[i];
                         // only add the edge if the target node actually exists
@@ -81,6 +90,7 @@ exports.renderNodeTree = function(req, res){
                 }
             }
         });
+
         res.json(tree);
     });
 };

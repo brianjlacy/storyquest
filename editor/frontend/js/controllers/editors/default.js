@@ -133,11 +133,7 @@ editorDefaultModule.controller("editorDefaultController", ["$scope", "TypeIcons"
             $.get( "/questml.peg", function( data ) {
                 $scope.questMLParser = PEG.buildParser(data);
                 console.log("QuestML parser active");
-                if (callback)
-                    callback($scope.questMLParser);
             });
-        else
-            callback($scope.questMLParser);
 
         // autocompleter configuration
         $scope.sqCompleter = {

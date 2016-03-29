@@ -83,8 +83,8 @@ NodeTypes.prototype.parseDefaultNodeConnections = function(configDir, node) {
             target: targetId,
             source: node.id
         });
-    return result;
     }
+    return result;
 };
 
 NodeTypes.prototype.getNewNodeId = function(configDir) {
