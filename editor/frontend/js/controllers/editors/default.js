@@ -77,8 +77,8 @@ snippet Insert List Value\n\
 
 var editorDefaultModule = angular.module("editorDefaultModule", [ "ngResource", "ui.ace" ]);
 
-editorDefaultModule.controller("editorDefaultController", ["$scope", "TypeIcons",
-    function ($scope, TypeIcons) {
+editorDefaultModule.controller("editorDefaultController", ["$scope", "TypeIcons", "$http",
+    function ($scope, TypeIcons, $http) {
 
         TypeIcons.registerType("default", "glyphicon-globe");
 
@@ -94,7 +94,45 @@ editorDefaultModule.controller("editorDefaultController", ["$scope", "TypeIcons"
                 $scope.setContentEditorEnabled(true);
                 $scope.setConfigurationEditorEnabled(true);
             }
+            // refresh node and image list
+            $scope.refreshNodeList();
+            $scope.refreshImageList();
         });
+
+        $scope.refreshNodeList = function() {
+            if ($scope.project.data && $scope.project.data.id)
+                $http({method: "GET", url: "/api/sequence/" + $scope.project.data.id}).
+                success(function(sequence, status, headers, config) {
+                    $http({method: "GET", url: "/api/nodelist/" + $scope.project.data.id}).
+                    success(function(nodes, status, headers, config) {
+                        $scope.nodelist = [];
+                        if (sequence.length==0)
+                            $scope.nodelist=nodes;
+                        else
+                            for (var i=0; i<sequence.length; i++)
+                                for (var j=0; j<nodes.length; j++)
+                                    if (nodes[j].id===sequence[i])
+                                        $scope.nodelist.push(nodes[j]);
+                    }).
+                    error(function(data, status, headers, config) {
+                        modalError("Error " + status + " when reading data. Please try again.");
+                    });
+                }).
+                error(function(data, status, headers, config) {
+                    modalError("Error " + status + " when reading data. Please try again.");
+                });
+        };
+
+        $scope.refreshImageList = function() {
+            if ($scope.project.data && $scope.project.data.id)
+                $.ajax({
+                    url: "/api/media/" + $scope.project.data.id
+                }).done(function (list) {
+                    $scope.imagelist = [];
+                    for (var i = 0; i < list.length; i++)
+                        $scope.imagelist.push({filename: list[i].replace(/.*\//, ""), path: list[i]});
+                });
+        };
 
         $scope.aceLoaded = function(editor) {
             if (editor) {
@@ -120,12 +158,52 @@ editorDefaultModule.controller("editorDefaultController", ["$scope", "TypeIcons"
             $scope.nodeChanged($scope.node);
         };
 
-        $scope.insertLink = function() {
-            $scope.webnodeeditor.insert("{link(Enter chapter id here):Enter link text here}");
+        $scope.insertLink = function(newLinkTarget, newLinkText) {
+            if (newLinkTarget && newLinkText)
+                $scope.webnodeeditor.insert("{link(" + newLinkTarget + "):" + newLinkText + "}");
+            else
+                $("#modalLink").modal();
         };
 
-        $scope.insertImage = function() {
-            $scope.webnodeeditor.insert("{image(Enter alignment here):Enter image name here}");
+        $scope.insertImage = function(newAlignment, newImage) {
+            if (newImage)
+                $scope.webnodeeditor.insert("{image(" + newAlignment + "):" + newImage.replace(/.*\//, "") + "}");
+            else {
+                $scope.newAlignment = "center";
+                $("#modalImage").modal();
+            }
+        };
+
+        $scope.insertBox = function() {
+            var text = $scope.webnodeeditor.getSession().doc.getTextRange($scope.webnodeeditor.selection.getRange());
+            if (text)
+                $scope.webnodeeditor.insert("{box(center):" + text + "}");
+            else
+                $scope.webnodeeditor.insert("{box(center):}");
+        };
+
+        $scope.insertHeadline = function() {
+            var text = $scope.webnodeeditor.getSession().doc.getTextRange($scope.webnodeeditor.selection.getRange());
+            if (text)
+                $scope.webnodeeditor.insert("# " + text);
+            else
+                $scope.webnodeeditor.insert("# ");
+        };
+
+        $scope.insertEmphasis = function() {
+            var text = $scope.webnodeeditor.getSession().doc.getTextRange($scope.webnodeeditor.selection.getRange());
+            if (text)
+                $scope.webnodeeditor.insert("*" + text + "*");
+            else
+                $scope.webnodeeditor.insert("**");
+        };
+
+        $scope.insertStrong = function() {
+            var text = $scope.webnodeeditor.getSession().doc.getTextRange($scope.webnodeeditor.selection.getRange());
+            if (text)
+                $scope.webnodeeditor.insert("**" + text + "**");
+            else
+                $scope.webnodeeditor.insert("****");
         };
 
         // setup questML parser

@@ -1,10 +1,77 @@
 <div class="directive-default">
-    <div class="acebuttons">
-        <button ng-click="insertImage()" title="Insert Image"
-                class="glyphicon glyphicon-picture"></button>
+
+    <div id="modalLink" tabindex="-1" role="dialog" aria-labelledby="modalLinkLabel" aria-hidden="true" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                    <h3 id="modalLinkLabel">Insert Link</h3></div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="newLinkTarget">Link Target:</label>
+                        <select class="form-control" id="newLinkTarget" ng-model="newLinkTarget">
+                            <option ng-repeat="thisNode in nodelist track by thisNode.id" value="{{thisNode.id}}">{{thisNode.title}} ({{thisNode.id}})</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="newLinkText" ng-model="newLinkText" placeholder="Link Text" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button ng-click="insertLink(newLinkTarget, newLinkText)" data-dismiss="modal" aria-hidden="true" ng-disabled="!newLinkTarget || !newLinkText" class="btn">
+                        Insert Link
+                    </button>
+                    <button data-dismiss="modal" aria-hidden="true" class="btn">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalImage" tabindex="-1" role="dialog" aria-labelledby="modalImageLabel" aria-hidden="true" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                    <h3 id="modalImageLabel">Insert Image</h3></div>
+                <div class="modal-body">
+                    <div class="form-group" style="display:table-cell;width:40%;vertical-align:top;padding:1em;">
+                        <label for="newImage">Image:</label>
+                        <select class="form-control" id="newImage" ng-model="newImage">
+                            <option ng-repeat="thisImage in imagelist track by thisImage.filename" value="{{thisImage.path}}">{{thisImage.filename}}</option>
+                        </select>
+                        <label for="newAlignment">Alignment/CSS Class:</label>
+                        <select class="form-control" id="newAlignment" ng-model="newAlignment">
+                            <option value="left">Left aligned</option>
+                            <option value="center">Centered</option>
+                            <option value="right">Right aligned</option>
+                        </select>
+                    </div>
+                    <div style="display:table-cell;width:40%;height:20em">
+                        <img src="{{newImage}}">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button ng-click="insertImage(newAlignment, newImage)" data-dismiss="modal" aria-hidden="true" ng-disabled="!newImage || !newAlignment" class="btn">
+                        Insert Image
+                    </button>
+                    <button data-dismiss="modal" aria-hidden="true" class="btn">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="acebuttons" style="margin-left:0.4em">
+        <button ng-click="insertHeadline()" title="Insert Headline" class="btn btn-xs btn-toolbar"><i class="glyphicon glyphicon-header"></i></button>
         <span>&nbsp;</span>
-        <button ng-click="insertLink()" title="Insert Link"
-                class="glyphicon glyphicon-random"></button>
+        <button ng-click="insertEmphasis()" title="Insert Emphasised Text" class="btn btn-xs btn-toolbar"><i class="glyphicon glyphicon-italic"></i></button>
+        <span>&nbsp;</span>
+        <button ng-click="insertStrong()" title="Insert Strong Text" class="btn btn-xs btn-toolbar"><i class="glyphicon glyphicon-bold"></i></button>
+        <span>&nbsp;&nbsp;&nbsp;</span>
+        <button ng-click="insertImage()" title="Insert Image" class="btn btn-xs btn-toolbar"><i class="glyphicon glyphicon-picture"></i></button>
+        <span>&nbsp;</span>
+        <button ng-click="insertLink()" title="Insert Link" class="btn btn-xs btn-toolbar"><i class="glyphicon glyphicon-link"></i></button>
+        <span>&nbsp;</span>
+        <button ng-click="insertBox()" title="Insert Box" class="btn btn-xs btn-toolbar"><i class="glyphicon glyphicon-th-large"></i></button>
     </div>
     <div ui-ace="{ onLoad: aceLoaded, onChange: aceChanged }" ng-model="node.text[0].text"></div>
 </div>

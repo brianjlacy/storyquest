@@ -291,6 +291,8 @@ editorModule.controller("editGraphicalCoreController", ["$scope", "$http", "$int
         $scope.onDropComplete=function(nodetype, event) {
             Node.create({ projectId: $scope.project.data.id, nodeIdOrType: nodetype }, function(node) {
                 node.color = "#666";
+                node.x = (event.x - paper.options.origin.x - $('#diagram').offset().left - 50) / scale;
+                node.y = (event.y - paper.options.origin.y - $('#diagram').offset().top - 50) / scale;
                 var nodeJoint = $scope.buildNode(node);
                 graph.addCells([nodeJoint]);
             }, function(error) {

@@ -119,7 +119,7 @@ StoryQuestEditorApp.factory("TypeIcons", [
                 // some default icons for no-editor types
                 default: "glyphicon-globe",
                 css: "glyphicon-eye-open",
-                html: "glyphicon-link",
+                html: "glyphicon-edit",
                 javascript: "glyphicon-cog"
             },
             registerType: function(type, icon) {

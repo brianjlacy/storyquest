@@ -42,6 +42,13 @@ var editableFiles = [
         title: "Global JS",
         description: "JavaScript that is available in all chapters.",
         type: "javascript"
+    },
+    {
+        id: "character",
+        path: "character.html",
+        title: "Charactersheet",
+        description: "Template for the character sheet.",
+        type: "html"
     }
 ];
 
