@@ -17,12 +17,10 @@
         <activity
             android:name=".MainActivity"
             android:label="${activityLabel}"
-            android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"
             android:configChanges="keyboardHidden|orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

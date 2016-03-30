@@ -26,7 +26,7 @@
 var questMLParser;
 function getQuestMLParser(callback) {
     if (!questMLParser)
-        $.get( "resources/questml.peg", function( data ) {
+        loadFile("resources/questml.peg", function( data ) {
             questMLParser = PEG.buildParser(data);
             questMLParser.parseQuestML = parseQuestML;
             console.log("QuestML parser active");

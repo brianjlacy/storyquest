@@ -24,15 +24,17 @@ package de.storyquest.client;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.webkit.ConsoleMessage;
@@ -41,14 +43,20 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
+import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity
+import java.io.IOException;
+import java.io.InputStream;
+
+public class MainActivity extends PlatformServicesActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public static String LOGTAG = MainActivity.class.getName();
 
     protected ProgressDialog progressDialog = null;
     protected WebView web = null;
+    protected WebView character = null;
     protected ScriptSystem scriptSystem = null;
     protected String currentUrl = null;
 
@@ -68,11 +76,44 @@ public class MainActivity extends AppCompatActivity
 
         // load initial layout
         setContentView(R.layout.activity_main);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        View header = navigationView.getHeaderView(0);
+
+        // wire the drawer open event to the character sheet refresh
+        DrawerLayout drawer = (DrawerLayout)findViewById(R.id.drawer_layout);
+        if (drawer != null) {
+            drawer.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+                @Override
+                public void onDrawerOpened(View drawerView) {
+                    super.onDrawerOpened(drawerView);
+                    Toast.makeText(MainActivity.this, "Drawer Opened, refresh character sheet here", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        // set the cover image from assets
+        ImageView coverImage = (ImageView)header.findViewById(R.id.coverImage);
+        try {
+            InputStream ims = getAssets().open("cover.png");
+            Drawable d = Drawable.createFromStream(ims, null);
+            coverImage.setImageDrawable(d);
+        }
+        catch(Exception e) {
+            throw new RuntimeException("Error loading cover image. Is 'cover.png' available in assets?", e);
+        }
 
         // make the web content debuggable from external chrome tools
         WebView.setWebContentsDebuggingEnabled(true);
+
+        // setup character webview
+        character = (WebView) header.findViewById(R.id.characterView);
+        character.setBackgroundColor(Color.TRANSPARENT);
+        character.getSettings().setJavaScriptEnabled(true);
+        character.getSettings().setDomStorageEnabled(true);
+        character.getSettings().setAllowFileAccess(true);
+        character.getSettings().setAppCacheEnabled(true);
+        character.loadUrl("file:///android_asset/character.html");
 
         // setup web view
         web = (WebView) findViewById(R.id.webView);
@@ -145,48 +186,19 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_main) {
+            // Handle the main action
+        } else if (id == R.id.nav_achievements) {
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_bookmarks) {
 
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -208,7 +220,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void execJavaScript(final String javaScript) {
+    public void execJavaScriptInContent(final String javaScript) {
         Log.d(LOGTAG, "Executing JavaScript in existing WebView: " + javaScript);
         this.runOnUiThread(new Runnable() {
             public void run() {
@@ -217,10 +229,19 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+    public void execJavaScriptInCharactersheet(final String javaScript) {
+        Log.d(LOGTAG, "Executing JavaScript in existing WebView: " + javaScript);
+        this.runOnUiThread(new Runnable() {
+            public void run() {
+                character.loadUrl("javascript:" + javaScript);
+            }
+        });
+    }
+
     public final void displaySpinner(int resource) {
         Log.d(LOGTAG, "Showing wait dialog.");
         if (progressDialog!=null) {
-            progressDialog = new ProgressDialog(this);
+            progressDialog = new ProgressDialog(this, R.style.AppDialog);
             progressDialog.setMessage(getString(resource));
             // making immersive mode stay while the dialog is shown
             progressDialog.getWindow().setFlags(
@@ -239,6 +260,4 @@ public class MainActivity extends AppCompatActivity
             progressDialog = null;
         }
     }
-
-
 }

@@ -30,3 +30,5 @@
 -keep public class com.google.android.gms.ads.identifier.** {
    *;
 }
+-keep class com.google.android.gms.** { *; }
+-dontwarn com.google.android.gms.**

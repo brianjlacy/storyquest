@@ -39,7 +39,7 @@ public abstract class PlatformServicesActivity extends AppCompatActivity {
     protected static GooglePlayGamesServices googlePlayGamesServices = null;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // configure play service support
