@@ -22,6 +22,7 @@
 package de.storyquest.client;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -42,7 +43,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import java.io.InputStream;
 
@@ -51,10 +51,12 @@ public class ContentActivity extends PlatformServicesActivity
 
     public static String LOGTAG = ContentActivity.class.getName();
 
+    public static final String BOOKMARKID = "bookmark";
+
     protected ProgressDialog progressDialog = null;
     protected WebView web = null;
     protected WebView character = null;
-    protected String currentUrl = null;
+    protected String bookmarkId = null;
 
     protected ScriptSystem scriptSystem = null;
     protected ScriptStorage scriptStorage = null;
@@ -88,10 +90,15 @@ public class ContentActivity extends PlatformServicesActivity
                 @Override
                 public void onDrawerOpened(View drawerView) {
                     super.onDrawerOpened(drawerView);
-                    Toast.makeText(ContentActivity.this, "Drawer Opened, refresh character sheet here", Toast.LENGTH_SHORT).show();
+                    execJavaScriptInCharactersheet("if(refresh)refresh()");
                 }
             });
         }
+
+        // get extra data with bookmark to load
+        Intent intent = getIntent();
+        if (intent.hasExtra(BOOKMARKID))
+            bookmarkId = intent.getStringExtra(BOOKMARKID);
 
         // set the cover image from assets
         ImageView coverImage = (ImageView)header.findViewById(R.id.coverImage);
@@ -125,10 +132,13 @@ public class ContentActivity extends PlatformServicesActivity
 
         // enable script interfaces
         scriptSystem = new ScriptSystem(this);
-        scriptStorage = new ScriptStorage(this, );
+        scriptStorage = new ScriptStorage(this, getApplicationContext().getSharedPreferences(ScriptStorage.CONTEXT, Context.MODE_PRIVATE));
         scriptSound = new ScriptSound(this);
         scriptGameServices = new ScriptGameServices(this);
         web.addJavascriptInterface(scriptSystem, "sqSystem");
+        web.addJavascriptInterface(scriptStorage, "sqStorage");
+        web.addJavascriptInterface(scriptSound, "sqSound");
+        web.addJavascriptInterface(scriptGameServices, "sqGameServices");
 
         // adding event overrides for the web view
         web.setWebChromeClient(new WebChromeClient());
@@ -155,6 +165,11 @@ public class ContentActivity extends PlatformServicesActivity
             public void onPageFinished(WebView view, String url) {
                 Log.d(LOGTAG, "Page rendering finished: " + url + ".");
                 hideSpinner();
+                if (bookmarkId!=null) {
+                    Log.i(LOGTAG, "Loading bookmark " + bookmarkId + ".");
+                    execJavaScriptInContent("loadBookmark('" + bookmarkId + "')");
+                    bookmarkId = null;
+                }
                 super.onPageFinished(view, url);
             }
             @Override
@@ -197,17 +212,40 @@ public class ContentActivity extends PlatformServicesActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_main) {
-            // Handle the main action
+            displayMain();
         } else if (id == R.id.nav_achievements) {
-
+            getGooglePlayServices().showAchievementsView();
         } else if (id == R.id.nav_bookmarks) {
-
+            displayBookmarks();
         } else if (id == R.id.nav_help) {
-
+            displayHelp();
+        } else if (id == R.id.nav_storebookmark) {
+            execJavaScriptInContent("storeBookmark()");
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void displayMain() {
+        Log.i(LOGTAG, "Displaying Main Menu..");
+        Intent mainMenuIntent = new Intent(this, MainMenuActivity.class);
+        startActivity(mainMenuIntent);
+    }
+
+    private void displayBookmarks() {
+        Log.i(LOGTAG, "Displaying Bookmarks..");
+        Intent bookmarkIntent = new Intent(this, BookmarkActivity.class);
+        startActivityForResult(bookmarkIntent, 42);
+    }
+
+    private void displayHelp() {
+        Log.i(LOGTAG, "Displaying Help..");
+        Intent helpIntent = new Intent(this, GenericActivity.class);
+        helpIntent.putExtra(GenericActivity.TITLE, getResources().getString(R.string.helpTitle));
+        helpIntent.putExtra(GenericActivity.HTMLPATH,"help.html");
+        helpIntent.putExtra(GenericActivity.BACKGROUNDIMAGE,"help.jpg");
+        startActivity(helpIntent);
     }
 
     @Override
