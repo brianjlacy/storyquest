@@ -82,11 +82,23 @@ task mergeStoryQuestResources << {
         exclude '**/*.properties'
         exclude '**/*.keystore'
     }
+    if (file('src/main/assets/splash.mp4').exists()) {
+        file('src/main/assets/splash.mp4').renameTo(file('src/main/res/raw/splash.mp4'))
+    }
+    if (file('src/main/assets/menu.mp4').exists()) {
+        file('src/main/assets/menu.mp4').renameTo(file('src/main/res/raw/menu.mp4'))
+    }
 }
 preBuild.dependsOn mergeStoryQuestResources
 
 // if cleaned, also clean assets
 task cleanStoryQuestResources << {
     delete 'src/main/assets'
+    if (file('src/main/assets/splash.mp4').exists()) {
+        delete 'src/main/res/raw/splash.mp4'
+    }
+    if (file('src/main/assets/menu.mp4').exists()) {
+        delete 'src/main/res/raw/menu.mp4'
+    }
 }
 clean.dependsOn cleanStoryQuestResources

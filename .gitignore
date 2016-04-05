@@ -1,3 +1,15 @@
+/client-android/app/src/main/assets
+/client-android/app/src/main/res/drawable/ic_launcher.png
+/client-android/app/src/main/res/drawable-xhdpi/ic_launcher.png
+/client-android/app/src/main/res/drawable-hdpi/ic_launcher.png
+/client-android/app/src/main/res/drawable-xxhdpi/ic_launcher.png
+/client-android/app/src/main/res/drawable-mdpi/ic_launcher.png
+/client-android/app/src/main/res/raw/menu.mp4
+/client-android/app/src/main/res/raw/splash.mp4
+/client-android/app/src/gen
+/client-android/app/app.iml
+/client-android/.gradle/2.10/taskArtifacts
+/client-android/client-android.iml
 /gen
 /editor/projects
 /ansible/storyquest-playbook.retry

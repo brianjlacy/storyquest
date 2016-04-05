@@ -6,4 +6,21 @@
 
     <string name="action_settings">Settings</string>
     <string name="loading">Laden...</string>
+    <string name="mainMenuNew">Neues Spiel</string>
+    <string name="mainMenuContinue">Lesezeichen</string>
+    <string name="mainMenuHelp">Hilfe</string>
+    <string name="title_activity_bookmark">BookmarkActivity</string>
+    <string name="continueToMain">Tippen für weiter</string>
+    <string name="bookmarksTitle">Lesezeichen</string>
+    <string name="mainMenuCredits">Abspann</string>
+    <string name="creditsTitle">Abspann</string>
+    <string name="helpTitle">Hilfe</string>
+    <string name="bookmarkStored">Lesezeichen gespeichert</string>
+    <string name="storeBookmark">Lesezeichen speichern</string>
+    <string name="bookmarks">Lesezeichen laden</string>
+    <string name="achievements">Erfolge</string>
+    <string name="mainmenu">Hauptmenü</string>
+    <string name="help">Hilfe</string>
+    <string name="deleteBookmarkSecurityTitle">Lesezeichen wirklich löschen?</string>
+    <string name="loadBookmarkSecurityTitle">Lesezeichen wirklich laden?</string>
 </resources>

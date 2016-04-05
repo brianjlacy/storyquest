@@ -225,6 +225,14 @@ public class GooglePlayGamesServices implements
         }
     }
 
+    public void showAchievementsView() {
+        if (getApiClient()!=null && getApiClient().isConnected()) {
+            Log.d(LOGTAG, "Displaying achievements.");
+            parentActvity.startActivityForResult(Games.Achievements.getAchievementsIntent(getApiClient()), 0);
+        } else
+            Log.d(LOGTAG, "Not connected: not displaying achievements.");
+    }
+
     public void showSavedGamesUI() {
         int maxNumberOfSavedGamesToShow = 5;
         Intent savedGamesIntent = Games.Snapshots.getSelectSnapshotIntent(mGoogleApiClient,
@@ -249,7 +257,7 @@ public class GooglePlayGamesServices implements
     }
 
     public void loadFromSnapshot(final String snapshotName) {
-        ((MainActivity)parentActvity).displaySpinner(R.string.loading);
+        ((ContentActivity)parentActvity).displaySpinner(R.string.loading);
         AsyncTask<Void, Void, Integer> task = new AsyncTask<Void, Void, Integer>() {
 
             private byte[] saveGameData = null;
@@ -278,7 +286,7 @@ public class GooglePlayGamesServices implements
 
             @Override
             protected void onPostExecute(Integer status) {
-                ((MainActivity)parentActvity).hideSpinner();
+                ((ContentActivity)parentActvity).hideSpinner();
                 // TODO: call some callback with saveGameData.
             }
         };

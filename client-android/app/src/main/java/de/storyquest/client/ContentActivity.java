@@ -29,12 +29,10 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.webkit.ConsoleMessage;
@@ -46,19 +44,22 @@ import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import java.io.IOException;
 import java.io.InputStream;
 
-public class MainActivity extends PlatformServicesActivity
+public class ContentActivity extends PlatformServicesActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static String LOGTAG = MainActivity.class.getName();
+    public static String LOGTAG = ContentActivity.class.getName();
 
     protected ProgressDialog progressDialog = null;
     protected WebView web = null;
     protected WebView character = null;
-    protected ScriptSystem scriptSystem = null;
     protected String currentUrl = null;
+
+    protected ScriptSystem scriptSystem = null;
+    protected ScriptStorage scriptStorage = null;
+    protected ScriptSound scriptSound = null;
+    protected ScriptGameServices scriptGameServices = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +76,7 @@ public class MainActivity extends PlatformServicesActivity
                 | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
         // load initial layout
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_content);
         NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View header = navigationView.getHeaderView(0);
@@ -87,7 +88,7 @@ public class MainActivity extends PlatformServicesActivity
                 @Override
                 public void onDrawerOpened(View drawerView) {
                     super.onDrawerOpened(drawerView);
-                    Toast.makeText(MainActivity.this, "Drawer Opened, refresh character sheet here", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ContentActivity.this, "Drawer Opened, refresh character sheet here", Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -124,6 +125,9 @@ public class MainActivity extends PlatformServicesActivity
 
         // enable script interfaces
         scriptSystem = new ScriptSystem(this);
+        scriptStorage = new ScriptStorage(this, );
+        scriptSound = new ScriptSound(this);
+        scriptGameServices = new ScriptGameServices(this);
         web.addJavascriptInterface(scriptSystem, "sqSystem");
 
         // adding event overrides for the web view
@@ -197,6 +201,8 @@ public class MainActivity extends PlatformServicesActivity
         } else if (id == R.id.nav_achievements) {
 
         } else if (id == R.id.nav_bookmarks) {
+
+        } else if (id == R.id.nav_help) {
 
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

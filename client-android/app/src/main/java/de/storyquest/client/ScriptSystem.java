@@ -34,9 +34,9 @@ import java.io.InputStreamReader;
 public class ScriptSystem {
 
     public static String LOGTAG = ScriptSystem.class.getName();
-    private MainActivity activity = null;
+    private ContentActivity activity = null;
 
-    public ScriptSystem(MainActivity activity) {
+    public ScriptSystem(ContentActivity activity) {
         this.activity = activity;
     }
 

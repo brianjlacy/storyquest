@@ -3,5 +3,6 @@
     "name": "Your Book Title",
     "author": "Author Name",
     "publisher": "Questor GmbH",
-    "sequence": "graph"
+    "sequence": "graph",
+    "theme": "dark"
 }
