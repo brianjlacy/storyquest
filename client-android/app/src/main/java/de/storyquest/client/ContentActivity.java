@@ -90,7 +90,7 @@ public class ContentActivity extends PlatformServicesActivity
                 @Override
                 public void onDrawerOpened(View drawerView) {
                     super.onDrawerOpened(drawerView);
-                    execJavaScriptInCharactersheet("if(refresh)refresh()");
+                    execJavaScriptInCharactersheet("if(typeof refresh!='undefined')refresh()");
                 }
             });
         }

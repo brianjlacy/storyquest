@@ -51,6 +51,14 @@ exports.registerServices = function(appConfig, app) {
     app.get("/api/splashimage/:projectId", global.authUser, global.authProject, this.getSplashImage);
     app.put("/api/splashvideo/:projectId", global.authUser, global.authProject, this.updateSplashVideo);
     app.get("/api/splashvideo/:projectId", global.authUser, global.authProject, this.getSplashVideo);
+    app.put("/api/menuimage/:projectId", global.authUser, global.authProject, this.updateMenuImage);
+    app.get("/api/menuimage/:projectId", global.authUser, global.authProject, this.getMenuImage);
+    app.put("/api/menuvideo/:projectId", global.authUser, global.authProject, this.updateMenuVideo);
+    app.get("/api/menuvideo/:projectId", global.authUser, global.authProject, this.getMenuVideo);
+    app.put("/api/helpimage/:projectId", global.authUser, global.authProject, this.updateHelpImage);
+    app.get("/api/helpimage/:projectId", global.authUser, global.authProject, this.getHelpImage);
+    app.put("/api/creditsimage/:projectId", global.authUser, global.authProject, this.updateCreditsImage);
+    app.get("/api/creditsimage/:projectId", global.authUser, global.authProject, this.getCreditsImage);
     app.get("/api/storerating/:projectId", global.authUser, this.storeRating);
     app.post("/api/storecomment/:projectId", this.storeComment);
     app.get("/api/sequence/:projectId", global.authUser, global.authProject, this.getSequence);
@@ -172,7 +180,8 @@ exports.storeSettings = function(req, res) {
             name: req.body.name,
             author: req.body.author,
             publisher: req.body.publisher,
-            sequence: req.body.sequence
+            sequence: req.body.sequence,
+            theme: req.body.theme
         };
         fs.writeFile(settingsFile, JSON.stringify(settings), function(err) {
             if (err)
@@ -298,7 +307,7 @@ exports.updateCoverImage = function(req, res){
     try {
         if (req.files && req.files.file) {
             var dimensions = imageSize(req.files.file.path);
-            if (dimensions.width===500 && dimensions.height===312) {
+            if (dimensions.width===840 && dimensions.height===237) {
                 // dont use rename here, because rename breaks when files are on different filesystems
                 fse.copySync(req.files.file.path, path.join(outputDir, "cover.png"));
                 fse.removeSync(req.files.file.path);
@@ -376,6 +385,122 @@ exports.getSplashVideo = function(req, res) {
     } else {
         res.writeHead(200, { "Content-Type": "video/mp4" });
         return res.end(fs.readFileSync(path.join(Utils.getProjectDir(projectId), "..", "..", "template", "splash.mp4")), "binary");
+    }
+};
+
+exports.updateMenuImage = function(req, res){
+    var outputDir = Utils.getProjectDir(req.param("projectId"));
+    try {
+        if (req.files && req.files.file) {
+            var dimensions = imageSize(req.files.file.path);
+            if (dimensions.width===800 && dimensions.height===1280) {
+                // dont use rename here, because rename breaks when files are on different filesystems
+                fse.copySync(req.files.file.path, path.join(outputDir, "menu.jpg"));
+                fse.removeSync(req.files.file.path);
+                return res.json(200, {});
+            } else
+                return res.json(500, {type: "REQUEST_FAILED", "message": "Image does not have the right size."});
+        }
+    } catch(err) {
+        return res.json(500, {type: "REQUEST_FAILED", "message": err});
+    }
+};
+
+exports.getMenuImage = function(req, res) {
+    var projectId = req.param("projectId");
+    var splashFile = path.join(Utils.getProjectDir(projectId), "menu.jpg");
+    if (fs.existsSync(splashFile)) {
+        res.writeHead(200, { "Content-Type": "image/jpeg" });
+        return res.end(fs.readFileSync(splashFile), "binary");
+    } else {
+        res.writeHead(200, { "Content-Type": "image/jpeg" });
+        return res.end(fs.readFileSync(path.join(Utils.getProjectDir(projectId), "..", "..", "template", "menu.jpg")), "binary");
+    }
+};
+
+exports.updateMenuVideo = function(req, res){
+    var outputDir = Utils.getProjectDir(req.param("projectId"));
+    try {
+        if (req.files && req.files.file) {
+            // dont use rename here, because rename breaks when files are on different filesystems
+            fse.copySync(req.files.file.path, path.join(outputDir, "menu.mp4"));
+            fse.removeSync(req.files.file.path);
+            return res.json(200, {});
+        }
+    } catch(err) {
+        return res.json(500, {type: "REQUEST_FAILED", "message": err});
+    }
+};
+
+exports.getMenuVideo = function(req, res) {
+    var projectId = req.param("projectId");
+    var splashVideoFile = path.join(Utils.getProjectDir(projectId), "menu.mp4");
+    if (fs.existsSync(splashVideoFile)) {
+        res.writeHead(200, { "Content-Type": "video/mp4" });
+        return res.end(fs.readFileSync(splashVideoFile), "binary");
+    } else {
+        res.writeHead(200, { "Content-Type": "video/mp4" });
+        return res.end(fs.readFileSync(path.join(Utils.getProjectDir(projectId), "..", "..", "template", "menu.mp4")), "binary");
+    }
+};
+
+exports.updateHelpImage = function(req, res){
+    var outputDir = Utils.getProjectDir(req.param("projectId"));
+    try {
+        if (req.files && req.files.file) {
+            var dimensions = imageSize(req.files.file.path);
+            if (dimensions.width===800 && dimensions.height===1280) {
+                // dont use rename here, because rename breaks when files are on different filesystems
+                fse.copySync(req.files.file.path, path.join(outputDir, "help.jpg"));
+                fse.removeSync(req.files.file.path);
+                return res.json(200, {});
+            } else
+                return res.json(500, {type: "REQUEST_FAILED", "message": "Image does not have the right size."});
+        }
+    } catch(err) {
+        return res.json(500, {type: "REQUEST_FAILED", "message": err});
+    }
+};
+
+exports.getHelpImage = function(req, res) {
+    var projectId = req.param("projectId");
+    var splashFile = path.join(Utils.getProjectDir(projectId), "help.jpg");
+    if (fs.existsSync(splashFile)) {
+        res.writeHead(200, { "Content-Type": "image/jpeg" });
+        return res.end(fs.readFileSync(splashFile), "binary");
+    } else {
+        res.writeHead(200, { "Content-Type": "image/jpeg" });
+        return res.end(fs.readFileSync(path.join(Utils.getProjectDir(projectId), "..", "..", "template", "help.jpg")), "binary");
+    }
+};
+
+exports.updateCreditsImage = function(req, res){
+    var outputDir = Utils.getProjectDir(req.param("projectId"));
+    try {
+        if (req.files && req.files.file) {
+            var dimensions = imageSize(req.files.file.path);
+            if (dimensions.width===800 && dimensions.height===1280) {
+                // dont use rename here, because rename breaks when files are on different filesystems
+                fse.copySync(req.files.file.path, path.join(outputDir, "credits.jpg"));
+                fse.removeSync(req.files.file.path);
+                return res.json(200, {});
+            } else
+                return res.json(500, {type: "REQUEST_FAILED", "message": "Image does not have the right size."});
+        }
+    } catch(err) {
+        return res.json(500, {type: "REQUEST_FAILED", "message": err});
+    }
+};
+
+exports.getCreditsImage = function(req, res) {
+    var projectId = req.param("projectId");
+    var splashFile = path.join(Utils.getProjectDir(projectId), "credits.jpg");
+    if (fs.existsSync(splashFile)) {
+        res.writeHead(200, { "Content-Type": "image/jpeg" });
+        return res.end(fs.readFileSync(splashFile), "binary");
+    } else {
+        res.writeHead(200, { "Content-Type": "image/jpeg" });
+        return res.end(fs.readFileSync(path.join(Utils.getProjectDir(projectId), "..", "..", "template", "credits.jpg")), "binary");
     }
 };
 

@@ -10,9 +10,11 @@
                                                                                                    placeholder="Give your project a descriptive name"
                                                                                                    class="form-control"/>
                     </div>
-                    <div class="form-group"><label for="newProjectDesc">Project Description</label><textarea
+                    <div class="form-group"><label for="newProjectDesc">Project Description</label>
+                        <textarea
                             ng-model="newProjectDesc" id="newProjectDesc" placeholder="Project description"
-                            class="form-control"></textarea></div>
+                            class="form-control"></textarea>
+                    </div>
                     <div class="form-group"><label for="newProjectTags">Tags</label><input type="text"
                                                                                            ng-model="newProjectTags"
                                                                                            id="newProjectTags"
@@ -109,19 +111,27 @@
                                                                               ng-model="selectedProject.name" ng-disabled="!selectedProject"
                                                                               ng-change="settings.name=selectedProject.name"
                                                                               class="form-control"/></div>
-                            <div class="form-group"><label>Description</label><textarea id="peDesc" rows="6" placeholder="Enter ..."
+                            <div class="form-group"><label>Description</label><textarea id="peDesc" rows="3" placeholder="Enter ..."
                                                                                         ng-model="selectedProject.description"
                                                                                         ng-disabled="!selectedProject"
                                                                                         class="form-control"></textarea></div>
                             <div class="form-group"><label>Keywords</label><input id="peTags" type="text" placeholder="Enter ..."
                                                                                   ng-model="selectedProject.tags"
                                                                                   ng-disabled="!selectedProject" class="form-control"/></div>
-                            <div class="form-group"><label>Chapter Sequence</label><select id="sequenceBehaviour"
-                                                                                           ng-model="settings.sequence"
-                                                                                           ng-disabled="!selectedProject" class="form-control">
-                                <option value="graph">Chapters are manually linked</option>
-                                <option value="sequence">Chapters are displayed in order of sequence</option>
-                            </select></div>
+                            <div class="form-group">
+                                <label>Chapter Sequence</label>
+                                <select id="sequenceBehaviour" ng-model="settings.sequence" ng-disabled="!selectedProject" class="form-control">
+                                    <option value="graph">Chapters are manually linked</option>
+                                    <option value="sequence">Chapters are displayed in order of sequence</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>App Theme</label>
+                                <select id="theme" ng-model="settings.theme" ng-disabled="!selectedProject" class="form-control">
+                                    <option value="dark">Dark Theme (light text)</option>
+                                    <option value="light">Light Theme (dark text)</option>
+                                </select>
+                            </div>
                         </div>
                         <div id="appsettings" class="tab-pane">
                             <div class="form-group"><label>App Label</label><input id="peAppLabel" type="text" placeholder="Enter ..."
@@ -165,6 +175,8 @@
                     <ul class="nav nav-tabs images-tabs">
                         <li class="active"><a href="#iconandcover" data-toggle="tab" class="iconandcover">Icon and Cover Images</a></li>
                         <li><a href="#splashimages" data-toggle="tab" class="splashimages">Splash Images</a></li>
+                        <li><a href="#menuimages" data-toggle="tab" class="menuimages">Menu Images</a></li>
+                        <li><a href="#creditshelpimages" data-toggle="tab" class="creditshelpimages">Help & Credits Images</a></li>
                         <li><a href="#keysettings" data-toggle="tab" class="keysettings">App Signing Key</a></li>
                     </ul>
                     <div class="tab-content project-content">
@@ -191,7 +203,7 @@
                                         1024x1024px, PNG
                                     </div>
                                     <div class="imagescell">
-                                        500x312px, PNG
+                                        840x237px, PNG
                                     </div>
                                 </div>
                                 <div class="imagesrow" style="height:10%">
@@ -212,7 +224,7 @@
                                         <form name="coverUploadForm">
                                             <button name="file" id="coverimageupload" class="btn btn-primary btn-xs"
                                                     ng-model="coverFile" ngf-pattern="'*.png'"
-                                                    ngf-accept="'*.png'" ngf-dimensions="$width==500 && $height==312"
+                                                    ngf-accept="'*.png'" ngf-dimensions="$width==840 && $height==237"
                                                     ngf-select="uploadCover()">
                                                 <span>&nbsp;Upload Cover Image</span>
                                             </button>
@@ -238,7 +250,7 @@
                                     <div class="imagescell">
                                         <img class="projectsplash">
                                     </div>
-                                    <div class="imagescell videocontainer">
+                                    <div class="imagescell videocontainer-splash">
                                         <span class="novideo">NO VIDEO</span>
                                         <video controls class="projectsplashvideo">
                                         </video>
@@ -274,6 +286,117 @@
                                                     ngf-select="uploadSplashVideo()">
                                                 <span>&nbsp;Upload Splash Video</span>
                                             </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="menuimages" class="tab-pane">
+                            <div class="projectimages imagestable">
+                                <div class="imagesrow" style="height:10%">
+                                    <div class="imagescell">
+                                        Static Menu
+                                    </div>
+                                    <div class="imagescell">
+                                        Video Menu (optional)
+                                    </div>
+                                </div>
+                                <div class="imagesrow" style="height:70%">
+                                    <div class="imagescell">
+                                        <img class="projectmenu">
+                                    </div>
+                                    <div class="imagescell videocontainer-menu">
+                                        <span class="novideo">NO VIDEO</span>
+                                        <video controls class="projectmenuvideo">
+                                        </video>
+                                    </div>
+                                </div>
+                                <div class="imagesrow" style="height:10%">
+                                    <div class="imagescell">
+                                        800x1280px, JPG
+                                    </div>
+                                    <div class="imagescell">
+                                        800x1280px, MP4
+                                    </div>
+                                </div>
+                                <div class="imagesrow" style="height:10%">
+                                    <div class="imagescell">
+                                        <form name="splashImageUploadForm">
+                                            <button name="file" id="menuimageupload" class="btn btn-primary btn-xs"
+                                                    ng-model="menuImageFile" ngf-pattern="'*.jpg'"
+                                                    ngf-accept="'*.jpg'" ngf-dimensions="$width==800 && $height==1280"
+                                                    ngf-select="uploadMenuImage()">
+                                                <span>&nbsp;Upload Menu Image</span>
+                                            </button>
+                                            <div ng-hide="!MenuImageUploadForm.file.$error.dimensions" style="color:red;font-weight:bold;">
+                                                Your selected file does not have<br>the required resolution!
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="imagescell">
+                                        <form name="splashVideoUploadForm">
+                                            <button name="file" id="menuvideoupload" class="btn btn-primary btn-xs"
+                                                    ng-model="splashMenuFile" ngf-pattern="'*.mp4'"
+                                                    ngf-accept="'*.mp4'"
+                                                    ngf-select="uploadMenuVideo()">
+                                                <span>&nbsp;Upload Menu Video</span>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="creditshelpimages" class="tab-pane">
+                            <div class="projectimages imagestable">
+                                <div class="imagesrow" style="height:10%">
+                                    <div class="imagescell">
+                                        Help Background
+                                    </div>
+                                    <div class="imagescell">
+                                        Credits Background
+                                    </div>
+                                </div>
+                                <div class="imagesrow" style="height:70%">
+                                    <div class="imagescell">
+                                        <img class="projecthelp">
+                                    </div>
+                                    <div class="imagescell">
+                                        <img class="projectcredits">
+                                    </div>
+                                </div>
+                                <div class="imagesrow" style="height:10%">
+                                    <div class="imagescell">
+                                        800x1280px, JPG
+                                    </div>
+                                    <div class="imagescell">
+                                        800x1280px, JPG
+                                    </div>
+                                </div>
+                                <div class="imagesrow" style="height:10%">
+                                    <div class="imagescell">
+                                        <form name="helpImageUploadForm">
+                                            <button name="file" id="helpimageupload" class="btn btn-primary btn-xs"
+                                                    ng-model="helpImageFile" ngf-pattern="'*.jpg'"
+                                                    ngf-accept="'*.jpg'" ngf-dimensions="$width==800 && $height==1280"
+                                                    ngf-select="uploadHelpImage()">
+                                                <span>&nbsp;Upload Menu Image</span>
+                                            </button>
+                                            <div ng-hide="!helpImageUploadForm.file.$error.dimensions" style="color:red;font-weight:bold;">
+                                                Your selected file does not have<br>the required resolution!
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="imagescell">
+                                        <form name="creditsImageUploadForm">
+                                            <button name="file" id="creditsimageupload" class="btn btn-primary btn-xs"
+                                                    ng-model="creditsImageFile" ngf-pattern="'*.jpg'"
+                                                    ngf-accept="'*.jpg'" ngf-dimensions="$width==800 && $height==1280"
+                                                    ngf-select="uploadCreditsImage()">
+                                                <span>&nbsp;Upload Credits Image</span>
+                                            </button>
+                                            <div ng-hide="!creditsImageUploadForm.file.$error.dimensions" style="color:red;font-weight:bold;">
+                                                Your selected file does not have<br>the required resolution!
+                                            </div>
                                         </form>
                                     </div>
                                 </div>

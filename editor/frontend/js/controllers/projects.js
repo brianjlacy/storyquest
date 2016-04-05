@@ -47,10 +47,25 @@ editorModule.controller("projectsCoreController", ["$scope", "$http", "Upload", 
             );
             setTimeout(function(){
                 $(".novideo").hide();
-                video.css("height", $(".videocontainer").height());
-                video.css("width", $(".videocontainer").width());
-                video.css("left", $(".videocontainer").offset().left);
+                video.css("height", $(".videocontainer-splash").height());
+                video.css("width", $(".videocontainer-splash").width());
+                video.css("left", $(".videocontainer-splash").offset().left);
             }, 1000);
+        };
+
+        $scope.updateMenuVideoView = function() {
+            // update video and resize. the video tag is a pain-in-the-ass
+            var video = $(".projectmenuvideo");
+            video.empty();
+            video.append(
+                '<source src="'+ "/api/menuvideo/" + $scope.selectedProject.id + '?' + new Date().getTime() + '">'
+            );
+            setTimeout(function(){
+                $(".novideo").hide();
+                video.css("height", $(".videocontainer-menu").height());
+                video.css("width", $(".videocontainer-menu").width());
+                video.css("left", $(".videocontainer-menu").offset().left);
+            }, 2000);
         };
 
         $scope.uploadIcon = function() {
@@ -125,6 +140,78 @@ editorModule.controller("projectsCoreController", ["$scope", "$http", "Upload", 
                 });
         };
 
+        $scope.uploadMenuImage = function() {
+            if ($scope.menuImageFile)
+                Upload.upload({
+                    method: "PUT",
+                    url: "/api/menuimage/" + $scope.selectedProject.id,
+                    data: {
+                        file: $scope.menuImageFile
+                    }
+                }).then(function (resp) {
+                    $(".projectmenu").attr("src", $(".projectmenu").attr("src") + "?date=" + new Date().getTime());
+                }, function (resp) {
+                    modalError("Error uploading file. Please try again.");
+                }, function (evt) {
+                    var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+                    Pace.restart();
+                });
+        };
+
+        $scope.uploadMenuVideo = function() {
+            if ($scope.menuVideoFile)
+                Upload.upload({
+                    method: "PUT",
+                    url: "/api/menuvideo/" + $scope.selectedProject.id,
+                    data: {
+                        file: $scope.menuVideoFile
+                    }
+                }).then(function (resp) {
+                    $scope.updateMenuVideoView();
+                }, function (resp) {
+                    modalError("Error uploading file. Please try again.");
+                }, function (evt) {
+                    var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+                    Pace.restart();
+                });
+        };
+        
+        $scope.uploadHelpImage = function() {
+            if ($scope.helpImageFile)
+                Upload.upload({
+                    method: "PUT",
+                    url: "/api/helpimage/" + $scope.selectedProject.id,
+                    data: {
+                        file: $scope.helpImageFile
+                    }
+                }).then(function (resp) {
+                    $(".projecthelp").attr("src", $(".projecthelp").attr("src") + "?date=" + new Date().getTime());
+                }, function (resp) {
+                    modalError("Error uploading file. Please try again.");
+                }, function (evt) {
+                    var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+                    Pace.restart();
+                });
+        };
+
+        $scope.uploadCreditsImage = function() {
+            if ($scope.creditsImageFile)
+                Upload.upload({
+                    method: "PUT",
+                    url: "/api/creditsimage/" + $scope.selectedProject.id,
+                    data: {
+                        file: $scope.creditsImageFile
+                    }
+                }).then(function (resp) {
+                    $(".projectmenu").attr("src", $(".projectcredits").attr("src") + "?date=" + new Date().getTime());
+                }, function (resp) {
+                    modalError("Error uploading file. Please try again.");
+                }, function (evt) {
+                    var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+                    Pace.restart();
+                });
+        };
+
         $(".setting-tabs a").click(function (e) {
             e.preventDefault();
             $(this).tab('show');
@@ -134,6 +221,7 @@ editorModule.controller("projectsCoreController", ["$scope", "$http", "Upload", 
             e.preventDefault();
             $(this).tab('show');
             $scope.updateSplashVideoView();
+            $scope.updateMenuVideoView();
         });
 
         $scope.newProject = function() {
@@ -216,6 +304,9 @@ editorModule.controller("projectsCoreController", ["$scope", "$http", "Upload", 
                 $(".projecticon").attr("src", "/api/iconimage/" + $scope.selectedProject.id);
                 $(".projectcover").attr("src", "/api/coverimage/" + $scope.selectedProject.id);
                 $(".projectsplash").attr("src", "/api/splashimage/" + $scope.selectedProject.id);
+                $(".projectmenu").attr("src", "/api/menuimage/" + $scope.selectedProject.id);
+                $(".projecthelp").attr("src", "/api/helpimage/" + $scope.selectedProject.id);
+                $(".projectcredits").attr("src", "/api/creditsimage/" + $scope.selectedProject.id);
                 $scope.keyPassword = undefined;
             });
         };

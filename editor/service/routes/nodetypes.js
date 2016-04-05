@@ -49,6 +49,20 @@ var editableFiles = [
         title: "Charactersheet",
         description: "Template for the character sheet.",
         type: "html"
+    },
+    {
+        id: "help",
+        path: "help.html",
+        title: "Help Text",
+        description: "Template for the help text.",
+        type: "html"
+    },
+    {
+        id: "credits",
+        path: "credits.html",
+        title: "Book Credits",
+        description: "Template for the credits list.",
+        type: "html"
     }
 ];
 
