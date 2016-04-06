@@ -1,10 +1,10 @@
 {image(center):border-floral.png} 
 
-{box(textcenter):__Vielen Dank, dass du dieses A-Book gespielt hast. Wir hoffen, dass es dir Spaß gemacht hat.__}
+{box(textcenter):__Vielen Dank, dass du dieses Spielbuch gespielt hast. Wir hoffen, dass es dir Spaß gemacht hat.__}
 
-## Erlebe nun das große Abenteuer mit dem Zwergen
+## Erlebe nun das große Abenteuer mit den Zwergen
 
-Dieser Prolog ist nur der Anfang und ein Vorgeschmack. Wenn du mehr Abenteuer erleben möchtest: das A-Book "Die Zwerge - Die Dritte Expedition" von Markus Heitz bietet mit über 400 Textseiten und mehr als 100 Illustrationen nicht nur spannende Abenteuer, sondern auch die Möglichkeit, einen eigenen Zwergenhelden zu erschaffen, ihm einen Namen zu geben und mit ihm Abenteuer im Geborgenen Land zu erleben. Das Buch reagiert auf deine Entscheidungen, Personen sprechen dich mit Namen an und du musst spannende Kämpfe und Proben bestehen um die Waffe der Vorfahren zu erlangen und das Land zu retten.
+Dieser Prolog ist nur der Anfang und ein Vorgeschmack. Wenn du mehr Abenteuer erleben möchtest: das Spielbuch "Die Zwerge - Die Dritte Expedition" von Markus Heitz bietet mit über 400 Textseiten und mehr als 100 Illustrationen nicht nur spannende Abenteuer, sondern auch die Möglichkeit, einen eigenen Zwergenhelden zu erschaffen, ihm einen Namen zu geben und mit ihm Abenteuer im Geborgenen Land zu erleben. Das Buch reagiert auf deine Entscheidungen, Personen sprechen dich mit Namen an und du musst spannende Kämpfe und Proben bestehen um die Waffe der Vorfahren zu erlangen und das Land zu retten.
 
 "Die Zwerge - Die Dritte Expedition": jetzt im App Store, bei Google Play und bei Amazon.
 
