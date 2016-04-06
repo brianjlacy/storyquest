@@ -1,0 +1,23 @@
+{
+  "id": "001",
+  "type": "default",
+  "title": "001",
+  "style": "fullwidth",
+  "isStartNode": false,
+  "backgroundImage": "bg-party.jpg",
+  "backgroundColor": "#efefef",
+  "paddingTop": "60%",
+  "accentColor": "#766278",
+  "boxBackgroundColor": "#000000",
+  "choiceEnabledGradientStartColor": "#6c5839",
+  "choiceEnabledGradientEndColor": "#382c12",
+  "choiceDisabledGradientStartColor": "#cda86d",
+  "choiceDisabledGradientEndColor": "#9a7931",
+  "choiceTextColor": "#dedede",
+  "text": {
+    "de": "001_de.txt"
+  },
+  "editorColor": "#10e65c",
+  "x": 429,
+  "y": 29
+}

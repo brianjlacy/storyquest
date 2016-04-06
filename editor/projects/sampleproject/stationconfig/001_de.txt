@@ -1,0 +1,23 @@
+Oben in der großen Ratshalle, mitten im Blauen Gebirge und im Zentrum der Festung Ogertod sitzen die Ersten der Ersten, die berühmtesten und berüchtigsten Zwerge aller Zeiten und beraten darüber, wer der nächste König sein soll.
+
+Und hier bist Du, ein junger Zwerg, der nur dazu dient, das Bier und den Wein zu servieren. Brogar war sehr deutlich, dass du dich in den nächsten Stunden wie ein „echter Zwerg“ zu benehmen hast und „immer dafür sorgen sollst, dass die Kehlen der Ersten nie trocken werden“. Als ob ein Gelage betrunkener Zwerge für irgendetwas gut wäre, schon gar einen König zu wählen!
+
+{image(center):border-floral.png}
+
+Du schüttelst den Kopf und blickst auf die leeren Krüge in der Ecke der opulenten Küche. Um dich herum flitzen Zwerge mit großen hölzernen Tabletts mit Bechern und Tellern herum und ein offensichtlich überforderter Zwerg in einer schmutzigen braunen Küchenschürze brüllt verzweifelt Anweisungen, um das Chaos aus dampfenden Töpfen, riesigen Schüsselbergen und sich auftürmenden abgenagten Hirschknochen in den Griff zu bekommen.
+
+Plötzlich fliegt die hölzerne Flügeltür zur großen Halle krachend auf. Das Tablett eines unglücklichen Zwerges, der gerade dort stand wird durch die Tür getroffen und fliegt splitternd quer durch die Küche, nur um am anderen Ende mit lautem Geschepper in einem Haufen leerer Krauttöpfe zu landen.
+
+Donnernd tritt Brogar ein und mit ihm der Lärm der großen Halle. Von überall her kommt Geschrei, Gelächter und Gegröhle. Langsam, fast schon ehrfürchtig schließen sich die Türflügel hinter Brogar und mit ihnen brandet der Lärm zurück. Einen Moment bildet sich eine fast schon unnatürliche Stille, als alle Aufmerksamkeit auf dem königlichen Küchenchef ruht.
+
+„MEHR WEIN, WO BLEIBT DER WEIN“, brüllt er und sucht die Küche mit Blicken ab.
+
+Gerade als du dir noch Gedanken darüber machst, wieviele solche Auftritte die Tür wohl noch aushalten wird kommt dir der Gedanke, dass du gemeint sein könntest und ziehst instinktiv den Kopf ein, so dass du hinter einem Stapel von frischen Tüchern verschwindest. Doch zu spät, Brogar hat dich bereits ausgemacht.
+
+„HE, DU DA, BEI VRACCAS, ICH HATTE DIR DOCH KLARGEMACHT, DASS IMMER WEIN IN DEN KRÜGEN SEIN SOLL!“. Stampfend bahnt er sich seinen Weg durch den Raum und zwei andere Zwerge springen zur Seite um ihm aus dem Weg zu gehen.
+
+Du schnappst dir einen der leeren Krüge vom Serviertisch und sprintest in Richtung des Gewölbegangs, der von der Küche aus tief in die Weinkeller der Großen Halle führt. Als du schon in der Schwärze verschwunden bist, hörst du noch Brogar brüllen. Besser du kommst nicht ohne einen gut gefüllten Weinkrug zurück, sonst wird das vielleicht dein letztes Fest in Ogertod sein.
+
+{link(002):Weiter}
+
+

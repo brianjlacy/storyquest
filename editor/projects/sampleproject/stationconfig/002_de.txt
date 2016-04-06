@@ -1,0 +1,13 @@
+{image(center):border-angel.png}
+
+Du bist zwar ein mutiger Zwerg, aber hier unten will wirklich niemand lange herumstreunen. Es ranken sich ein paar seltsame Gerüchte um diese Gewölbe und keiner deiner Freunde aus der Reihe der Bediensteten der Großen Halle steigt mit einem Lachen hier herunter. Die meisten grabschen sich schnell einige Dinge, die gebraucht werden und verschwinden so schnell die kurzen Beine sie tragen können wieder nach oben.
+
+Deine kurzen Beine werden etwas weicher, als du dich erinnerst, dass der Wein ganz am Ende des Gewölbes lagert und du das gesamte ehemalige Burgverlies durchqueren musst.
+
+{image(left):image-astro.png}
+
+Allerdings musst du erst einmal dafür sorgen, dass du überhaupt etwas sehen kannst. Belegar, der Verwalter des Weinguts der Festung legt normalerweise immer eine Fackel und Zunder neben dem Eingang des Gewölbes bereit. Allerdings hast du Belegar schon seit Wochen nicht mehr gesehen – was dir, wenn du darüber nachdenkst etwas seltsam vorkommt. Schließlich sollte ja gerade der Verwalter des Gutes auch um den Erfolg der wichtigsten Zusammenkunft seit Jahren besorgt sein und wenigstens gelegentlich einmal zur Kontrolle auftauchen.
+
+{link(004):Du suchst im Halbdunkel nach Fackel und Zunder}
+
+{link(003):Du gehst ohne Fackel weiter, schließlich bist du ein ganzer Zwerg!}

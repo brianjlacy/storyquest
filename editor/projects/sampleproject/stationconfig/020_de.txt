@@ -1,0 +1,10 @@
+{image(center):border-angel.png}
+
+Der Geist greift wieder nach dir und diesmal bist du nicht schnell genug. Mit einem mächtigen Gebrüll nimmt er dich und schleudert dich gegen die Wand des Gewölbes. 
+
+Das letzte was du noch mitbekommst ist die Frauenstimme „Genug, er hat genug..jetzt holen wir uns den Rest des Zwergengefleuchs“.
+
+{box(textcenter):ENDE}
+
+{link(epilog):Zurück zum Menü}
+

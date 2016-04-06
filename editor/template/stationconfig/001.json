@@ -8,13 +8,17 @@
   "backgroundColor": "#efefef",
   "paddingTop": "100%",
   "accentColor": "#766278",
-  "boxBackgroundColor": "white",
+  "boxBackgroundColor": "#000000",
   "choiceEnabledGradientStartColor": "#3498db",
   "choiceEnabledGradientEndColor": "#2980b9",
   "choiceDisabledGradientStartColor": "#3498db",
   "choiceDisabledGradientEndColor": "#2980b9",
-  "choiceTextColor": "white",
+  "choiceTextColor": "#000000",
   "text": {
     "de": "001_de.txt"
-  }
+  },
+  "editorColor": "#10e65c",
+  "x": 300,
+  "y": 417,
+  "onEnter": "\n\nmodel.setValue(\"someKey\", \"Hallo Welt\");\n\nmodel.setFlag(\"hatDenSchluessel\");\n\nif(model.hasFlag(\"hatDenSchluessel\")) {\n    \n}\n\n"
 }

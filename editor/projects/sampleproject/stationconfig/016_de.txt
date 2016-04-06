@@ -1,0 +1,12 @@
+{image(center):border-floral.png}
+ 
+Du erreichst einen Stapel hölzerner Trockenobstkisten, der achtlos an einer Wand des Ganges gestapelt wurde. Als du an ihm vorbeigehst quillt plötzlich grüner Nebel zwischen den Kisten hervor und als du überrascht zur Seite springst bricht schon irgendetwas mit einem unirdischen Brüllen aus den Kisten hervor, deren Splitter sich über die gesamte Breite des Gangs verteilen.
+
+Der Orkgeist richtet sich auf und stapft auf dich zu. Instinktiv weichst du zurück.
+
+{link(018):Du trittst dem Geist mutig entgegen.}
+
+{link(017):Du fliehst, nur weg von dem Geist.}
+
+
+

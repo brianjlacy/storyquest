@@ -1,0 +1,13 @@
+Der Orkgeist greift nach dir. Er ist schnell, aber du bist diesmal schneller und weichst flink in die andere Ecke des Ganges aus. Gerade noch hattest du das Gefühl, dass der Gang sehr breit ist, aber nun fühlt er sich sehr eng und ohne Fluchtmöglichkeit an. 
+
+{image(center):image-dragon-full.png}
+
+Brüllend dreht sich der Geist um, da fällt dir das Amulett mit dem Medallion ein. Vielleicht hat das alles irgendwie damit zu tun? Schließlich ist es genauso unrealistisch hier unten einem Orkgeist zu begegnen wie im Staub ein wertvolles Amulett zu finden.
+
+{link(019):Du schlägst das Amulett gegen die Wand, um es zu zerstören.}
+
+{link(020):Du versuchst zu entkommen..}
+
+
+
+

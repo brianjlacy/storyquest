@@ -1,0 +1,16 @@
+{image(center):border-angel.png}
+
+Nach einigem Herumwühlen im Staub der Jahrhunderte am Boden des Gewölbes findest du tatsächlich eine alte, fast heruntergebrannte Fackel, die sich zusammen mit dem daneben liegenden Zunder und der steinernen Wand des Ganges entzünden lässt. Erleichtert blickst du in die Dunkelheit.
+Du schreitest langsam in das Gewölbe. Die Fackel erleuchtet deinen Weg, ist aber nicht stark genug, um den gesamten Keller sichtbar zu machen. Am Rand des Feuerscheins glaubst du zuckende Bewegungen wahrzunehmen, verbannst diese Gedanken aber in die Welt des Fabulierens bei zuviel Wurzelbier.
+
+{image(center):image-dragon-full.png}
+
+Als du um eine Ecke biegst stehst du plötzlich vor einer Grube. Du weisst genau, dass es sowas hier nicht geben sollte und das Erdreich am Rand der Grube erscheint dir auch recht frisch. Es sieht so aus, als ob jemand hier etwas ausgegraben hat. Die ganze Sache wird dir jetzt unheimlich, zum Glück hast du die Fackel dabei, die dir wenigstens ein bisschen Mut spendet.
+
+Mit einem kleinen Anlauf, bei dem du darauf achtest, die Fackel nicht zu verlieren springst du über die Grube und landest direkt an einer weiteren Weggabelung, die nach Links an ein paar leeren Bierfässern und einen mit hölzernen Stützstreben ausgebauten Gang nach rechts abzweigt.
+
+{link(006):Folge dem linken Gang.}
+
+{link(007):Folge dem rechten Gang.}
+
+

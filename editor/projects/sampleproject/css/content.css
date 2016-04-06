@@ -16,7 +16,8 @@ div#content {
     font-family: textfont;
     font-weight: normal;
     font-size: 18pt;
-    background: #e9e9e9;
+    background-image: url(../images/page.jpg);
+    background-repeat: repeat-y;
 }
 
 div#content h1 {
@@ -54,27 +55,29 @@ div.image.center img {
 }
 
 div.image.left img {
-    width: 50%;
+    width: 30%;
     padding: 4%;
     margin-left: -10%;
     margin-right: 5%;
     float: left;
-    background: white;
 }
 
 div.image.right img {
-    width: 50%;
+    width: 30%;
     padding: 4%;
     margin-right: -10%;
     margin-left: 5%;
     float: right;
-    background: white;
 }
 
 h2 em {
     font-family: thinitalic;
     font-weight: normal;
     font-style: normal;
+}
+
+div#content p {
+    text-indent: 1em;
 }
 
 p em {
@@ -105,7 +108,6 @@ div.box.right {
     margin-right: -10%;
     margin-left: 5%;
     float: right;
-    background: white;
 }
 
 div.box.center {
@@ -113,8 +115,16 @@ div.box.center {
     padding: 4%;
     margin-left: auto;
     margin-right: auto;
-    background: white;
 }
+
+div.box.textcenter {
+    width: 100%;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    background: transparent !important;
+}
+
 div#content.default {
     width: 80%;
     margin-left: 5%;
@@ -194,7 +204,6 @@ div#content.fullwidth div.box.left {
     margin-left: -3%;
     margin-right: 5%;
     float: left;
-    background: white;
 }
 
 div#content.fullwidth div.box.right {
@@ -203,7 +212,6 @@ div#content.fullwidth div.box.right {
     margin-right: -3%;
     margin-left: 5%;
     float: right;
-    background: white;
 }
 
 div#content.fullwidth div.image.left img {
@@ -212,7 +220,6 @@ div#content.fullwidth div.image.left img {
     margin-left: -3%;
     margin-right: 5%;
     float: left;
-    background: white;
 }
 
 div#content.fullwidth div.image.right img {
@@ -221,7 +228,6 @@ div#content.fullwidth div.image.right img {
     margin-right: -3%;
     margin-left: 5%;
     float: right;
-    background: white;
 }
 
 div#content.fullwidth div.choice {

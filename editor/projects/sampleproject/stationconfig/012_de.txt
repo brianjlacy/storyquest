@@ -1,0 +1,11 @@
+{image(center):border-angel.png}
+ 
+Du näherst dich dem Leuchten und versuchst herauszufinden, was es damit auf sich hat. Als du bis auf wenige Meter heran bist, bricht es hervor: plötzlich fliegen die Fässer um und landen krachend an den Wänden. Ein riesiger Orkgeist kommt auf dich zu. Trotz dass er fast durchsichtig ist kannst du die Orkhauer und die mächtigen Pranken erkennen, die nach dir greifen. Mit einem mächtigen Gebrüll packt er dich und schleudert dich gegen die Wand des Gewölbes. 
+
+Das letzte was du noch mitbekommst ist die Frauenstimme „Genug, er hat genug..jetzt holen wir uns den Rest des Zwergengefleuchs“.
+
+{box(textcenter):ENDE}
+
+{link(epilog):Zurück zum Menü}
+
+

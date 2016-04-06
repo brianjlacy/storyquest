@@ -1,0 +1,46 @@
+/* Standard Fonts */
+
+@font-face {
+    font-family: headerfont;
+    src: url('../images/FjallaOne-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: textfont;
+    src: url('../images/AlegreyaSans-Light.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: lightfont;
+    src: url('../images/AlegreyaSans-Light.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: regularfont;
+    src: url('../images/AlegreyaSans-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: boldfont;
+    src: url('../images/AlegreyaSans-Bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: thinfont;
+    src: url('../images/AlegreyaSans-Thin.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: thinitalic;
+    src: url('../images/AlegreyaSans-ThinItalic.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: regularitalic;
+    src: url('../images/AlegreyaSans-Italic.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: lightitalic;
+    src: url('../images/AlegreyaSans-LightItalic.ttf') format('truetype');
+}

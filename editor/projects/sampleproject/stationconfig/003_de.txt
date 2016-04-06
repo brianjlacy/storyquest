@@ -1,0 +1,8 @@
+{image(center):border-angel.png}
+
+Du tastest dich langsam im Dunklen voran. Schritt für Schritt schreitest du unsicher in den dunklen Keller hinein. Die Dunkelheit fühlt sich wie eine fast schon körperliche Bedrohung an. Plötzlich verlierst du den Boden unter den Füßen. Mit deinem letzten Gedanken wunderst du dich, wo dieser Abgrund herkommt. Mit einem dumpfen Krachen schlägst du auf hartem Felsen auf und alles wird dunkel.
+
+{box(textcenter):ENDE}
+
+{link(epilog):Zurück zum Menü}
+

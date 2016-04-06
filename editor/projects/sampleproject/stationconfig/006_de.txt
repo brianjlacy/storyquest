@@ -1,0 +1,10 @@
+{image(center):border-angel.png} 
+
+Der Gang läuft endlos lange dahin. Du kannst dich gar nicht daran erinnern, dass das Gewölbe so riesig war. Allerdings warst du bisher auch nie so tief im Keller wie jetzt. 
+Am Rande des Feuerscheins der Fackel siehst du plötzlich etwas am Boden liegen. Langsam näherst du dich und erkennst eine kurze Zwergenspitzhacke. Daneben liegt eine Schaufel, die mit irgendetwas dunklem beschmiert ist. Du kommst näher und erkennst mit Schrecken, dass es sich offensichtlich um Blut handelt. Hinter der Schaufel kommt noch eine Dreizackige Hacke zum Vorschein, an der ebenfalls eine Menge Blut klebt.
+
+Du erschauderst und überlegst kurz umzukehren. Der Zorn Brogars wird zwar furchtbar sein, wenn du ohne Wein zurückkommst, aber du kommst wenigstens heil zurück. Irgendetwas ist hier ganz gewaltig faul.
+
+{link(008):Weiter}
+
+

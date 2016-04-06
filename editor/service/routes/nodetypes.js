@@ -37,6 +37,13 @@ var editableFiles = [
         type: "css"
     },
     {
+        id: "fontscss",
+        path: "css/fonts.css",
+        title: "Fonts CSS",
+        description: "The font styling.",
+        type: "css"
+    },
+    {
         id: "globaljs",
         path: "js/global.js",
         title: "Global JS",

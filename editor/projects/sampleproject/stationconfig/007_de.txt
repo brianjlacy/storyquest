@@ -1,0 +1,11 @@
+{image(center):border-floral.png} 
+
+Der Feuerschein deiner Fackel wirft unheimliche Schatten durch die endlosen Regale mit Flaschen, Krügen und Kisten, die sich rechts und links von deinem Weg entlangziehen. Manchmal hast du das Gefühl, dass ein leises Schaben oder Kratzen aus der Dunkelheit hervorkommt. Du schüttelst den Kopf und versuchst einfach nicht daran zu denken.
+
+Plötzlich erkennst du am Rande des Feuerscheins etwas feuchtes auf dem sonst staubig-trockenen Boden. Als du näher kommst schreckst du zurück: scheinbar ist es Blut, dass sich in einer breiten Spur den Boden entlang in die Dunkelheit zieht.
+
+{image(right):image-dwarv.png}
+
+Trotz einem aufflammenden Fluchtimpuls folgst du der Spur und machst eine grausige Entdeckung:  neben einigen Werkzeugen liegt ein toter Zwerg. Irgendjemand hat ihm den bärtigen Schädel eingeschlagen. Du umrundest den Toten und stellst mit Erschrecken fest, dass es sich um Belegar handelt. Was ist hier nur passiert. Du beschließt, dass der Wein nun egal ist und du so schnell wie möglich wieder aus dem Gewölbe herauskommen musst. Nur weg hier.
+
+{link(008):Weiter}

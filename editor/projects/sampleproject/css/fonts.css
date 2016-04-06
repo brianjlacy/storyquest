@@ -1,0 +1,46 @@
+/* Standard Fonts */
+
+@font-face {
+    font-family: headerfont;
+    src: url('../images/Averia-Bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: textfont;
+    src: url('../images/AveriaSerif-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: lightfont;
+    src: url('../images/Averia-Light.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: regularfont;
+    src: url('../images/AveriaSerif-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: boldfont;
+    src: url('../images/AveriaSerif-Bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: thinfont;
+    src: url('../images/AveriaSerif-Light.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: thinitalic;
+    src: url('../images/AveriaSerif-LightItalic.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: regularitalic;
+    src: url('../images/AveriaSerif-Italic.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: lightitalic;
+    src: url('../images/AveriaSerif-LightItalic.ttf') format('truetype');
+}

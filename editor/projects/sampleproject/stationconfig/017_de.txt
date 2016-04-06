@@ -1,0 +1,12 @@
+{image(center):border-angel.png}
+
+Endlich findest du die Treppen, die wieder hinauf in die Küche führen. Oben angekommen dreht sich Brogar zu dir um, der gerade einen jungen Küchenzwerg angebrüllt hat. Er schaut verwirrt, warum du über und über mit Staub, Sand und Dreck beschmutzt bist, bemerkt dann aber deine leeren Hände, wo seiner Meinung nach eigentlich ein paar Weinkrüge sein sollten. Er setzt an und brüllt dich fast aus deinen ledernen Stiefeln, was für ein unnützer Zwerg du bist und wie er nur alles immer alleine machen muss. Bevor du überhaupt etwas entgegnen kannst von toten Zwergen und seltsamen Stimmen hat der dich schon am Wams gepackt und aus der Tür der Küche herausbefördert.
+
+{image(right):image-dwarv.png} 
+
+Unsanft landest du mitten zwischen zwei feixenden Zwergenfrauen in der Ratshalle. Du rappelst dich auf, entschuldigst dich förmlich bei den beiden Zwerginnen und verwindest in der Masse der anderen Zwerge. Jetzt bist du bereit, bereit für neue Abenteuer. Soll doch die Küche bleiben wo sie ist, du bist zu Größerem berufen – zu einem großen Zwerg..
+
+{box(textcenter):ENDE}
+
+{link(epilog):Zurück zum Menü}
+

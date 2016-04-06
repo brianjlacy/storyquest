@@ -1,0 +1,17 @@
+{image(center):border-floral.png} 
+
+Du bist zwar ein junger Zwerg, aber wenn in einem dunklen Gewölbe mit einem toten Gutsverwalter eine säuselnde Stimme aus der Finsternis dir beruhigende Worte wie einen Magiehauch einflüstert, dann bedeutet das meistens nichts Gutes – und schon gar keine Sicherheit. Du ignorierst die Stimme und versuchst nicht an sie zu denken – nur raus hier und fort von irgendwelcher seltsamer Magie, die hier im Spiel sein muss.
+
+Als du um eine Ecke biegst stolperst du plötzlich über etwas am Boden und fällst hart hin. Schnell rappelst du dich wieder auf und nimmst dir trotz deiner Furcht die kurze Zeit, dir den Staub vom Leinenwams zu klopfen. Du blickst kurz zurück und stellst fest, dass du über eine zwergische Ledertasche gestolpert bist, die achtlos am Boden liegt.
+
+{image(left):image-dragon-round.png} 
+
+Du nimmst die Tasche und öffnest sie. Hervor kommt eine kleine Flasche, offensichtlich mit Schnaps gefüllt und eine kurze Notiz auf einem vergilbten und an den Rändern eingerissenen Pergamentfetzen.
+Die Notiz lautet: „Das Medallion ist vergraben in der zehnten Reihe der fünften Kohorte des zwergischen Weinlagers im früheren Verlies des Felsquetschers.“. Du erinnerst dich dunkel, dass du dich genau in diesem Verlies befindest, denn die Lagerkatakombe war zu Utgars Zeiten ein gefürchtetes Verlies. So langsam zählst du die Dinge zusammen. Damit macht auch die Grube Sinn, die du gefunden hast. Aber was ist das Medaillon und warum liegt dort drüben ein toter Zwerg?
+
+Du steckst die Tasche und die Notiz in deinen Gürtel und setzt deinen Weg fort. Ein paar Meter weiter kommst du an eine Abzweigung und kannst dich nicht mehr genau erinnern, welche die richtige Richtung ist. Verdammte Furcht, sie bringt deinen Kopf mehr durcheinander als ein ganzes Fass Zwergenbier.
+
+{link(013):Nach Links gehen.}
+
+{link(014):Nach Rechts gehen.}
+
