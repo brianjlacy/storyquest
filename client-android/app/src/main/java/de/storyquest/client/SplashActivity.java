@@ -136,13 +136,15 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        videoHolder.stopPlayback();
+        if (videoHolder.isPlaying())
+            videoHolder.stopPlayback();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        videoHolder.stopPlayback();
+        if (videoHolder.isPlaying())
+            videoHolder.stopPlayback();
     }
 
     @Override
