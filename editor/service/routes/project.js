@@ -55,6 +55,10 @@ exports.registerServices = function(appConfig, app) {
     app.get("/api/menuimage/:projectId", global.authUser, global.authProject, this.getMenuImage);
     app.put("/api/menuvideo/:projectId", global.authUser, global.authProject, this.updateMenuVideo);
     app.get("/api/menuvideo/:projectId", global.authUser, global.authProject, this.getMenuVideo);
+    app.put("/api/sidebarimage/:projectId", global.authUser, global.authProject, this.updateSidebarImage);
+    app.get("/api/sidebarimage/:projectId", global.authUser, global.authProject, this.getSidebarImage);
+    app.put("/api/uifont/:projectId", global.authUser, global.authProject, this.updateUIFont);
+    app.get("/api/uifont/:projectId", global.authUser, global.authProject, this.getUIFont);
     app.put("/api/helpimage/:projectId", global.authUser, global.authProject, this.updateHelpImage);
     app.get("/api/helpimage/:projectId", global.authUser, global.authProject, this.getHelpImage);
     app.put("/api/creditsimage/:projectId", global.authUser, global.authProject, this.updateCreditsImage);
@@ -441,6 +445,62 @@ exports.getMenuVideo = function(req, res) {
     } else {
         res.writeHead(200, { "Content-Type": "video/mp4" });
         return res.end(fs.readFileSync(path.join(Utils.getProjectDir(projectId), "..", "..", "template", "menu.mp4")), "binary");
+    }
+};
+
+exports.updateSidebarImage = function(req, res){
+    var outputDir = Utils.getProjectDir(req.param("projectId"));
+    try {
+        if (req.files && req.files.file) {
+            var dimensions = imageSize(req.files.file.path);
+            if (dimensions.width===837 && dimensions.height===1920) {
+                // dont use rename here, because rename breaks when files are on different filesystems
+                fse.copySync(req.files.file.path, path.join(outputDir, "sidebar.jpg"));
+                fse.removeSync(req.files.file.path);
+                return res.json(200, {});
+            } else
+                return res.json(500, {type: "REQUEST_FAILED", "message": "Image does not have the right size."});
+        }
+    } catch(err) {
+        return res.json(500, {type: "REQUEST_FAILED", "message": err});
+    }
+};
+
+exports.getSidebarImage = function(req, res) {
+    var projectId = req.param("projectId");
+    var sidebarFile = path.join(Utils.getProjectDir(projectId), "sidebar.jpg");
+    if (fs.existsSync(sidebarFile)) {
+        res.writeHead(200, { "Content-Type": "image/jpeg" });
+        return res.end(fs.readFileSync(sidebarFile), "binary");
+    } else {
+        res.writeHead(200, { "Content-Type": "image/jpeg" });
+        return res.end(fs.readFileSync(path.join(Utils.getProjectDir(projectId), "..", "..", "template", "sidebar.jpg")), "binary");
+    }
+};
+
+exports.updateUIFont = function(req, res){
+    var outputDir = Utils.getProjectDir(req.param("projectId"));
+    try {
+        if (req.files && req.files.file) {
+            // dont use rename here, because rename breaks when files are on different filesystems
+            fse.copySync(req.files.file.path, path.join(outputDir, "uifont.ttf"));
+            fse.removeSync(req.files.file.path);
+            return res.json(200, {});
+        }
+    } catch(err) {
+        return res.json(500, {type: "REQUEST_FAILED", "message": err});
+    }
+};
+
+exports.getUIFont = function(req, res) {
+    var projectId = req.param("projectId");
+    var uiFontFile = path.join(Utils.getProjectDir(projectId), "uifont.ttf");
+    if (fs.existsSync(uiFontFile)) {
+        res.writeHead(200, { "Content-Type": "application/octet-stream" });
+        return res.end(fs.readFileSync(uiFontFile), "binary");
+    } else {
+        res.writeHead(200, { "Content-Type": "application/octet-stream" });
+        return res.end(fs.readFileSync(path.join(Utils.getProjectDir(projectId), "..", "..", "template", "uifont.ttf")), "binary");
     }
 };
 

@@ -175,6 +175,41 @@ editorModule.controller("projectsCoreController", ["$scope", "$http", "Upload", 
                     Pace.restart();
                 });
         };
+
+        $scope.uploadSidebarImage = function() {
+            if ($scope.sidebarImageFile)
+                Upload.upload({
+                    method: "PUT",
+                    url: "/api/sidebarimage/" + $scope.selectedProject.id,
+                    data: {
+                        file: $scope.sidebarImageFile
+                    }
+                }).then(function (resp) {
+                    $(".projectsidebar").attr("src", $(".projectsidebar").attr("src") + "?date=" + new Date().getTime());
+                }, function (resp) {
+                    modalError("Error uploading file. Please try again.");
+                }, function (evt) {
+                    var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+                    Pace.restart();
+                });
+        };
+
+        $scope.uploadUiFont = function() {
+            if ($scope.uifontFile)
+                Upload.upload({
+                    method: "PUT",
+                    url: "/api/uifont/" + $scope.selectedProject.id,
+                    data: {
+                        file: $scope.uifontFile
+                    }
+                }).then(function (resp) {
+                }, function (resp) {
+                    modalError("Error uploading file. Please try again.");
+                }, function (evt) {
+                    var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+                    Pace.restart();
+                });
+        };
         
         $scope.uploadHelpImage = function() {
             if ($scope.helpImageFile)
@@ -305,6 +340,7 @@ editorModule.controller("projectsCoreController", ["$scope", "$http", "Upload", 
                 $(".projectcover").attr("src", "/api/coverimage/" + $scope.selectedProject.id);
                 $(".projectsplash").attr("src", "/api/splashimage/" + $scope.selectedProject.id);
                 $(".projectmenu").attr("src", "/api/menuimage/" + $scope.selectedProject.id);
+                $(".projectsidebar").attr("src", "/api/sidebarimage/" + $scope.selectedProject.id);
                 $(".projecthelp").attr("src", "/api/helpimage/" + $scope.selectedProject.id);
                 $(".projectcredits").attr("src", "/api/creditsimage/" + $scope.selectedProject.id);
                 $scope.keyPassword = undefined;

@@ -104,6 +104,7 @@
                         <li class="active"><a href="#projectsettings" data-toggle="tab" class="projectsettings">Basic Info</a></li>
                         <li><a href="#appsettings" data-toggle="tab" class="appsettings">App Settings</a></li>
                         <li><a href="#publishersettings" data-toggle="tab" class="publishersettings">Publisher Settings</a></li>
+                        <li><a href="#keysettings" data-toggle="tab" class="keysettings">App Signing Key</a></li>
                     </ul>
                     <div class="tab-content project-content">
                         <div id="projectsettings" class="tab-pane active">
@@ -158,6 +159,34 @@
                                                                                 ng-model="settings.publisher" ng-disabled="!selectedProject"
                                                                                 class="form-control"/></div>
                         </div>
+                        <div id="keysettings" class="tab-pane">
+                            <div class="keystatusblock keystatusblock-positive" ng-hide="!settings.KEY_ALIAS">
+                                <span class="keystatus"><i class="glyphicon glyphicon-ok-circle"></i>&nbsp;&nbsp;Key is available</span>&nbsp;&nbsp;
+                                <span class="keydownload"><a class="btn btn-default btn-xs" href="/api/settings/key/{{selectedProject.id}}">Download Key</a></span>
+                            </div>
+                            <div class="keystatusblock keystatusblock-negative" ng-hide="settings.KEY_ALIAS">
+                                <span class="keystatus"><i class="glyphicon glyphicon-alert"></i>&nbsp;&nbsp;Key is not available, please upload or create a key.</span>
+                            </div>
+                            <div class="form-group">
+                                <label>Key Alias</label>
+                                <input id="keyAlias" type="text" placeholder="No key alias available" ng-model="settings.KEY_ALIAS" class="disabled form-control"/>
+                            </div>
+                            <div class="form-group">
+                                <label>Key Password</label>
+                                <div class="inner-addon left-addon">
+                                    <button class="btn btn-default btn-xs" ng-click="showKeyPassword()">Show</button>
+                                    <input id="keyPassword" type="text" placeholder="Key password is hidden" ng-model="keyPassword" class="disabled form-control"/>
+                                </div>
+                            </div>
+                            <div class="warning">
+                                Please make sure you always keep a backup of your key, key alias and key password at a safe place, even when you created the key here. <em>If you loose your key or any of the noted data, you will not be able to upload app updates to Google Play anymore.</em>
+                            </div>
+                            <div class="pull-right">
+                                <button class="btn btn-danger" ng-click="createKey()">Create New Key</button>
+                                &nbsp;&nbsp;
+                                <button class="btn btn-danger" ng-click="uploadKey()">Upload Key</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -176,8 +205,8 @@
                         <li class="active"><a href="#iconandcover" data-toggle="tab" class="iconandcover">Icon and Cover Images</a></li>
                         <li><a href="#splashimages" data-toggle="tab" class="splashimages">Splash Images</a></li>
                         <li><a href="#menuimages" data-toggle="tab" class="menuimages">Menu Images</a></li>
+                        <li><a href="#sidebarimages" data-toggle="tab" class="sidebarimages">Sidebar and UI Font</a></li>
                         <li><a href="#creditshelpimages" data-toggle="tab" class="creditshelpimages">Help & Credits Images</a></li>
-                        <li><a href="#keysettings" data-toggle="tab" class="keysettings">App Signing Key</a></li>
                     </ul>
                     <div class="tab-content project-content">
                         <div id="iconandcover" class="tab-pane active">
@@ -346,6 +375,59 @@
                                 </div>
                             </div>
                         </div>
+                        <div id="sidebarimages" class="tab-pane">
+                            <div class="projectimages imagestable">
+                                <div class="imagesrow" style="height:10%">
+                                    <div class="imagescell">
+                                        Sidebar Background
+                                    </div>
+                                    <div class="imagescell">
+                                        UI Font
+                                    </div>
+                                </div>
+                                <div class="imagesrow" style="height:70%">
+                                    <div class="imagescell">
+                                        <img class="projectsidebar" style="max-height: 15%;">
+                                    </div>
+                                    <div class="imagescell">
+                                        <span class="keydownload"><a class="btn btn-default btn-xs" href="/api/uifont/{{selectedProject.id}}">Download Font</a></span>
+                                    </div>
+                                </div>
+                                <div class="imagesrow" style="height:10%">
+                                    <div class="imagescell">
+                                        837x1920px, JPG
+                                    </div>
+                                    <div class="imagescell">
+                                        TrueType Font
+                                    </div>
+                                </div>
+                                <div class="imagesrow" style="height:10%">
+                                    <div class="imagescell">
+                                        <form name="sidebarImageUploadForm">
+                                            <button name="file" id="sidebarimageupload" class="btn btn-primary btn-xs"
+                                                    ng-model="sidebarImageFile" ngf-pattern="'*.jpg'"
+                                                    ngf-accept="'*.jpg'" ngf-dimensions="$width==837 && $height==1920"
+                                                    ngf-select="uploadSidebarImage()">
+                                                <span>&nbsp;Upload Sidbar Background</span>
+                                            </button>
+                                            <div ng-hide="!sidebarImageUploadForm.file.$error.dimensions" style="color:red;font-weight:bold;">
+                                                Your selected file does not have<br>the required resolution!
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="imagescell">
+                                        <form name="uifontUploadForm">
+                                            <button name="file" id="uifontupload" class="btn btn-primary btn-xs"
+                                                    ng-model="uifontFile" ngf-pattern="'*.ttf'"
+                                                    ngf-accept="'*.ttf'"
+                                                    ngf-select="uploadUiFont()">
+                                                <span>&nbsp;Upload UI Font</span>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div id="creditshelpimages" class="tab-pane">
                             <div class="projectimages imagestable">
                                 <div class="imagesrow" style="height:10%">
@@ -400,34 +482,6 @@
                                         </form>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div id="keysettings" class="tab-pane">
-                            <div class="keystatusblock keystatusblock-positive" ng-hide="!settings.KEY_ALIAS">
-                                <span class="keystatus"><i class="glyphicon glyphicon-ok-circle"></i>&nbsp;&nbsp;Key is available</span>&nbsp;&nbsp;
-                                <span class="keydownload"><a class="btn btn-default btn-xs" href="/api/settings/key/{{selectedProject.id}}">Download Key</a></span>
-                            </div>
-                            <div class="keystatusblock keystatusblock-negative" ng-hide="settings.KEY_ALIAS">
-                                <span class="keystatus"><i class="glyphicon glyphicon-alert"></i>&nbsp;&nbsp;Key is not available, please upload or create a key.</span>
-                            </div>
-                            <div class="form-group">
-                                <label>Key Alias</label>
-                                <input id="keyAlias" type="text" placeholder="No key alias available" ng-model="settings.KEY_ALIAS" class="disabled form-control"/>
-                            </div>
-                            <div class="form-group">
-                                <label>Key Password</label>
-                                <div class="inner-addon left-addon">
-                                    <button class="btn btn-default btn-xs" ng-click="showKeyPassword()">Show</button>
-                                    <input id="keyPassword" type="text" placeholder="Key password is hidden" ng-model="keyPassword" class="disabled form-control"/>
-                                </div>
-                            </div>
-                            <div class="warning">
-                                Please make sure you always keep a backup of your key, key alias and key password at a safe place, even when you created the key here. <em>If you loose your key or any of the noted data, you will not be able to upload app updates to Google Play anymore.</em>
-                            </div>
-                            <div class="pull-right">
-                                <button class="btn btn-danger" ng-click="createKey()">Create New Key</button>
-                                &nbsp;&nbsp;
-                                <button class="btn btn-danger" ng-click="uploadKey()">Upload Key</button>
                             </div>
                         </div>
                     </div>
