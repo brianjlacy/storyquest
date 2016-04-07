@@ -22,6 +22,7 @@
 package de.storyquest.client;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.VideoView;
 
 public class SplashActivity extends AppCompatActivity {
@@ -57,6 +59,8 @@ public class SplashActivity extends AppCompatActivity {
         // setup theme
         int theme = ((StoryQuestApplication)this.getApplication()).getStoryQuestTheme();
         // TODO: setup theme colors whether THEME_LIGHT or THEME_DARK (default)
+        ((TextView)findViewById(R.id.touchToContinue)).setTypeface(((StoryQuestApplication)getApplication()).getUiFont(), Typeface.NORMAL);
+
 
         videoHolder = (VideoView)findViewById(R.id.splashVideo);
         ImageView imageHolder = (ImageView)findViewById(R.id.splashImage);

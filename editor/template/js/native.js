@@ -168,7 +168,10 @@ weakDeclare('loadBookmark', function(id) {
     for (var i=0; i<bookmarks.length; i++)
         if (bookmarks[i].id===id) {
             var modelStr = bookmarks[i].model;
-            model = JSON.parse(modelStr);
+            if (typeof modelStr=='object')
+               model = modelStr;
+            else 
+	       model = JSON.parse(modelStr);
             storeModel();
             toStation(bookmarks[i].currentStation);
         }

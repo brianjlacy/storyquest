@@ -206,6 +206,33 @@ button.button {
     margin-top: 0.5em;
 }
 
+/* generic dialogs */
+
+#help {
+    padding-left: 2em;
+    padding-right: 2em;
+}
+
+#credits {
+    padding-left: 2em;
+    padding-right: 2em;
+}
+
+#credits h1,h2,h3 {
+    text-align: center;
+}
+
+#credits h2 {
+    margin: 0;
+    padding-bottom: 0.1em;
+    padding-top: 0.8em;
+}
+
+#credits h3 {
+    margin: 0;
+    padding: 0;
+}
+
 /* Alternate Style: fullwidth */
 
 div#content.fullwidth {

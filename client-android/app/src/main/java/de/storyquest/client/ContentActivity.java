@@ -21,8 +21,10 @@
  */
 package de.storyquest.client;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -43,6 +45,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.InputStream;
 
@@ -83,6 +86,14 @@ public class ContentActivity extends PlatformServicesActivity
         navigationView.setNavigationItemSelectedListener(this);
         View header = navigationView.getHeaderView(0);
 
+        // apply theme
+        try {
+            Drawable d = Drawable.createFromStream(getAssets().open("sidebar.jpg"), null);
+            navigationView.setBackground(d);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
         // wire the drawer open event to the character sheet refresh
         DrawerLayout drawer = (DrawerLayout)findViewById(R.id.drawer_layout);
         if (drawer != null) {
@@ -114,13 +125,22 @@ public class ContentActivity extends PlatformServicesActivity
         // make the web content debuggable from external chrome tools
         WebView.setWebContentsDebuggingEnabled(true);
 
+        // enable script interfaces
+        scriptSystem = new ScriptSystem(this);
+        scriptStorage = new ScriptStorage(this, getApplicationContext().getSharedPreferences(ScriptStorage.CONTEXT, Context.MODE_PRIVATE));
+        scriptSound = new ScriptSound(this);
+        scriptGameServices = new ScriptGameServices(this);
+
         // setup character webview
         character = (WebView) header.findViewById(R.id.characterView);
-        character.setBackgroundColor(Color.TRANSPARENT);
         character.getSettings().setJavaScriptEnabled(true);
         character.getSettings().setDomStorageEnabled(true);
         character.getSettings().setAllowFileAccess(true);
         character.getSettings().setAppCacheEnabled(true);
+        character.addJavascriptInterface(scriptSystem, "sqSystem");
+        character.addJavascriptInterface(scriptStorage, "nativeStorage");
+        character.addJavascriptInterface(scriptSound, "sqSound");
+        character.addJavascriptInterface(scriptGameServices, "sqGameServices");
         character.loadUrl("file:///android_asset/character.html");
 
         // setup web view
@@ -129,14 +149,8 @@ public class ContentActivity extends PlatformServicesActivity
         web.getSettings().setDomStorageEnabled(true);
         web.getSettings().setAllowFileAccess(true);
         web.getSettings().setAppCacheEnabled(true);
-
-        // enable script interfaces
-        scriptSystem = new ScriptSystem(this);
-        scriptStorage = new ScriptStorage(this, getApplicationContext().getSharedPreferences(ScriptStorage.CONTEXT, Context.MODE_PRIVATE));
-        scriptSound = new ScriptSound(this);
-        scriptGameServices = new ScriptGameServices(this);
         web.addJavascriptInterface(scriptSystem, "sqSystem");
-        web.addJavascriptInterface(scriptStorage, "sqStorage");
+        web.addJavascriptInterface(scriptStorage, "nativeStorage");
         web.addJavascriptInterface(scriptSound, "sqSound");
         web.addJavascriptInterface(scriptGameServices, "sqGameServices");
 
@@ -165,7 +179,7 @@ public class ContentActivity extends PlatformServicesActivity
             public void onPageFinished(WebView view, String url) {
                 Log.d(LOGTAG, "Page rendering finished: " + url + ".");
                 hideSpinner();
-                if (bookmarkId!=null) {
+                if (bookmarkId!=null && url.startsWith("file:///android_asset/content.html")) {
                     Log.i(LOGTAG, "Loading bookmark " + bookmarkId + ".");
                     execJavaScriptInContent("loadBookmark('" + bookmarkId + "')");
                     bookmarkId = null;
@@ -221,6 +235,7 @@ public class ContentActivity extends PlatformServicesActivity
             displayHelp();
         } else if (id == R.id.nav_storebookmark) {
             execJavaScriptInContent("storeBookmark()");
+            Toast.makeText(this, getResources().getText(R.string.bookmarkStored), Toast.LENGTH_SHORT).show();
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -228,15 +243,38 @@ public class ContentActivity extends PlatformServicesActivity
     }
 
     private void displayMain() {
-        Log.i(LOGTAG, "Displaying Main Menu..");
-        Intent mainMenuIntent = new Intent(this, MainMenuActivity.class);
-        startActivity(mainMenuIntent);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getResources().getString(R.string.mainMenuSecurityTitle));
+        builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                Log.i(LOGTAG, "Displaying Main Menu..");
+                Intent mainMenuIntent = new Intent(ContentActivity.this, MainMenuActivity.class);
+                startActivity(mainMenuIntent);
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private void displayBookmarks() {
         Log.i(LOGTAG, "Displaying Bookmarks..");
         Intent bookmarkIntent = new Intent(this, BookmarkActivity.class);
         startActivityForResult(bookmarkIntent, 42);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (requestCode==42) {
+            Log.i(LOGTAG, "Returning from bookmarks, refreshing bookmark model..");
+            execJavaScriptInContent("initBookmarks()");
+        }
     }
 
     private void displayHelp() {

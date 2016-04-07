@@ -23,4 +23,6 @@
     <string name="help">Hilfe</string>
     <string name="deleteBookmarkSecurityTitle">Lesezeichen wirklich löschen?</string>
     <string name="loadBookmarkSecurityTitle">Lesezeichen wirklich laden?</string>
+    <string name="defaultBookmarkTitle">Gespeichertes Lesezeichen</string>
+    <string name="mainMenuSecurityTitle">Wirklich zum Hauptmenü zurückkehren?</string>
 </resources>

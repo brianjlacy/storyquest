@@ -3,13 +3,17 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#80c8c8c8"
-        android:layout_marginBottom="4dp">
+        android:background="@drawable/round_button"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp">
 
         <ImageView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_menu_slideshow"
+            android:src="@android:drawable/ic_menu_agenda"
             android:layout_marginRight="10dp"
             android:layout_marginLeft="10dp"
             android:layout_weight="1" />
@@ -24,12 +28,14 @@
                 android:id="@+id/bookmarkTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
                 android:textAppearance="?android:attr/textAppearanceMedium"/>
 
             <TextView
                 android:id="@+id/bookmarkSubtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
                 android:textAppearance="?android:attr/textAppearanceSmall"/>
         </LinearLayout>
 
@@ -38,6 +44,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:src="@android:drawable/ic_menu_delete"
+            android:background="#00000000"
             android:layout_marginRight="10dp"
             android:layout_marginLeft="10dp"
             android:layout_weight="1" />

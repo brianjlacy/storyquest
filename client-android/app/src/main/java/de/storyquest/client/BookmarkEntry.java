@@ -22,8 +22,10 @@
 package de.storyquest.client;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -64,7 +66,9 @@ public class BookmarkEntry extends LinearLayout {
     }
 
     private void initView() {
-        View view = inflate(getContext(), R.layout.component_bookmark, null);
+        inflate(getContext(), R.layout.component_bookmark, this);
+        ((TextView)findViewById(R.id.bookmarkTitle)).setTypeface(StoryQuestApplication.getApplication().getUiFont(), Typeface.NORMAL);
+        ((TextView)findViewById(R.id.bookmarkSubtitle)).setTypeface(StoryQuestApplication.getApplication().getUiFont(), Typeface.NORMAL);
         findViewById(R.id.bookmarkDeleteButton).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,7 +81,5 @@ public class BookmarkEntry extends LinearLayout {
                 bookmarkSelectedListener.selectBookmark(bookmarkId);
             }
         });
-
-        addView(view);
     }
 }

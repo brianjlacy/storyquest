@@ -26,6 +26,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -34,13 +35,16 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.sql.Date;
+import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 public class BookmarkActivity extends AppCompatActivity implements BookmarkEntry.BookmarkSelectedListener {
 
@@ -66,6 +70,7 @@ public class BookmarkActivity extends AppCompatActivity implements BookmarkEntry
         // setup theme
         int theme = ((StoryQuestApplication)this.getApplication()).getStoryQuestTheme();
         // TODO: setup theme colors whether THEME_LIGHT or THEME_DARK (default)
+        ((TextView)findViewById(R.id.bookmarkTitle)).setTypeface(((StoryQuestApplication)getApplication()).getUiFont(), Typeface.NORMAL);
 
         try {
             Drawable background = Drawable.createFromStream(getAssets().open("bookmarks.jpg"), null);
@@ -74,26 +79,7 @@ public class BookmarkActivity extends AppCompatActivity implements BookmarkEntry
             throw new RuntimeException(e);
         }
 
-        // parse bookmarks
-        String bookmarksJSON = getApplicationContext().getSharedPreferences(ScriptStorage.CONTEXT, Context.MODE_PRIVATE).
-                getString(ScriptStorage.KEY_BOOKMARKS, null);
-        if (bookmarksJSON!=null && !bookmarksJSON.equals(""))
-            try {
-                JSONArray jsonarray = new JSONArray(bookmarksJSON);
-                for (int i = 0; i < jsonarray.length(); i++) {
-                    // read bookmarks, build UI list
-                    JSONObject jsonobject = jsonarray.getJSONObject(i);
-                    String title = jsonobject.getString("name");
-                    Date date = Date.valueOf(jsonobject.getString("date"));
-                    String id = jsonobject.getString("id");
-                    BookmarkEntry thisEntry = new BookmarkEntry(this);
-                    thisEntry.setBookmarkData(id, title, DateFormat.getDateFormat(this).format(date));
-                    thisEntry.setOnBookmarkSelectedListener(this);
-                    ((LinearLayout)findViewById(R.id.bookmarkList)).addView(thisEntry);
-                }
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
+        refreshBookmarkList();
 
         findViewById(R.id.backtoMainButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,6 +87,39 @@ public class BookmarkActivity extends AppCompatActivity implements BookmarkEntry
                 finish();
             }
         });
+    }
+
+    private void refreshBookmarkList() {
+        // parse bookmarks
+        String bookmarksJSON = getApplicationContext().getSharedPreferences(ScriptStorage.CONTEXT, Context.MODE_PRIVATE).
+                getString(ScriptStorage.KEY_BOOKMARKS, null);
+        if (bookmarksJSON!=null && !bookmarksJSON.equals(""))
+            try {
+                ((LinearLayout)findViewById(R.id.bookmarkList)).removeAllViews();
+                JSONArray jsonarray = new JSONArray(bookmarksJSON);
+                for (int i = 0; i < jsonarray.length(); i++) {
+                    // read bookmarks, build UI list
+                    JSONObject jsonobject = jsonarray.getJSONObject(i);
+                    String title = getResources().getString(R.string.defaultBookmarkTitle);
+                    if (jsonobject.has("name"))
+                        title = jsonobject.getString("name");
+                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                    Date date = null;
+                    try {
+                        date = df.parse(jsonobject.getString("date"));
+                    } catch (ParseException e) {
+                        Log.d(LOGTAG, "Date from bookmarks not recognized: " + jsonobject.getString("date"), e);
+                        date = new Date();
+                    }
+                    String id = jsonobject.getString("id");
+                    BookmarkEntry thisEntry = new BookmarkEntry(this);
+                    thisEntry.setBookmarkData(id, title, DateFormat.getDateFormat(this).format(date) + " - " + DateFormat.getTimeFormat(this).format(date));
+                    thisEntry.setOnBookmarkSelectedListener(this);
+                    ((LinearLayout)findViewById(R.id.bookmarkList)).addView(thisEntry);
+                }
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
     }
 
     @Override
@@ -161,6 +180,7 @@ public class BookmarkActivity extends AppCompatActivity implements BookmarkEntry
                         SharedPreferences.Editor editor = getApplicationContext().getSharedPreferences(ScriptStorage.CONTEXT, Context.MODE_PRIVATE).edit();
                         editor.putString(ScriptStorage.KEY_BOOKMARKS, newBookmarkArray.toString());
                         editor.commit();
+                        refreshBookmarkList();
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
                     }

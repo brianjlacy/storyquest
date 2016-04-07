@@ -22,6 +22,7 @@
 package de.storyquest.client;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -30,6 +31,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.VideoView;
 
@@ -61,6 +63,10 @@ public class MainMenuActivity extends AppCompatActivity {
         // setup theme
         int theme = ((StoryQuestApplication)this.getApplication()).getStoryQuestTheme();
         // TODO: setup theme colors whether THEME_LIGHT or THEME_DARK (default)
+        ((Button)findViewById(R.id.buttonNew)).setTypeface(((StoryQuestApplication)getApplication()).getUiFont(), Typeface.NORMAL);
+        ((Button)findViewById(R.id.buttonContinue)).setTypeface(((StoryQuestApplication)getApplication()).getUiFont(), Typeface.NORMAL);
+        ((Button)findViewById(R.id.buttonHelp)).setTypeface(((StoryQuestApplication)getApplication()).getUiFont(), Typeface.NORMAL);
+        ((Button)findViewById(R.id.buttonCredits)).setTypeface(((StoryQuestApplication)getApplication()).getUiFont(), Typeface.NORMAL);
 
         videoHolder = (VideoView)findViewById(R.id.menuVideo);
         ImageView imageHolder = (ImageView)findViewById(R.id.menuImage);

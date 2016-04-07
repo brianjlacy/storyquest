@@ -26,9 +26,11 @@
             android:layout_weight="9">
 
             <TextView
+                android:id="@+id/bookmarkTitle"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
+                android:textStyle="bold"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/bookmarksTitle"
                 android:textAlignment="center" />
@@ -37,13 +39,18 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/bookmarkList"
-        android:orientation="vertical"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="9">
-    </LinearLayout>
+        android:layout_weight="9"
+        android:layout_gravity="center_horizontal">
+        <LinearLayout
+            android:id="@+id/bookmarkList"
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_height="wrap_content">
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

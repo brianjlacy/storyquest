@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:text="@string/mainMenuNew"
             android:id="@+id/buttonNew"
-            android:background="#70000000"
+            android:background="@drawable/round_button"
             android:layout_marginBottom="10dp"
             android:textColor="#ffffff"/>
 
@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/buttonContinue"
             android:text="@string/mainMenuContinue"
-            android:background="#70000000"
+            android:background="@drawable/round_button"
             android:layout_marginBottom="10dp"
             android:textColor="#ffffff"/>
 
@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/buttonHelp"
             android:text="@string/mainMenuHelp"
-            android:background="#70000000"
+            android:background="@drawable/round_button"
             android:layout_marginBottom="10dp"
             android:textColor="#ffffff"/>
 
@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/buttonCredits"
             android:text="@string/mainMenuCredits"
-            android:background="#70000000"
+            android:background="@drawable/round_button"
             android:layout_marginBottom="10dp"
             android:textColor="#ffffff"/>
     </LinearLayout>

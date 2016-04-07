@@ -23,6 +23,8 @@ package de.storyquest.client;
 
 import android.app.Application;
 import android.content.Context;
+import android.graphics.Typeface;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,26 +33,36 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 public class StoryQuestApplication extends Application {
 
+    private static final String LOGTAG = StoryQuestApplication.class.getName();
+
     public static final int THEME_LIGHT = 0;
     public static final int THEME_DARK = 1;
 
     private int theme = THEME_DARK;
     private Map<String, String> configuration = null;
+    private Typeface uifont = null;
+
+    private static StoryQuestApplication appContext = null;
 
     @Override
     public void onCreate() {
         super.onCreate();
+
+        FontsOverride.setDefaultFont(this, "MONOSPACE", getUiFont());
+
         Map<String, String> configuration = getStoryQuestConfiguration();
         if (configuration.containsKey("theme") && (configuration.get("theme").equals("0") || configuration.get("theme").equals("light")))
             setStoryQuestTheme(THEME_LIGHT);
         else
             setStoryQuestTheme(THEME_DARK);
+        StoryQuestApplication.appContext = this;
     }
 
     public int getStoryQuestTheme() {
@@ -76,6 +88,16 @@ public class StoryQuestApplication extends Application {
             }
         }
         return configuration;
+    }
+
+    public Typeface getUiFont() {
+        if (uifont==null)
+            uifont = Typeface.createFromAsset(getAssets(),"uifont.ttf");
+        return uifont;
+    }
+
+    public static StoryQuestApplication getApplication() {
+        return StoryQuestApplication.appContext;
     }
 
     private String loadConfigJSONFromAsset() {

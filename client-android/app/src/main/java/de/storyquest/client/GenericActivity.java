@@ -23,6 +23,7 @@ package de.storyquest.client;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -66,6 +67,7 @@ public class GenericActivity extends AppCompatActivity {
         // setup theme
         int theme = ((StoryQuestApplication)this.getApplication()).getStoryQuestTheme();
         // TODO: setup theme colors whether THEME_LIGHT or THEME_DARK (default)
+        ((TextView)findViewById(R.id.genericTitle)).setTypeface(((StoryQuestApplication)getApplication()).getUiFont(), Typeface.NORMAL);
 
         // setup background
         try {
