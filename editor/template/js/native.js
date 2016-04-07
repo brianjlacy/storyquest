@@ -96,6 +96,7 @@ weakDeclare('autoSwitchContent', function() {
 weakDeclare('dispatchLocal', function(nextStationConfig) {
     // to be sure, store model here
     storeModel();
+    console.log("Next station: " + nextStationConfig.id);
     switchContent(nextStationConfig.id);
 });
 

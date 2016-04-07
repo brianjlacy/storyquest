@@ -254,9 +254,7 @@ function playButtonSound() {
 }
 
 function getDropin(dropinName, dropinParams, body, callback) {
-    jQuery.ajax({
-        url: "resources/" + dropinName + ".dropin",
-        success: function (result) {
+    loadFile("resources/" + dropinName + ".dropin", function (result) {
             if (!window._dropinParams) {
                 window._dropinParams = {};
             }
@@ -266,13 +264,13 @@ function getDropin(dropinName, dropinParams, body, callback) {
             window._dropinParams[dropinName] = dropinParams;
             window._dropinBody[dropinName] = body;
             callback(result);
-        }
     });
 }
 
 $(document).ready(function() {
     applyI18n();
     retrieveModel();
+    initBookmarks();
     storeModel();
     if (typeof model!="undefined" && model!=null)
         ko.applyBindings(model);

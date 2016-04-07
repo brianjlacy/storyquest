@@ -1,0 +1,8 @@
+{image(center):border-angel.png}
+
+Deine Angst übermannt dich. Du bis nicht mehr fähig einen klaren Gedanken zu fassen und bekommst auch nicht mehr mit wie sich etwas dunkles auf dich stürzt..
+
+{box(textcenter):ENDE}
+
+{link(epilog):Zurück zum Menü}
+

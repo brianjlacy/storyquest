@@ -19,5 +19,7 @@
   },
   "editorColor": "#10e65c",
   "x": 429,
-  "y": 29
+  "y": 29,
+  "onExit": "",
+  "onEnter": "increaseFear(1);model.setValue(\"ingame\", true);\n"
 }

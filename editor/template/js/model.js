@@ -38,6 +38,7 @@ var mapping = {
                 this.flags[key](value);
             else
                 this.flags[key] = ko.observable(value);
+            storeModel();
         };
 
         innerModel.getValue = function(key) {
@@ -104,6 +105,18 @@ function getModelAsJS() {
     // interfere with de-serializing later.
     delete modelObj.__ko_mapping__;
     return modelObj;
+}
+
+function forceRetrieveModel() {
+    // retrieve JSON string from system (either native or html5)
+    var modelStr = retrieveModelStr();
+    // if modelStr is null or "", knockout fails badly
+    if (!modelStr || modelStr==null || modelStr=="")
+        modelStr = "{}";
+    // convert to knockout object, use mapping plugin to get an observable object
+    var modelObj = JSON.parse(modelStr);
+    setModelFromJS(modelObj);
+    return model;
 }
 
 function retrieveModel() {

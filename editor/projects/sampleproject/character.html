@@ -20,16 +20,34 @@
         <script src="js/native.js"></script>
         <script src="js/questml.js"></script>
         <script src="js/model.js"></script>
-        <script src="js/content.js"></script>
 
         <script src="js/global.js"></script>
     </head>
 
-    <body id="body">
-        <div id="charactersheet">
-		<h1>Charactersheet</h1>
-	</div>
-
+    <body id="body" style="background-image:url(images/bg-character.jpg);background-size:cover">
+        <div id="charactersheet" style="text-align:center">
+		<div data-bind="visible:flags.ingame">
+		    <h1 data-bind="text:flags.heroname"></h1>
+		    <h2 style="margin:0;padding:0">Angstpunkte</h2>
+		    <h3 data-bind="text:flags.fear||0" style="font-size:2em;margin:0;padding:0"></h3>
+		    <h4 style="margin:0;padding:0">(von maximal 10)</h4>
+		</div>
+		<div style="margin:2em" data-bind="visible:!flags.ingame()">
+		    Willkommen zum Demonstrations-Spielbuch für das StoryQuest-System. Mit StoryQuest können sie ihre eigenen Spielbücher und interaktiven Publikationen einfach und schnell erstellen. Mehr Infos unter www.storyquest.de.<br>
+		    <img src="images/storyquest-logo.png" style="width:80%;margin-top:2em;display:inline-block">
+		</div>
+    	</div>
     </body>
+
+	<script>
+
+function refresh() {
+    forceRetrieveModel();
+    if (typeof model!="undefined" && model!=null) {
+        ko.cleanNode($("#body")[0]);
+        ko.applyBindings(model);
+    }
+}
+</script>
 
 </html>

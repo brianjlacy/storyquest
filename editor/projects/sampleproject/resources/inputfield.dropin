@@ -1,0 +1,23 @@
+<!--
+%NAME:Input Field Dropin
+%DESCRIPTION:Provides an input field that sets a model variable
+-->
+
+<div>
+    <div id="_dropin_inputfield_label" style="text-align:center;margin-bottom:0.5em;font-weight:bold"></div>
+    <input type="text" id="_dropin_inputfield_input" style="width:100%;font-size:1.3em;text-align:center;font-family:textfont"></input>
+    <button class="button" id="_dropin_inputfield_button"></button>
+
+    <script>
+        $("#_dropin_inputfield_label").html(_dropinBody.inputfield);
+        $("#_dropin_inputfield_input").attr("placeholder", _dropinParams.inputfield[1]);
+        $("#_dropin_inputfield_button").html(_dropinParams.inputfield[2]);
+
+        $("#_dropin_inputfield_button").click(function() {
+            model.setValue(_dropinParams.inputfield[0], $("#_dropin_inputfield_input").val());
+            console.log("Set " + _dropinParams.inputfield[0] + " to " + model.getValue(_dropinParams.inputfield[0]));
+            $("#_dropin_inputfield_input").prop('disabled', true);
+            $("#_dropin_inputfield_button").prop('disabled', true);
+        });
+    </script>
+</div>

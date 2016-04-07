@@ -3,6 +3,12 @@
 
 Diese Geschichte ist ein unmittelbarer Prolog für "Die Dritte Expedition". In der Halle der Mächtigen befinden sich viele trockene Kehlen, die nach Trank verlangen. Du bist ein dahergelaufener Zwerg, der bei der großen Zusammenkunft im Blauen Gebirge in der Küche zur Hand geht - oder steckt doch mehr in dir?
 
+### Dein Name
+
+Damit du beginnen kannst, gib deinem Helden einen individuellen Namen:
+
+{dropin(inputfield,heroname,Name,Speichern):Name deines Helden}
+
 ### Spielregeln
 
 Dies ist ein Soloabenteuer. Am Ende eines Kapitels musst du dich entscheiden wie die Geschichte weitergeben soll. Es gibt viele Wege durch das Buch, aber du bestimmst deine eigene Geschichte. Sei ein Held im Geborgenen Land.

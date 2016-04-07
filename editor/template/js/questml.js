@@ -200,7 +200,11 @@ var parseQuestML = function(html) {
                 var dropinParams = params.slice(1, params.length);
                 var dropinId = hashNumber(dropinName + dropinParams.join(""));
                 getDropin(dropinName, dropinParams, body, function(content) {
-                    $("#dropin" + dropinId).html(content);
+		    // some browsers are too fast, the element is not added when the
+                    // dropin content is loaded. 
+		    setTimeout(function() {
+  	                  $("#dropin" + dropinId).html(content);                    
+                    }, 250);
                 });
                 return "<div class='dropin' id='dropin" + dropinId + "'></div>";
                 break;

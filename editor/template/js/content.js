@@ -44,6 +44,8 @@ function switchContent(stationIdx) {
                 $("div.choice.enabled").css("background-image", "linear-gradient(to bottom, " + loadedStation.choiceEnabledGradientStartColor + ", " + loadedStation.choiceEnabledGradientEndColor + ")");
                 $("div.choice.disabled").css("background-image", "linear-gradient(to bottom, " + loadedStation.choiceDisabledGradientStartColor + ", " + loadedStation.choiceDisabledGradientEndColor + ")");
                 $("div.choice").css("color", loadedStation.choiceTextColor);
+                // reset scroller to top
+                $(document).scrollTop(0);
             });
         });
     });
