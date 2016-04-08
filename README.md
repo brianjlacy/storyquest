@@ -14,6 +14,8 @@ interactive JavaScript-based content. StoryQuest delivers ready-to-deploy app ar
 for various platforms, including iOS, Android, FirefoxOS, Chrome, and can export
 builds for e-readers like Kindle or Kobo.
 
+![Story Client](/screenshots/client-combined.jpg?raw=true "Story Client")
+
 StoryQuest is currently in development and has reached beta stage. Feel free to comment or try.
 Caution: documentation is somewhat sparse at the moment, we're woking on this. 
 
