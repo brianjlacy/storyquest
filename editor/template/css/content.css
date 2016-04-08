@@ -7,6 +7,10 @@ body {
     padding-top: 50%;
 }
 
+body.genericbody {
+    background: transparent !important;
+}
+
 div#content::-webkit-scrollbar {
     display: none;
 }
