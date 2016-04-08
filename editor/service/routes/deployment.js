@@ -240,7 +240,7 @@ exports.deployAndroid = function(req, res) {
         } else {
             try {
                 // initiate build
-                var child = spawn("./gradlew", [ "-b", "build-test.gradle" ], { cwd: tempDir });
+                var child = spawn("./gradlew", [ "-b", "build.gradle" ], { cwd: tempDir });
                 builds[buildId].process = child;
                 child.stdout.on("data", function(chunk) {
                     var timestamp = new Date().getTime();

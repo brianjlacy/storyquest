@@ -5,6 +5,8 @@
 This is StoryQuest, A game book development platform complete with a web 
 based editor and a mobile client.
 
+![Storygraph Editor](/screenshots/graph.jpg?raw=true "Storygraph Editor")
+
 It is a feature-rich web based development suite and mobile client for
 mobile augmented books. With StoryQuest, you can create adventure e-books and interactive 
 fiction that contain branching storylines, audio, images, illustrations, video, and 
