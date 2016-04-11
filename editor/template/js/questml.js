@@ -24,6 +24,40 @@
  */
 
 var questMLParser;
+var enabledChecks = [];
+
+setInterval(function() {
+    for (var i=0; i<enabledChecks.length; i++) {
+        var evalResult = false;
+        try {
+            // check if this is a common js expression
+            evalResult = eval(enabledChecks[i].conditionStatement)
+        } catch(e) {
+            // does not seems so, try to interpret as model variable name
+            evalResult = model.getValue(enabledChecks[i].conditionStatement);
+        }
+        if (evalResult) {
+            $("." + enabledChecks[i].elementClass).addClass("enabled").removeClass("disabled");
+        } else {
+            $("." + enabledChecks[i].elementClass).removeClass("enabled").addClass("disabled");
+        }
+    }
+}, 1000);
+
+function registerEnabledChecking(elementClass, conditionStatement) {
+    console.log("Registered enabled/disabled checking loop for " + elementClass);
+    enabledChecks.push({
+        elementClass: elementClass,
+        conditionStatement: conditionStatement
+    });
+}
+
+function unregisterEnabledChecking(elementClass) {
+    for (var i=0; i<enabledChecks.length; i++)
+        if (enabledChecks[i].elementClass==elementClass)
+            enabledChecks.splice(i, 1);
+}
+
 function getQuestMLParser(callback) {
     if (!questMLParser)
         loadFile("resources/questml.peg", function( data ) {
@@ -160,7 +194,9 @@ var parseQuestML = function(html) {
                         linkState = "disabled";
                     if (linkFlag && model.hasFlag(linkFlag))
                         linkState = "disabled";
-                    return "<div class='choice " + linkState + "' data-flag='" + linkFlag + "' data-target='" + params[0] + "' href='#'><i class='fa fa-external-link'></i>&nbsp;&nbsp;" + body + "</div>";
+                    var linkId = "link" + hashNumber(uuid());
+                    registerEnabledChecking(linkId, params[2]);
+                    return "<div class='" + linkId + " choice " + linkState + "' data-flag='" + linkFlag + "' data-target='" + params[0] + "' href='#'><i class='fa fa-external-link'></i>&nbsp;&nbsp;" + body + "</div>";
                 } else
                     return "";
                 break;
@@ -175,7 +211,9 @@ var parseQuestML = function(html) {
                         ilinkState = "disabled";
                     if (ilinkFlag && model.hasFlag(ilinkFlag))
                         ilinkState = "disabled";
-                    return "<span class='choice " + ilinkState + "' data-flag='" + ilinkFlag + "' data-target='" + params[0] + "' href='#'>" + body + "</span>";
+                    var linkId = "link" + hashNumber(uuid());
+                    registerEnabledChecking(linkId, params[2]);
+                    return "<span class='" + linkId + " choice " + ilinkState + "' data-flag='" + ilinkFlag + "' data-target='" + params[0] + "' href='#'>" + body + "</span>";
                 } else
                     return "";
                 break;
@@ -212,7 +250,7 @@ var parseQuestML = function(html) {
                 var dropinElementId = "dropin" + dropinId;
                 getDropin(dropinName, dropinElementId, dropinParams, body, function(content) {
 		        // some browsers are too fast, the element is not added when the
-                    // dropin content is loaded. 
+                // dropin content is loaded.
 		        setTimeout(function() {
   	                  $("#dropin" + dropinId).html(content);                    
                     }, 250);

@@ -12,6 +12,8 @@
 
     For the editor: the string after %DESCRIPTION anywhere in the dropin text
     is used as the description text for the file browser. Same with %NAME.
+
+    CAUTION: USE ONLY LETTERS, INTEGERS, BANGS, SPACES IN PARAMETERS!
 -->
 
 <h1 id="_dropin_demo_id"></h1>
