@@ -192,21 +192,32 @@ var parseQuestML = function(html) {
                     model.setFlag(body);
                 return "";
                 break;
+            case "increase":
+                if (params)
+                    model.setValue(body, parseInt(model.getValue(body))+parseInt(params[0]));
+                return "";
+                break;
+            case "decrease":
+                if (params)
+                    model.setValue(body, parseInt(model.getValue(body))-parseInt(params[0]));
+                return "";
+                break;
             case "script":
                 return eval(body);
                 break;
             case "dropin":
                 var dropinName = params[0];
                 var dropinParams = params.slice(1, params.length);
-                var dropinId = hashNumber(dropinName + dropinParams.join(""));
-                getDropin(dropinName, dropinParams, body, function(content) {
-		    // some browsers are too fast, the element is not added when the
+                var dropinId = hashNumber(uuid());
+                var dropinElementId = "dropin" + dropinId;
+                getDropin(dropinName, dropinElementId, dropinParams, body, function(content) {
+		        // some browsers are too fast, the element is not added when the
                     // dropin content is loaded. 
-		    setTimeout(function() {
+		        setTimeout(function() {
   	                  $("#dropin" + dropinId).html(content);                    
                     }, 250);
                 });
-                return "<div class='dropin' id='dropin" + dropinId + "'></div>";
+                return "<div class='dropin' id=" + dropinElementId + "></div>";
                 break;
             default:
                 console.log("Unknown QuestML command " + name);

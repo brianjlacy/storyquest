@@ -1,0 +1,27 @@
+<!--
+%NAME:Inview Dropin
+%DESCRIPTION:Sets a variable to a value or executes a script when the dropin scrolls into view.
+
+Examples:
+    {dropin(inview,Text Label,someVariable):42}
+    Sets the variable someVariable to 42 when the dropin scrolls into view. Note that body can be
+    any JavaScript expression that returns a value.
+
+    {dropin(inview,Text Label):playSFXOnce("someSoundfile")}
+    Executes the body script when the dropin scrolls into view. Note that if no variable name is
+    given, there will be no allocation.
+-->
+
+<div class="_dropin_inview">
+    <div id="_dropin_inview_label" style="text-align:center;margin-bottom:0.5em;font-weight:bold"></div>
+    <script>
+        $("#" + dropinId + " #_dropin_inview_label").html(_dropinParams[dropinId][0]);
+        $("#" + dropinId).one("inview", function() {
+            console.log("Dropin " + dropinId + " is visible, executing script.");
+            if (_dropinParams[dropinId][1])
+                model.setValue(_dropinParams[dropinId][1], eval(_dropinBody[dropinId]));
+            else
+                eval(_dropinBody[dropinId].replace(/&#39;/g, "'").replace(/&quot;/g, '"'));
+        });
+    </script>
+</div>

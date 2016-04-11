@@ -14,9 +14,26 @@
     is used as the description text for the file browser. Same with %NAME.
 -->
 
-<h1 id="_dropin_demo_headline"></h1>
+<h1 id="_dropin_demo_id"></h1>
+<h2 id="_dropin_demo_headline"></h2>
 <h2 id="_dropin_demo_body"></h2>
+
+<!-- ONLY ONE SCRIPT TAG ALLOWED -->
 <script>
-    $("#_dropin_demo_headline").html("This dropin has the parameters " + _dropinParams.demo.join(","));
-    $("#_dropin_demo_body").html("And the body: " + _dropinBody.demo);
+    // _dropinBody.<typename of dropin> has the body content of the LAST dropin of this type added to the text.
+    // _dropinBody.<id of dropin> has the body content of the CURRENT dropin of this type added to the text.
+    //                -> use executeDropinCode(this, function(dropinId)) if you need to address particular dropin instances.
+    // _dropinParams.<typename of dropin> has an array containing the params (minus the dropin type name) of the LAST dropin.
+    // _dropinParams.<id of dropin> has an array containing the params (minus the dropin type name) of the CURRENT dropin.
+    //                -> use executeDropinCode(this, function(dropinId)) if you need to address particular dropin instances.
+    // dropinId has the particular id of this dropin instance.
+    //                -> use $("#" + dropinId) to refer to the enclosing dropin element of THIS dropin.
+
+    console.log("DROPIN ID: " + dropinId);
+    console.log("DROPIN BODY: " + _dropinBody[dropinId]);
+    console.log("DROPIN PARAMS: " + _dropinParams[dropinId].join(", "));
+
+    $("#_dropin_demo_id").html("This dropin has the id: " + dropinId);
+    $("#_dropin_demo_headline").html("And the parameters " + _dropinParams[dropinId].join(", "));
+    $("#_dropin_demo_body").html("And the body: " + _dropinBody[dropinId]);
 </script>

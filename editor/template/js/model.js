@@ -30,6 +30,7 @@ var mapping = {
         var innerModel = ko.mapping.fromJS(options.data);
 
         innerModel.setValue = function(key, value) {
+            console.log("Setting model value: " + key + " = " + value);
             if (typeof value == "undefined")
                 value = true;
             if (!this.flags)

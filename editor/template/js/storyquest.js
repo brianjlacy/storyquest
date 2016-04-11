@@ -253,16 +253,28 @@ function playButtonSound() {
     playSFXOnce("sounds/button.mp3");
 }
 
-function getDropin(dropinName, dropinParams, body, callback) {
+function getDropin(dropinName, dropInId, dropinParams, body, callback) {
+    console.log("Loading dropin type " + dropinName + " (" + dropInId + ")");
     loadFile("resources/" + dropinName + ".dropin", function (result) {
-            if (!window._dropinParams) {
+            // setting parameters
+            if (!window._dropinParams)
                 window._dropinParams = {};
-            }
-            if (!window._dropinBody) {
+            if (!window._dropinBody)
                 window._dropinBody = {};
-            }
             window._dropinParams[dropinName] = dropinParams;
             window._dropinBody[dropinName] = body;
+            window._dropinParams[dropInId] = dropinParams;
+            window._dropinBody[dropInId] = body;
+            // extracting script content, wrapping it into inspection code
+            var scriptContentRE = result.match("<script[^>]*>([\\s\\S]*?)<\/script>");
+            if (scriptContentRE) {
+                var scriptContents = scriptContentRE[1];
+                var inspectionCode = "<script class='dropinscript'>(function(self){if(self==window){var script=document.querySelector('script.dropinscript');script.className='';Function(script.innerHTML).call(script);}else{var dropinId = $(self.parentNode.parentNode).attr('id');" + scriptContents + "}})(this);</script>";
+                result = result.replace(/<script[^>]*>[\s\S]*?<\/script>/, inspectionCode);
+            } else {
+                console.log("Warning: dropin script code not recognized for dropin " + dropInId);
+            }
+            // returning result
             callback(result);
     });
 }

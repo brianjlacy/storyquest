@@ -7,7 +7,7 @@ Diese Geschichte ist ein unmittelbarer Prolog für "Die Dritte Expedition". In d
 
 Damit du beginnen kannst, gib deinem Helden einen individuellen Namen:
 
-{dropin(inputfield,heroname,Name,Speichern):Name deines Helden}
+{dropin(inputfield,heroname,Name eingeben,Speichern):Name deines Helden}
 
 ### Spielregeln
 
