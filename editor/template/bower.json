@@ -29,7 +29,7 @@
     "font-awesome": "fontawesome#^4.5.0",
     "knockout-mapping": "^2.4.1",
     "pegjs": "^0.9.0",
-    "protonet/jquery.inview": "jquery.inview#^1.1.2"
+    "jquery.inview": "protonet/jquery.inview#^1.1.2"
   },
   "resolutions": {
     "jquery": ">= 1.6.2"
