@@ -5,8 +5,6 @@
 
     Dropin files must match the dropin name (name.dropin) and must be located
     in the resources folder.
-    Params are available in _dropinParams.<nameOfDropin> as an array.
-    The body of the dropin statement is available in  _dropinBody.<nameOfDropin>.
     It is encouraged to use id and class names that are guaranteed to be local to
     the dropin. All script and css tags are global, access to model as usual.
 
@@ -24,10 +22,8 @@
 <script>
     // _dropinBody.<typename of dropin> has the body content of the LAST dropin of this type added to the text.
     // _dropinBody.<id of dropin> has the body content of the CURRENT dropin of this type added to the text.
-    //                -> use executeDropinCode(this, function(dropinId)) if you need to address particular dropin instances.
     // _dropinParams.<typename of dropin> has an array containing the params (minus the dropin type name) of the LAST dropin.
     // _dropinParams.<id of dropin> has an array containing the params (minus the dropin type name) of the CURRENT dropin.
-    //                -> use executeDropinCode(this, function(dropinId)) if you need to address particular dropin instances.
     // dropinId has the particular id of this dropin instance.
     //                -> use $("#" + dropinId) to refer to the enclosing dropin element of THIS dropin.
 

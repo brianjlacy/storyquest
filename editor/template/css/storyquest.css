@@ -25,3 +25,10 @@ input {
     user-select: default;
 }
 
+.hidden {
+    display: none;
+}
+
+.disabled {
+    pointer-events: none;
+}

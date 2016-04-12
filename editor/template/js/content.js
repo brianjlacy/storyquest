@@ -39,17 +39,21 @@ function switchContent(stationIdx) {
             .css("padding-top", loadedStation.paddingTop);
         loadFile("stationconfig/" + loadedStation.text['de'], function(result) {
             sideloadContent(stationIdx, loadedStation, result, function() {
-                $("h1").addClass("accentColor").css("color", loadedStation.accentColor);
-                $("h3").addClass("accentColor").css("color", loadedStation.accentColor);
-                $(".box").css("background-color", loadedStation.boxBackgroundColor);
-                $("div.choice.enabled").css("background-image", "linear-gradient(to bottom, " + loadedStation.choiceEnabledGradientStartColor + ", " + loadedStation.choiceEnabledGradientEndColor + ")");
-                $("div.choice.disabled").css("background-image", "linear-gradient(to bottom, " + loadedStation.choiceDisabledGradientStartColor + ", " + loadedStation.choiceDisabledGradientEndColor + ")");
-                $("div.choice").css("color", loadedStation.choiceTextColor);
+                refreshStyles();
                 // reset scroller to top
                 $(document).scrollTop(0);
             });
         });
     });
+}
+
+function refreshStyles() {
+    $("h1").addClass("accentColor").css("color", currentStation.accentColor);
+    $("h3").addClass("accentColor").css("color", currentStation.accentColor);
+    $(".box").css("background-color", currentStation.boxBackgroundColor);
+    $("div.choice").css("background-image", "linear-gradient(to bottom, " + currentStation.choiceEnabledGradientStartColor + ", " + currentStation.choiceEnabledGradientEndColor + ")");
+    $("div.choice.disabled").css("background-image", "linear-gradient(to bottom, " + currentStation.choiceDisabledGradientStartColor + ", " + currentStation.choiceDisabledGradientEndColor + ")");
+    $("div.choice").css("color", currentStation.choiceTextColor);
 }
 
 function escapeRegExp(str) {
@@ -101,7 +105,7 @@ function sideloadContent(stationIdx, config, configAsset, callback) {
         contentElem.html(html);
 
         // register hooks for enabled choices
-        $(".choice.enabled").each(function(idx, elem) {
+        $(".choice").each(function(idx, elem) {
             $(elem).hammer().on("tap", function(event) {
                 playButtonSound();
                 toStation($(event.target).attr("data-target"));
@@ -109,11 +113,10 @@ function sideloadContent(stationIdx, config, configAsset, callback) {
         });
 
         // register hooks for enabled switches
-        $(".switch.enabled").each(function(idx, elem) {
+        $(".switch").each(function(idx, elem) {
             $(elem).hammer().on("tap", function(event) {
                 playButtonSound();
                 model.setFlag($(event.target).attr("data-flag"));
-                $(event.target).removeClass("enabled");
                 $(event.target).addClass("disabled");
             });
         });

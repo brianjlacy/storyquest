@@ -24,38 +24,40 @@
  */
 
 var questMLParser;
-var enabledChecks = [];
 
+/*
+    Expression check loop
+    If an element has the attributes data-check and data-checkfail, this
+    loop checks the result of the expression and adds the class contained in
+    data-checkfail if the expression evaluates to false.
+ */
 setInterval(function() {
-    for (var i=0; i<enabledChecks.length; i++) {
-        var evalResult = false;
-        try {
-            // check if this is a common js expression
-            evalResult = eval(enabledChecks[i].conditionStatement)
-        } catch(e) {
-            // does not seems so, try to interpret as model variable name
-            evalResult = model.getValue(enabledChecks[i].conditionStatement);
-        }
-        if (evalResult) {
-            $("." + enabledChecks[i].elementClass).addClass("enabled").removeClass("disabled");
+    $("[data-check]").each(function(index, element) {
+        var expression = $(element).attr("data-check");
+        var classIfFailed = $(element).attr("data-checkfail");
+        var evalResult = evalExpression(expression);
+        if (!evalResult) {
+            $(element).addClass(classIfFailed);
         } else {
-            $("." + enabledChecks[i].elementClass).removeClass("enabled").addClass("disabled");
+            $(element).removeClass(classIfFailed);
         }
-    }
+        refreshStyles();
+    });
 }, 1000);
 
-function registerEnabledChecking(elementClass, conditionStatement) {
-    console.log("Registered enabled/disabled checking loop for " + elementClass);
-    enabledChecks.push({
-        elementClass: elementClass,
-        conditionStatement: conditionStatement
-    });
-}
-
-function unregisterEnabledChecking(elementClass) {
-    for (var i=0; i<enabledChecks.length; i++)
-        if (enabledChecks[i].elementClass==elementClass)
-            enabledChecks.splice(i, 1);
+// evaluates an expression, replacing all quotes and [] - use only for parameter expressions!
+function evalExpression(expression) {
+    // eliminate quoting and expression substitution of () with []
+    expression = expression.replace(/\[/g, "(").replace(/]/g, ")").replace(/&#39;/g, "\"").replace(/&quot;/g, '"').replace(/&lt;/, "<").replace(/&gt;/, ">");
+    var evalResult = false;
+    try {
+        // check if this is a common js expression
+        evalResult = eval(expression)
+    } catch(e) {
+        // does not seems so, try to interpret as model variable name
+        evalResult = model.getValue(expression);
+    }
+    return evalResult;
 }
 
 function getQuestMLParser(callback) {
@@ -171,57 +173,37 @@ var parseQuestML = function(html) {
                 return "<div class='box " + params[0] + "'>" + body + "</div>";
                 break;
             case "button":
-                if (!params[2]) params[2] = "true";
-                if (!params[3]) params[3] = "true";
-                if (params[2]=="" || secureEvalBool(params[2])) {
-                    var buttonState = "enabled";
-                    if (params[3]!="" && !secureEvalBool(params[3]))
-                        buttonState = "disabled";
-                    if (model.hasFlag(params[1].trim()))
-                        buttonState = "disabled";
-                    return "<div class='switch " + buttonState + "' data-flag='" + params[1].trim() + "' href='#'>" + body + "</div>";
-                } else
-                    return "";
+                var btarget = params[0];
+                var blinkFlag;
+                if (params[1])
+                    blinkFlag = params[1].trim();
+                var bisEnabledExpression = params[2] || "true";
+                var bisEnabled = evalExpression(bisEnabledExpression);
+                return "<div data-checkfail='disabled' data-check='" + bisEnabledExpression + "' class='switch " + (!bisEnabled?"disabled":"") + "' data-flag='" + blinkFlag + "' data-target='" + btarget + "' href='#'><i class='fa fa-external-link'></i>&nbsp;&nbsp;" + body + "</div>";
                 break;
             case "link":
+                var target = params[0];
                 var linkFlag;
-                if (params[1]) linkFlag = params[1].trim();
-                if (!params[2]) params[2] = "true";
-                if (!params[3]) params[3] = "true";
-                if (params[2]=="" || secureEvalBool(params[2])) {
-                    var linkState = "enabled";
-                    if (params[3]!="" && !secureEvalBool(params[3]))
-                        linkState = "disabled";
-                    if (linkFlag && model.hasFlag(linkFlag))
-                        linkState = "disabled";
-                    var linkId = "link" + hashNumber(uuid());
-                    registerEnabledChecking(linkId, params[2]);
-                    return "<div class='" + linkId + " choice " + linkState + "' data-flag='" + linkFlag + "' data-target='" + params[0] + "' href='#'><i class='fa fa-external-link'></i>&nbsp;&nbsp;" + body + "</div>";
-                } else
-                    return "";
+                if (params[1])
+                    linkFlag = params[1].trim();
+                var isEnabledExpression = params[2] || "true";
+                var isEnabled = evalExpression(isEnabledExpression);
+                return "<div data-checkfail='disabled' data-check='" + isEnabledExpression + "' class='choice " + (!isEnabled?"disabled":"") + "' data-flag='" + linkFlag + "' data-target='" + target + "' href='#'><i class='fa fa-external-link'></i>&nbsp;&nbsp;" + body + "</div>";
                 break;
             case "ilink":
+                var itarget = params[0];
                 var ilinkFlag;
-                if (params[1]) ilinkFlag = params[1].trim();
-                if (!params[2]) params[2] = "true";
-                if (!params[3]) params[3] = "true";
-                if (params[2]=="" || secureEvalBool(params[2])) {
-                    var ilinkState = "enabled";
-                    if (params[3]!="" && !secureEvalBool(params[3]))
-                        ilinkState = "disabled";
-                    if (ilinkFlag && model.hasFlag(ilinkFlag))
-                        ilinkState = "disabled";
-                    var linkId = "link" + hashNumber(uuid());
-                    registerEnabledChecking(linkId, params[2]);
-                    return "<span class='" + linkId + " choice " + ilinkState + "' data-flag='" + ilinkFlag + "' data-target='" + params[0] + "' href='#'>" + body + "</span>";
-                } else
-                    return "";
+                if (params[1])
+                    ilinkFlag = params[1].trim();
+                var iisEnabledExpression = params[2] || "true";
+                var iisEnabled = evalExpression(iisEnabledExpression);
+                return "<span data-checkfail='disabled' data-check='" + iisEnabledExpression + "' class='choice " + (!iisEnabled?"disabled":"") + "' data-flag='" + ilinkFlag + "' data-target='" + itarget + "' href='#'><i class='fa fa-external-link'></i>&nbsp;&nbsp;" + body + "</span>";
                 break;
             case "when":
-                if (eval(params[0]))
-                    return body;
-                else
-                    return "";
+                var hidden = "hidden";
+                if (evalExpression(params[0]))
+                    hidden = "";
+                return "<div class='when " + hidden + "' data-checkfail='hidden' data-check='" + params[0] + "'>" + body + "</div>";
                 break;
             case "set":
                 if (params)

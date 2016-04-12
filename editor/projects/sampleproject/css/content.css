@@ -139,7 +139,7 @@ div.choice {
     cursor: pointer;
     display: block;
     width: 100%;
-    background-image: linear-gradient(to bottom, #3498db, #2980b9);
+    background-image: linear-gradient(rgb(108, 88, 57), rgb(56, 44, 18));
     color: white;
     margin-left: -10%;
     font-family: regularfont;
@@ -150,11 +150,7 @@ div.choice {
     margin-bottom: 1em;
 }
 
-div.choice.disabled {
-    opacity: 0.4 !important;
-}
-
-div.choice.enabled:active {
+div.choice:active {
     opacity: 0.7 !important;
 }
 
@@ -180,7 +176,7 @@ div.switch.disabled {
     opacity: 0.4 !important;
 }
 
-div.switch.enabled:active {
+div.switch:active {
     opacity: 0.7 !important;
 }
 
@@ -280,27 +276,15 @@ div#content.fullwidth div.image.right img {
 div#content.fullwidth div.choice {
     display: block;
     width: 90%;
-    background-image: linear-gradient(to bottom, #3498db, #2980b9);
-    color: white;
     margin-left: auto;
     margin-right: auto;
-    font-family: regularfont;
-    border-radius: 7px;
-    box-shadow: 0 1px 3px #666666;
     padding: 10px 20px 10px 20px;
-    text-decoration: none;
 }
 
 div#content.fullwidth div.switch {
     display: block;
     width: 90%;
-    background-image: linear-gradient(to bottom, #a3db80, #07b912);
-    color: white;
     margin-left: auto;
     margin-right: auto;
-    font-family: regularfont;
-    border-radius: 7px;
-    box-shadow: 0 1px 3px #666666;
     padding: 10px 20px 10px 20px;
-    text-decoration: none;
 }
