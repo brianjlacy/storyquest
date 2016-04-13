@@ -57,14 +57,14 @@ Examples:
         $("#" + dropinId + " ._dropin_diceroller_label").html(labelString);
         $("#" + dropinId + " .dice0").click(function() {
             $(this).off("click");
-            random0 = random(1, 6);
+            random0 = random(6, 1);
             $(this).attr("src", "images/dice" + random0 + ".gif");
             randomResult += random0;
             updateDiceroller();
         });
         $("#" + dropinId + " .dice1").click(function() {
             $(this).off("click");
-            random1 = random(1, 6);
+            random1 = random(6, 1);
             $(this).attr("src", "images/dice" + random1 + ".gif");
             randomResult += random1;
             updateDiceroller();

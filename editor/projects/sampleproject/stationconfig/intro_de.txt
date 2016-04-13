@@ -1,6 +1,8 @@
 # Das Gewölbe
 ## von Michael Kleinhenz
 
+The dwarf shows you a {~|red|blue|green|} gem.
+
 Diese Geschichte ist ein unmittelbarer Prolog für "Die Dritte Expedition". In der Halle der Mächtigen befinden sich viele trockene Kehlen, die nach Trank verlangen. Du bist ein dahergelaufener Zwerg, der bei der großen Zusammenkunft im Blauen Gebirge in der Küche zur Hand geht - oder steckt doch mehr in dir?
 
 {dropin(diceroller,attackRoll,10,Erfolg!,Hat leider nicht geklappt!):Du musst mindestens eine 10 würfeln!}
@@ -20,3 +22,5 @@ Dies ist ein Soloabenteuer. Am Ende eines Kapitels musst du dich entscheiden wie
 Michael Kleinhenz arbeitet als Softwarearchitekt im Rheinland, ist leidenschaftlicher Rollenspiel- und Fantasyfan und hat schon die ein oder andere Reise in die Welt der Zwerge unternommen.
 
 {link(001,notUsed,heroname):Weiter}
+
+

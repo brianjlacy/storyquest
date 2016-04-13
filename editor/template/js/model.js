@@ -68,7 +68,7 @@ var mapping = {
             else {
                 var intValue = parseInt(this.sequences[sequenceKey].value);
                 if (isNaN(intValue))
-                    return this.sequences[sequenceKey].value;
+                    return this.sequences[sequenceKey].value();
                 else
                     return intValue;
             }

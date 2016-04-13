@@ -210,24 +210,17 @@ function hashNumber(text) {
 }
 
 /**
- * Generates a random number between 0 and the given range.
- *
- * @param range
- * @returns {number}
- */
-function random(range) {
-    return Math.floor((Math.random() * range));
-}
-
-/**
  * Generates a random number between start and the given range.
  *
  * @param start
  * @param range
  * @returns {number}
  */
-function random(start, range) {
-    return Math.floor((Math.random() * range)) + start;
+function random(range, start) {
+    if (start)
+        return Math.floor((Math.random() * range)) + start;
+    else
+        return Math.floor((Math.random() * range + 1));
 }
 
 /**

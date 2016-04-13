@@ -138,23 +138,28 @@ var parseQuestML = function(html) {
                 if (currentSequenceIndex<=sequenceParts.length-1) {
                     model.setSequence(sequenceModelId, currentSequenceIndex+1, JSON.stringify(sequenceParts));
                     return sequenceParts[currentSequenceIndex];
-                }
+                } else
+                    return "";
                 break;
             case "random":
-                var random = random(sequenceParts.length-1);
+                var random = Math.floor((Math.random() * (sequenceParts.length)));
                 return sequenceParts[random];
                 break;
             case "cycle":
-                if (currentSequenceIndex>sequenceParts.length-1)
+                var result = sequenceParts[currentSequenceIndex];
+                if (currentSequenceIndex>=sequenceParts.length-1)
                     currentSequenceIndex = 0;
                 else
                     currentSequenceIndex++;
                 model.setSequence(sequenceModelId, currentSequenceIndex, JSON.stringify(sequenceParts));
-                return sequenceParts[currentSequenceIndex];
+                return result;
                 break;
             default:
                 if (currentSequenceIndex<sequenceParts.length-1) {
-                    model.setSequence(sequenceModelId, currentSequenceIndex+1, JSON.stringify(sequenceParts));
+                    model.setSequence(sequenceModelId, ++currentSequenceIndex, JSON.stringify(sequenceParts));
+                } else if (currentSequenceIndex>sequenceParts.length-1) {
+                    currentSequenceIndex = sequenceParts.length-1;
+                    model.setSequence(sequenceModelId, currentSequenceIndex, JSON.stringify(sequenceParts));
                 }
                 return sequenceParts[currentSequenceIndex];
         }
@@ -245,6 +250,8 @@ var parseQuestML = function(html) {
         }
     }
 
+    // remove possibly problematic quotes prior to parsing
+    html = html.replace(/&amp;/g, "&");
     var parsedArray = this.parse(html);
     var result = "";
     for (var i=0; i<parsedArray.length; i++) {
