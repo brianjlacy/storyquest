@@ -1,6 +1,6 @@
 {image(right):image-dragon-square.png} 
 
-Aus der Dunkelheit kommt wieder die Stimme herangeschwebt: „Komm her und du wirst reich und mächtig werden. Du willst doch ein großer Zwerg sein...komm zu mir und du wirst der Größte aller Zwerge werden..
+Aus der Dunkelheit kommt wieder die Stimme herangeschwebt: „Komm her, {heroname}, und du wirst reich und mächtig werden. Du willst doch ein großer Zwerg sein...komm zu mir und du wirst der Größte aller Zwerge werden..
 
 Du beschließt, die Stimme weiter zu ignorieren. Reich und mächtig nützt auch nichts, wenn man vorher von dunkler Magie verschlungen wird!
 

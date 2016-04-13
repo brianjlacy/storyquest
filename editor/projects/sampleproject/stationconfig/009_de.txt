@@ -6,7 +6,7 @@ Du folgst der Stimme, die zwar nichts mehr sagt, aber immer noch seltsam präsen
 
 Nach ein paar Metern stehen ein paar Bierfässer im Gang und blockieren den weiteren Weg. Dahinter ist nur Schwärze. Du überlegst, ob du über die Fässer steigen sollst, fragst dich aber dann, wieso diese überhaupt mitten im Gang gestapelt wurde.
 
-Bevor du zu einem Schluss kommst quillt grüner Nebel zwischen den Fässern hervor. Erschaudernd stellst du fest, dass der Nebel aus sich selbst heraus leuchtet und fast den gesamten Gang mit schrecklich grünem Licht erfüllt. Welche Teufelsmagie ist hier nur im Spiel.
+Bevor du zu einem Schluss kommst quillt {&|grüner|blauer|roter|} Nebel zwischen den Fässern hervor. Erschaudernd stellst du fest, dass der Nebel aus sich selbst heraus leuchtet und fast den gesamten Gang mit schrecklich {&|grünem|blauem|rotem|} Licht erfüllt. Welche Teufelsmagie ist hier nur im Spiel.
 
 {link(012):Du untersuchst den Nebel und gehst näher heran.}
 

@@ -1,6 +1,6 @@
 {image(center):border-angel.png} 
 
-Schweren Herzens schlägst du das Amulett mit aller Kraft gegen einen großen, herausragenden Stein in der Wand des Ganges. Knirschend zersplittert der grüne Edelstein in der Mitte des Medallions und rieselt als glitzernder Staub auf den Boden des Gewölbes. 
+Schweren Herzens schlägst du das Amulett mit aller Kraft gegen einen großen, herausragenden Stein in der Wand des Ganges. Knirschend zersplittert der {&|grüne|blaue|rote|} Edelstein in der Mitte des Medallions und rieselt als glitzernder Staub auf den Boden des Gewölbes. 
 
 Einen Augenblick später zuckt der Orkgeist zurück und verdreht die geisterhaften Augen. Hinter ihm gurgelt etwas und dann folgt ein markerschütternder Schrei der wie aus vielen Kehlen ertönt. Ein sonnenheller Blitz blendet dich und du wirst unsanft ein paar Meter in den Gang hineingeschleudert.
 Als du wieder zu dir kommst ist von dem Geist oder dem Amulett nichts mehr zu sehen. Auch der glitzernde Staub ist verschwunden. Du trauerst dem wertvollen Medallion einen kurzen Moment nach, erkennst dann aber, dass dich die Vernichtung des Schmuckstücks vermutlich das Leben gerettet hat.

@@ -20,7 +20,7 @@ div#content {
     font-weight: normal;
     font-size: 14pt;
     background-image: url(../images/page.jpg);
-    background-repeat: repeat-y;
+    background-repeat: repeat;
 }
 
 div#content h1 {

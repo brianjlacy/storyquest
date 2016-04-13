@@ -35,7 +35,7 @@ function switchContent(stationIdx) {
         $("#content").addClass(loadedStation.style)
             .css("background-color", loadedStation.backgroundColor);
         $("#body").css("background-image", "url(images/" + loadedStation.backgroundImage + ")")
-            .css("background-size", "contain")
+            .css("background-size", "cover")
             .css("padding-top", loadedStation.paddingTop);
         loadFile("stationconfig/" + loadedStation.text['de'], function(result) {
             sideloadContent(stationIdx, loadedStation, result, function() {

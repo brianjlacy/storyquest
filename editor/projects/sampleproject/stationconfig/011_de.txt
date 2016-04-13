@@ -1,6 +1,6 @@
 {image(right):image-dwarv.png} 
 
-Dein Herz klopft, als du weitergehst. Du musst dich Konzentrieren. Was sagte dein Lehrer Angrosch immer: „nimm die Furcht und schöpfe aus ihr. Mach sie dir zum Untertan und lehre sie, dir zu helfen und nicht zu schaden!“. Du versuchst dich zu konzentrieren und blinzelst. Und tatsächlich, es hilft: du beruhigst dich und dein Mut kehr zurück. Dies ist eine bedrohliche Situation – aber schließlich bist du ein Zwerg und damit eines der mutigsten Wesen im Geborgenen Land. Ein wenig Furcht bleibt dennoch, und so setzt du deinen Weg zügig fort.
+Dein Herz klopft, als du weitergehst. Du musst dich Konzentrieren. Was sagte dein Lehrer Angrosch immer: „nimm die Furcht, {heroname}, und schöpfe aus ihr. Mach sie dir zum Untertan und lehre sie, dir zu helfen und nicht zu schaden!“. Du versuchst dich zu konzentrieren und blinzelst. Und tatsächlich, es hilft: du beruhigst dich und dein Mut kehr zurück. Dies ist eine bedrohliche Situation – aber schließlich bist du ein Zwerg und damit eines der mutigsten Wesen im Geborgenen Land. Ein wenig Furcht bleibt dennoch, und so setzt du deinen Weg zügig fort.
 
 {link(010):Weiter}
 

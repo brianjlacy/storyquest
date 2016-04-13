@@ -2,7 +2,7 @@
 
 {image(right):image-astro.png} 
 
-Du läufst die Regale entlang und auf den Ausgang zu. Mehrmals fragst du dich, ob du wirklich auf dem richtigen Weg bist, da erkennst du im Augenwinkel etwas, das aus dem Einerlei der Fässer und Kisten heraussticht. Etwas glitzert. Du wärst kein guter Zwerg, wenn du so etwas nicht auch am Rande deines Sichtfeldes bemerken würdest. Du bleibst stehen und kniest nieder. Fast komplett mit Sand und Staub zugedeckt findest du ein goldenes Amulett mit einem kleinen grünen Medallion daran. Ein tiefgrüner funkelnder Stein steckt darin. Schnell steckst du das Geschmeide in deinen Gürtel.
+Du läufst die Regale entlang und auf den Ausgang zu. Mehrmals fragst du dich, ob du wirklich auf dem richtigen Weg bist, da erkennst du im Augenwinkel etwas, das aus dem Einerlei der Fässer und Kisten heraussticht. Etwas glitzert. Du wärst kein guter Zwerg, wenn du so etwas nicht auch am Rande deines Sichtfeldes bemerken würdest. Du bleibst stehen und kniest nieder. Fast komplett mit Sand und Staub zugedeckt findest du ein goldenes Amulett mit einem kleinen {&|grünen|blauen|roten|} Medallion daran. Ein {&|tiefgrüner|tiefblauer|tiefroter|} funkelnder Stein steckt darin. Schnell steckst du das Geschmeide in deinen Gürtel.
 
 {link(015):Du willst das Gewölbe nun auf schnellstem Wege verlassen. Wein hin oder her, das Medallion ist sicher eine Menge mehr wert als Brogar dir bezahlt und es gibt noch andere Abenteuer, die auf dich warten..}
 

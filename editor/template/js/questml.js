@@ -37,9 +37,15 @@ setInterval(function() {
         var classIfFailed = $(element).attr("data-checkfail");
         var evalResult = evalExpression(expression);
         if (!evalResult) {
-            $(element).addClass(classIfFailed);
+            if (classIfFailed=="dropshow")
+                $(element).hide("drop", {}, 1000);
+            else
+                $(element).addClass(classIfFailed);
         } else {
-            $(element).removeClass(classIfFailed);
+            if (classIfFailed=="dropshow")
+                $(element).show("drop", {}, 1000);
+            else
+                $(element).removeClass(classIfFailed);
         }
         refreshStyles();
     });
@@ -208,7 +214,8 @@ var parseQuestML = function(html) {
                 var hidden = "hidden";
                 if (evalExpression(params[0]))
                     hidden = "";
-                return "<div class='when " + hidden + "' data-checkfail='hidden' data-check='" + params[0] + "'>" + body + "</div>";
+                // "dropshow" is a special keyword that animates the show/hide
+                return "<div class='when " + hidden + "' data-checkfail='dropshow' data-check='" + params[0] + "'>" + body + "</div>";
                 break;
             case "set":
                 if (params)

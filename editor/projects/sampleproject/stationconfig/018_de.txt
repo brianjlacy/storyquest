@@ -1,4 +1,10 @@
-Der Orkgeist greift nach dir. Er ist schnell, aber du bist diesmal schneller und weichst flink in die andere Ecke des Ganges aus. Gerade noch hattest du das Gefühl, dass der Gang sehr breit ist, aber nun fühlt er sich sehr eng und ohne Fluchtmöglichkeit an. 
+Der Orkgeist hebt einen bedrohlichen Hammer über seinen Kopf. Du spürst seinen fauligen Atem als er brüllend auf dich zugestürmt kommt. Instinktiv gehst du in die Knie und machst dich bereit für ein schnelles Ausweichen.
+
+{dropin(diceroller,dodgeroll,5,Du hast es geschafft!,Das ging daneben!):Würfle eine 5 um auszuweichen!}
+
+{when(model.getValue["dodgeroll"]>4):Er ist schnell, aber du bist diesmal schneller und weichst flink in die andere Ecke des Ganges aus. Gerade noch hattest du das Gefühl, dass der Gang sehr breit ist, aber nun fühlt er sich sehr eng und ohne Fluchtmöglichkeit an.}
+
+{when(model.getValue["dodgeroll"]>0 && model.getValue["dodgeroll"]<=4):Du versuchst auszuweichen, aber der Geist ist schneller. Krachend geht der Hammer auf deinem linken Bein nieder und nur mit Glück brechen deine Knochen nicht.}
 
 {image(center):image-dragon-full.png}
 

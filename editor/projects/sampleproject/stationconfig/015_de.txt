@@ -4,7 +4,7 @@
 
 Endlich findest du die Treppen, die wieder hinauf in die Küche führen. Oben angekommen dreht sich Brogar zu dir um, der gerade einen jungen Küchenzwerg angebrüllt hat. Er schaut verwirrt, warum du über und über mit Staub, Sand und Dreck beschmutzt bist, bemerkt dann aber deine leeren Hände, wo seiner Meinung nach eigentlich ein paar Weinkrüge sein sollten. Gerade als er Luft holt um dich aus dem ledernen Stiefeln zu brüllen sagst du, dass du jetzt ein freier Zwerg bist und keinen Küchendienst mehr notwendig hast. Bevor er seine erneute Verwirrung darüber abschütteln kann verlässt du die Küche schnell in Richtung des Ratssaals und kannst durch die Tür noch sein erderschütterndes Brüllen vernehmen. 
 
-Jetzt bist du bereit, bereit für neue Abenteuer. Du gesellst dich zu den anderen Zwergen, die zu großer Zahl die Ratshalle füllen. Deine Hand ruht auf dem goldenen Amulett...
+Jetzt bist du bereit, bereit für neue Abenteuer. Du gesellst dich zu den anderen Zwergen, die zu großer Zahl die Ratshalle füllen. Deine Hand ruht auf dem {~|grünen|bauen|roten|} Amulett...
 
 {box(textcenter):ENDE}
 

@@ -1,5 +1,7 @@
 {image(center):border-angel.png}
 
+{set:fackel}
+
 Nach einigem Herumwühlen im Staub der Jahrhunderte am Boden des Gewölbes findest du tatsächlich eine alte, fast heruntergebrannte Fackel, die sich zusammen mit dem daneben liegenden Zunder und der steinernen Wand des Ganges entzünden lässt. Erleichtert blickst du in die Dunkelheit.
 Du schreitest langsam in das Gewölbe. Die Fackel erleuchtet deinen Weg, ist aber nicht stark genug, um den gesamten Keller sichtbar zu machen. Am Rand des Feuerscheins glaubst du zuckende Bewegungen wahrzunehmen, verbannst diese Gedanken aber in die Welt des Fabulierens bei zuviel Wurzelbier.
 
