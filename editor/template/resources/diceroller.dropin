@@ -13,16 +13,16 @@ Examples:
 -->
 
 <div class="_dropin_diceroller">
-    <div id="_dropin_diceroller_dice" style="text-align:center;margin-bottom:0.5em;height:6em;background:#b6b6b6;margin:0;padding:0.5em">
-        <div class="_dropin_diceroller_label" style="font-weight:bold;line-height:1em"></div>
+    <div id="_dropin_diceroller_dice" style="text-align:center;margin-bottom:0.5em;height:6em;background:rgba(0,0,0,0.5);margin:0;padding:0.5em;border-radius:0.5em">
+        <div class="_dropin_diceroller_label" style="font-weight:bold;line-height:1em;color:lightgrey"></div>
         <div style="height:4em;margin:0;padding:0">
             <img src="images/dice.gif" class="dice0" style="height:100%;margin-right:1em">
             <img src="images/dice.gif" class="dice1" style="height:100%;margin-left:1em">
         </div>
-        <div class="_dropin_diceroller_roll" style="height:1em;margin:0;padding:0;line-height:1em">
+        <div class="_dropin_diceroller_roll" style="height:1em;margin:0;padding:0;line-height:1em;color:lightgrey">
             Würfel antippen zum stoppen!
         </div>
-        <div class="_dropin_diceroller_result" style="height:1em;margin:0;padding:0;line-height:1em;display:none">
+        <div class="_dropin_diceroller_result" style="height:1em;margin:0;padding:0;line-height:1em;display:none;color:lightgrey">
             Du hast gewürfelt!
         </div>
     </div>
