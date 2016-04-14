@@ -34,7 +34,6 @@ exports.registerServices = function(config, app) {
 
 exports.renderNodeTree = function(req, res){
     var projectId = req.param("projectId");
-    var isWindow = req.param("window")==="true";
     var configDir = path.join(Utils.getProjectDir(projectId), "stationconfig");
 
     var tree = {
@@ -47,7 +46,7 @@ exports.renderNodeTree = function(req, res){
 
         // pass 1: parse nodes
         list.forEach(function (file) {
-            if (file.indexOf(".json")!=-1) {
+            if (file.indexOf(".json")!=-1 && file.indexOf("~")==-1) {
                 var node = JSON.parse(fs.readFileSync(path.join(configDir, file)));
                 // parse node
                 var thisNode = {
