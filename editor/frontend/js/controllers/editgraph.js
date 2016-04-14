@@ -217,20 +217,82 @@ editorModule.controller("editGraphicalCoreController", ["$scope", "$http", "$int
             snapLinks: { radius: 75 }
         });
 
-        paper.on('cell:pointerup', function(cellView, evt, x, y) {
-            Node.get({ projectId: $scope.project.data.id, nodeIdOrType: cellView.model.get('sqId')}, function(node) {
-                node.x = cellView.model.get('position').x;
-                node.y = cellView.model.get('position').y;
-                $scope.nodeChanged(node);
-            });
+        /* Group selection and node moving start */
+
+        var pointerIsDown = false;
+        var originalPos = { x:0, y:0 };
+        paper.on('cell:pointerdown', function(cellView, evt, x, y) {
+            pointerIsDown = true;
+            originalPos.x = cellView.model.get('position').x;
+            originalPos.y = cellView.model.get('position').y;
         });
+
+        paper.on('cell:pointermove', function(cellView, evt, x, y) {
+            if (pointerIsDown) {
+                // calculate delta
+                var deltaX = originalPos.x - cellView.model.get('position').x;
+                var deltaY = originalPos.y - cellView.model.get('position').y;
+                // recorn new orig position
+                originalPos.x = cellView.model.get('position').x;
+                originalPos.y = cellView.model.get('position').y;
+                // drag cell around detected, move all marked cells
+                for (var i=0; i<markedNodes.length; i++) {
+                    if (cellView.model.id != markedNodes[i].model.id) {
+                        var position = markedNodes[i].model.get('position');
+                        markedNodes[i].model.set('position', {x: position.x - deltaX, y: position.y - deltaY});
+                    }
+                }
+            }
+        });
+
+         var markedNodes = [];
+         paper.on('cell:pointerclick', function(cellView, evt, x, y) {
+             if (!evt.shiftKey) {
+               for (var i=0; i<markedNodes.length; i++) {
+                   console.log("Setting color for " + markedNodes[i]);
+                   markedNodes[i].model.attr('.body/stroke', 'darkgrey');
+                   markedNodes[i].model.attr('.header/stroke', 'darkgrey');
+                }
+                markedNodes = [ ];
+             }
+             markedNodes.push(cellView);
+             cellView.model.attr('.body/stroke', 'red');
+             cellView.model.attr('.header/stroke', 'red');
+         });
+
+        paper.on('cell:pointerup', function(cellView, evt, x, y) {
+            pointerIsDown = false;
+            if (markedNodes.length>0)
+                // selection in progress
+                for (var i=0; i<markedNodes.length; i++) {
+                    // wrapping the call in a function to capture the context. JavaScript sucks sometimes.
+                    (function() {
+                        var thisNode = markedNodes[i];
+                        Node.get({ projectId: $scope.project.data.id, nodeIdOrType: thisNode.model.get('sqId')}, function(node) {
+                            node.x = thisNode.model.get('position').x;
+                            node.y = thisNode.model.get('position').y;
+                            $scope.nodeChanged(node);
+                        });
+                    })();
+                }
+            else {
+                // only the local node, no selection
+                Node.get({ projectId: $scope.project.data.id, nodeIdOrType: cellView.model.get('sqId')}, function(node) {
+                    node.x = cellView.model.get('position').x;
+                    node.y = cellView.model.get('position').y;
+                    $scope.nodeChanged(node);
+                });
+            }
+        });
+
+        /* Group selection and node moving end */
 
         paper.on('cell:pointerdblclick',
              function(cellView, evt, x, y) {
                  $scope.editNode(cellView.model.get('sqId'));
              }
          );
-
+        
         // DRAG PAPER START
 
         paper.on('blank:pointerdown',
