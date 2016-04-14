@@ -249,7 +249,6 @@ editorModule.controller("editGraphicalCoreController", ["$scope", "$http", "$int
          paper.on('cell:pointerclick', function(cellView, evt, x, y) {
              if (!evt.shiftKey) {
                for (var i=0; i<markedNodes.length; i++) {
-                   console.log("Setting color for " + markedNodes[i]);
                    markedNodes[i].model.attr('.body/stroke', 'darkgrey');
                    markedNodes[i].model.attr('.header/stroke', 'darkgrey');
                 }
@@ -297,6 +296,13 @@ editorModule.controller("editGraphicalCoreController", ["$scope", "$http", "$int
 
         paper.on('blank:pointerdown',
             function(event, x, y) {
+                // reset selection
+                for (var i=0; i<markedNodes.length; i++) {
+                    markedNodes[i].model.attr('.body/stroke', 'darkgrey');
+                    markedNodes[i].model.attr('.header/stroke', 'darkgrey');
+                }
+                markedNodes = [ ];
+
                 $scope.originDelta = { x: paper.options.origin.x, y: paper.options.origin.y };
                 $scope.scale = V(paper.viewport).scale();
                 $scope.dragStartPosition = { x: x * $scope.scale.sx, y: y * $scope.scale.sy};
