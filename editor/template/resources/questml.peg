@@ -112,7 +112,7 @@ CommandEnd =
 	"}" { return name; }
 
 ParameterValue =
-	_ chars:[a-zA-Z0-9 &;-\\!\\.(\]]+ _ { return chars.join(""); }
+	_ chars:[a-zA-Z0-9 &/;-\\!\\.(\]]+ _ { return chars.join(""); }
 
 CommandName =
 	chars:[a-zA-Z0-9]+ { return chars.join(""); }

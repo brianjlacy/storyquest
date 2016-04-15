@@ -1,0 +1,51 @@
+<!--
+%NAME:Video Dropin
+%DESCRIPTION:Plays video files with controls.
+
+Examples:
+    {dropin(video,1280,720):example.mp4}
+-->
+
+<div class="_dropin_media">
+
+    <style>
+        .mejs-container {
+            font-family: textfont !important;
+            background: transparent;
+        }
+        .mejs-container .mejs-controls {
+            background: transparent;
+            color: white;
+        }
+    </style>
+    <script>
+        var screenAspect = 1.77;
+        if (_dropinParams[dropinId][1] && _dropinParams[dropinId][2])
+            screenAspect = parseInt(_dropinParams[dropinId][1]) / parseInt(_dropinParams[dropinId][2]);
+        var width = $("#content").width();
+        var height = width / screenAspect;
+        $("#" + dropinId).append("<video id='media" + dropinId + "' src='" + _dropinBody[dropinId] + "' width='" + width + "' height='" + height + "'></video>");
+        var mediaElem = $("#media" + dropinId);
+        mediaElem.mediaelementplayer({
+            videoWidth: width,
+            videoHeight: height,
+            startVolume: 1.0,
+            loop: false,
+            features: ['playpause', 'fullscreen'],
+            alwaysShowControls: false,
+            iPadUseNativeControls: false,
+            iPhoneUseNativeControls: false,
+            AndroidUseNativeControls: false,
+            alwaysShowHours: false,
+            showTimecodeFrameCount: false,
+            enableKeyboard: false,
+            pauseOtherPlayers: true,
+            success: function(mediaElement, originalNode) {
+                console.log("Setting up video player..");
+                $("#" + dropinId).one("inview", function() {
+                    console.log("Dropin " + dropinId + " is visible, playing video..");
+                    mediaElement.play();
+                })
+        }});
+    </script>
+</div>

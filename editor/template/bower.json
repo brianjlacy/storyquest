@@ -30,7 +30,8 @@
     "knockout-mapping": "^2.4.1",
     "pegjs": "^0.9.0",
     "jquery.inview": "protonet/jquery.inview#^1.1.2",
-    "jquery-ui": "^1.11.4"
+    "jquery-ui": "^1.11.4",
+    "mediaelement": "^2.20.1"
   },
   "resolutions": {
     "jquery": ">= 1.6.2"
