@@ -70,7 +70,15 @@ var editableFiles = [
         title: "Book Credits",
         description: "Template for the credits list.",
         type: "html"
+    },
+    {
+        id: "epubcss",
+        path: "css/epub.css",
+        title: "EPub CSS",
+        description: "CSS rules for EPub exports.",
+        type: "css"
     }
+
 ];
 
 var dropinSkeleton = "<!--\n%NAME:$TITLE$\n%DESCRIPTION:$DESCRIPTION$\n-->\n";

@@ -152,4 +152,49 @@ editorModule.controller("deployCoreController", ["$scope", "$http", "ProjectServ
                     modalError("Error launching build on server. Please try again. (" + response.status + ")");
                 });
         };
+
+        $scope.buildEPub = function() {
+            if ($scope.buildId!=null) {
+                modalError("Build already in progress, please wait until it is finished.");
+                return;
+            }
+            console.log("Starting EPub build on server..");
+            $(".activityicon").addClass("fa-spin");
+            $http.get("/api/deployment/epub/" + $scope.project.data.id)
+                .then(function successCallback(response) {
+                    $scope.buildId = response.data.buildId;
+                    console.log("Successfully started EPub build on server, buildId " + $scope.buildId);
+                    $scope.clearConsole();
+                    $scope.logWatcher = setInterval(function() {
+                        $http.get("/api/deployment/state/" + $scope.project.data.id + "/" + $scope.buildId)
+                            .then(function successCallback(response) {
+                                if (response.data.state==="building") {
+                                    $scope.appendToConsole(response.data.text);
+                                }
+                                else if (response.data.state==="finished") {
+                                    console.log("Building in finished.");
+                                    $scope.appendToConsole(response.data.text);
+                                    $scope.buildId = null;
+                                    clearInterval($scope.logWatcher);
+                                    $scope.appendArtifact(response.data);
+                                    $(".activityicon").removeClass("fa-spin");
+                                } else {
+                                    clearInterval($scope.logWatcher);
+                                    $scope.buildId = null;
+                                    $(".activityicon").removeClass("fa-spin");
+                                    modalError("Error while building on server. Please try again. (" + response.data.exitCode + ")");
+                                }
+                            }, function errorCallback(response) {
+                                clearInterval($scope.logWatcher);
+                                $scope.buildId = null;
+                                $(".activityicon").removeClass("fa-spin");
+                                modalError("Error while building on server. Please try again. (" + response.status + ")");
+                            })
+                    }, 1000);
+                }, function errorCallback(response) {
+                    $scope.buildId = null;
+                    $(".activityicon").removeClass("fa-spin");
+                    modalError("Error launching build on server. Please try again. (" + response.status + ")");
+                });
+        };
 }]);

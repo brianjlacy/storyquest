@@ -109,7 +109,7 @@ ArgumentList =
 	list:(_ ","? _ ParameterValue)* { return extractList(list, 3) }
 
 CommandEnd =
-	"}" { return name; }
+	"}"
 
 ParameterValue =
 	_ chars:[a-zA-Z0-9 &/;-\\!\\.(\]]+ _ { return chars.join(""); }
@@ -118,7 +118,7 @@ CommandName =
 	chars:[a-zA-Z0-9]+ { return chars.join(""); }
 
 Text =
-	chars:[^{}#*,]+  { return chars.join(""); }
+	chars:[^{}#*,]+ { return chars.join(""); }
 
 /* utility rules */
 

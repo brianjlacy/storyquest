@@ -20,6 +20,14 @@
                         </p>
                     </td>
                 </tr>
+                <tr>
+                    <td valign="top"><img src="images/epub.png"/></td>
+                    <td>
+                        <p style="margin:0;padding:0">
+                            <a class="btn btn-primary" ng-click="buildEPub()" ng-disabled="buildId!=null"><i class="glyphicon glyphicon-book"></i>&nbsp;&nbsp;Build EPub Book</a>
+                        </p>
+                    </td>
+                </tr>
             </table>
         </div>
     </div>
@@ -31,7 +39,7 @@
             </div>
             <table class="table table-hover table-condensed artifactstable" ng-show="artifacts && artifacts.length>0">
                 <tr ng-repeat="artifact in artifacts">
-                    <td valign="top" width="7%"><img ng-show="artifact.type==='android'" src="images/android-icon.png"/><img ng-show="artifact.type==='web'" src="images/html5-icon.png"/></td>
+                    <td valign="top" width="7%"><img ng-show="artifact.type==='android'" src="images/android-icon.png"/><img ng-show="artifact.type==='web'" src="images/html5-icon.png"/><img ng-show="artifact.type==='epub'" src="images/epub-icon.png"/></td>
                     <td>{{artifact.label}}</td>
                     <td>{{artifact.appId}}</td>
                     <td>{{artifact.versionName}} / {{artifact.versionCode}}</td>
