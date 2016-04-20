@@ -158,11 +158,11 @@ var createEPub = function(epubStream, projectId) {
                 var parsedText = [];
                 for (var j=0; j<texts.length; j++)
                     if (texts[j].lang == "de") {
-                        var rawText = texts[j].text.replace(/&amp;/g, "&");
                         // markdown parsing
-                        var htmlText = markdown.toHTML(rawText, "Gruber");
+                        var htmlText = markdown.toHTML(texts[j].text, "Gruber");
                         // pegjs parsing
-                        parsedText = pegjsParser.parse(htmlText);
+                        var rawText = htmlText.replace(/&amp;/g, "&");
+                        parsedText = pegjsParser.parse(rawText);
                     }
                 // postparse
                 var html = '<?xml version="1.0" encoding="utf-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>' + title + '</title><link rel="stylesheet" href="css/epub.css"/></head><body>';
@@ -185,11 +185,13 @@ var parseQuestMLStatement = function(statement) {
         var result;
         switch(statement.type) {
             case "expression":
-                if (typeof statement.body == "object" && statment.body.command == "sequence")
+                console.log(statement);
+                if (typeof statement.body == "object" && statement.body.type == "sequence")
                     // for epubs, always return first element in sequence
-                    result = statement.content[0];
+                    result = statement.body.content[0];
                 else
                     result = "<p><b>EXPRESSIONS NOT SUPPORTED BY EPUB EXPORT</b></p>";
+                console.log("STATEMENT DONE" + result);
                 break;
             case "command":
                 var commandName = statement.command.name;
