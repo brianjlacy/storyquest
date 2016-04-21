@@ -137,6 +137,7 @@ var createEPub = function(epubStream, projectId, buildId) {
     var files = fs.readdirSync(outputDir);
     var grammar = fs.readFileSync(path.join("template", "resources", "questml.peg")).toString();
     var pegjsParser = PEG.buildParser(grammar);
+    var imageList = [];
 
     // FIXME: do not use just the file list here, but the sequence.json sequence!
     if (files) {
@@ -187,20 +188,23 @@ var createEPub = function(epubStream, projectId, buildId) {
                     parsedText = pegjsParser.parse(rawText);
                 }
             // postparse
-            var html = '<?xml version="1.0" encoding="utf-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>' + title + '</title><link rel="stylesheet" href="css/epub.css"/></head><body>';
+            var html = '<?xml version="1.0" encoding="utf-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>' + title + '</title><link rel="stylesheet" href="epub.css"/></head><body>';
             for (var k=0; k<parsedText.length; k++) {
-                html += parseQuestMLStatement(parsedText[k]);
+                html += parseQuestMLStatement(parsedText[k], imageList);
             }
             html+= '</body></html>';
-            epubStream.add(node.id + '.xhtml', html, {
+            // prefixing files with 'a' to comply to epub standards (no numbers at start)
+            epubStream.add("a" + node.id + '.xhtml', html, {
                 title: title,
                 toc: true
             });
         }
     }
+    // return a list of all used images
+    return imageList;
 };
 
-var parseQuestMLStatement = function(statement) {
+var parseQuestMLStatement = function(statement, imageList) {
     if (typeof statement==="string") {
         return statement;
     } else {
@@ -219,7 +223,9 @@ var parseQuestMLStatement = function(statement) {
                 var body = statement.body; // may be array
                 switch (commandName) {
                     case "image":
-                        result = "<div class='image " + params[0] + "'><img src='images/" + body + "'></div>";
+                        result = "<div class='image " + params[0] + "'><img src='" + body + "'/></div>";
+                        if (imageList.indexOf(body)==-1)
+                            imageList.push(body);
                         break;
                     case "box":
                         result = "<div class='box " + params[0] + "'>";
@@ -231,12 +237,14 @@ var parseQuestMLStatement = function(statement) {
                         result += "</div>";
                         break;
                     case "link":
+                        // links have an 'a' prefix to comply to epub standard (no numbers at start)
                         var target = params[0];
-                        result = "<a class='choice' href='" + target + ".xhtml'>" + body + "</a>";
+                        result = "<a class='choice' href='a" + target + ".xhtml'>" + body + "</a>";
                         break;
                     case "ilink":
+                        // links have an 'a' prefix to comply to epub standard (no numbers at start)
                         var itarget = params[0];
-                        result = "<a class='choice href='" + itarget + ".xhtml'>" + body + "</a>";
+                        result = "<a class='choice href='a" + itarget + ".xhtml'>" + body + "</a>";
                         break;
                     case "when":
                         if (params[0]==="isEbook")
@@ -458,74 +466,72 @@ exports.deployEPub = function(req, res) {
                     title: jsonConfig.name,
                     author: jsonConfig.author,
                     description: project.description,
-                    rights: jsonConfig.publisher
+                    rights: jsonConfig.publisher,
+                    cover: "splash.jpg"
                 });
-                // add resources, only jpg, png and ttf are supported
-                var imagesDir = path.join(Utils.getProjectDir(projectId), "images");
-                var imagesTemplateDir = path.join("template", "images");
-                var files = fs.readdirSync(imagesDir);
-                var templateFiles = fs.readdirSync(imagesTemplateDir);
-                // add template resources
-                if (templateFiles)
-                    for (var i=0; i<templateFiles.length; i++)
-                        if (templateFiles[i].toLowerCase().endsWith(".jpg") || templateFiles[i].toLowerCase().endsWith(".png") || templateFiles[i].toLowerCase().endsWith(".ttf"))
-                            epubStream.add("images/" + templateFiles[i], fs.readFileSync(path.join(imagesTemplateDir, templateFiles[i])), {
-                                toc: false
-                            });
-                // add project resources
-                builds[buildId].log.push({
-                    timestamp: new Date().getTime(),
-                    progress: 5,
-                    chunk: "Adding media resources..\n"
-                });
-                if (files)
-                    for (i=0; i<files.length; i++)
-                        if (files[i].toLowerCase().endsWith(".jpg") || files[i].toLowerCase().endsWith(".png") || files[i].toLowerCase().endsWith(".ttf"))
-                            epubStream.add("images/" + files[i], fs.readFileSync(path.join(imagesDir, files[i])), {
-                                toc: false
-                            });
                 // add epub css
                 builds[buildId].log.push({
                     timestamp: new Date().getTime(),
                     progress: 5,
                     chunk: "Adding epub css styles..\n"
                 });
-                epubStream.add("css/epub.css", fs.readFileSync("template/css/epub.css"), {
-                    toc: false
-                });
                 if (fs.existsSync(path.join(Utils.getProjectDir(projectId), "css", "epub.css")))
-                    epubStream.add("css/epub.css", fs.readFileSync(path.join(Utils.getProjectDir(projectId), "epub.css")), {
+                    epubStream.add("epub.css", fs.readFileSync(path.join(Utils.getProjectDir(projectId), "css", "epub.css")), {
                         toc: false
                     });
-                // add coverpage
-                builds[buildId].log.push({
-                    timestamp: new Date().getTime(),
-                    progress: 5,
-                    chunk: "Creating and adding cover page..\n"
-                });
-                epubStream.add("splash.jpg", fs.readFileSync("template/splash.jpg"), {
-                    toc: false
-                });
+                else
+                    epubStream.add("epub.css", fs.readFileSync(path.join("template", "css", "epub.css")), {
+                        toc: false
+                    });
+                // add cover
                 if (fs.existsSync(path.join(Utils.getProjectDir(projectId), "splash.jpg")))
                     epubStream.add("splash.jpg", fs.readFileSync(path.join(Utils.getProjectDir(projectId), "splash.jpg")), {
                         toc: false
                     });
-                epubStream.add("bookcover.html", fs.readFileSync("template/bookcover.html"), {
-                    toc: true,
-                    title: "Cover"
+                else
+                    epubStream.add("splash.jpg", fs.readFileSync(path.join("template", "splash.jpg")), {
+                        toc: false
+                    });
+                /*
+                builds[buildId].log.push({
+                    timestamp: new Date().getTime(),
+                    progress: 5,
+                    chunk: "Creating and adding cover page..\n"
                 });
                 if (fs.existsSync(path.join(Utils.getProjectDir(projectId), "bookcover.html")))
                     epubStream.add("bookcover.html", fs.readFileSync(path.join(Utils.getProjectDir(projectId), "bookcover.html")), {
                         toc: true,
                         title: "Cover"
                     });
+                else
+                    epubStream.add("bookcover.html", fs.readFileSync(path.join("template", "bookcover.html")), {
+                        toc: true,
+                        title: "Cover"
+                    });
+                */
                 // add parsed HTML
                 builds[buildId].log.push({
                     timestamp: new Date().getTime(),
                     progress: 5,
                     chunk: "Now starting to add content chapters..\n"
                 });
-                createEPub(epubStream, projectId, buildId);
+                var imageList = createEPub(epubStream, projectId, buildId);
+                // add resources, only jpg, png are supported, using the imageList returned above
+                var imagesDir = path.join(Utils.getProjectDir(projectId), "images");
+                var files = imageList;
+                builds[buildId].log.push({
+                    timestamp: new Date().getTime(),
+                    progress: 5,
+                    chunk: "Adding media resources..\n"
+                });
+                // Warning: no files from template/images are added to avoid unused images in the epub that will lead to KDP rejection!
+                if (files)
+                    for (var i=0; i<files.length; i++)
+                        if (files[i].toLowerCase().endsWith(".jpg") || files[i].toLowerCase().endsWith(".png"))
+                            epubStream.add("" + files[i], fs.readFileSync(path.join(imagesDir, files[i])), {
+                                toc: false
+                            });
+                // finish build
                 builds[buildId].log.push({
                     timestamp: new Date().getTime(),
                     progress: 5,
