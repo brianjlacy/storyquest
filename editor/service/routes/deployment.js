@@ -203,8 +203,7 @@ var createEPub = function(epubStream, projectId, buildId) {
 var parseQuestMLStatement = function(statement) {
     if (typeof statement==="string") {
         return statement;
-    }
-    else {
+    } else {
         var result;
         switch(statement.type) {
             case "expression":
@@ -223,7 +222,13 @@ var parseQuestMLStatement = function(statement) {
                         result = "<div class='image " + params[0] + "'><img src='images/" + body + "'></div>";
                         break;
                     case "box":
-                        result = "<div class='box " + params[0] + "'>" + body + "</div>";
+                        result = "<div class='box " + params[0] + "'>";
+                        if (typeof body == "string")
+                            result += body;
+                        else
+                            for (var j=0; j<body.length; j++)
+                                result += parseQuestMLStatement(body[j]);
+                        result += "</div>";
                         break;
                     case "link":
                         var target = params[0];
@@ -233,8 +238,18 @@ var parseQuestMLStatement = function(statement) {
                         var itarget = params[0];
                         result = "<a class='choice href='" + itarget + ".xhtml'>" + body + "</a>";
                         break;
+                    case "when":
+                        if (params[0]==="isEbook")
+                            if (typeof body == "string")
+                                result = body;
+                            else 
+                                for (var i=0; i<body.length; i++)
+                                    result += parseQuestMLStatement(body[i]);
+                        else 
+                            result = "";
+                        break;
                     default:
-                        result = "<p><b>COMMAND '" + commandName + "' NOT SUPPORTED BY EPUB EXPORT</b></p>";
+                        result = "<!-- omitted not supported command '" + commandName + "' here -->";
                 }
                 break;
         }
@@ -488,11 +503,11 @@ exports.deployEPub = function(req, res) {
                     progress: 5,
                     chunk: "Creating and adding cover page..\n"
                 });
-                epubStream.add("bookcover.jpg", fs.readFileSync("template/bookcover.jpg"), {
+                epubStream.add("splash.jpg", fs.readFileSync("template/splash.jpg"), {
                     toc: false
                 });
-                if (fs.existsSync(path.join(Utils.getProjectDir(projectId), "bookcover.jpg")))
-                    epubStream.add("bookcover.jpg", fs.readFileSync(path.join(Utils.getProjectDir(projectId), "bookcover.jpg")), {
+                if (fs.existsSync(path.join(Utils.getProjectDir(projectId), "splash.jpg")))
+                    epubStream.add("splash.jpg", fs.readFileSync(path.join(Utils.getProjectDir(projectId), "splash.jpg")), {
                         toc: false
                     });
                 epubStream.add("bookcover.html", fs.readFileSync("template/bookcover.html"), {

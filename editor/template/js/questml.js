@@ -53,6 +53,11 @@ setInterval(function() {
 
 // evaluates an expression, replacing all quotes and [] - use only for parameter expressions!
 function evalExpression(expression) {
+    // check special conditions for platform
+    if (expression=="isEbook")
+        return false;
+    else if (expression=="isApp")
+        return true;
     // eliminate quoting and expression substitution of () with []
     expression = expression.replace(/\[/g, "(").replace(/]/g, ")").replace(/&#39;/g, "\"").replace(/&quot;/g, '"').replace(/&lt;/, "<").replace(/&gt;/, ">");
     var evalResult = false;
@@ -84,11 +89,11 @@ var parseQuestML = function(html) {
     console.log("Starting QuestML parsing..");
 
     function parseStatement(statement) {
+        var result;
         if (typeof statement==="string") {
-            return statement;
+            result = statement;
         }
         else {
-            var result;
             switch(statement.type) {
                 case "expression":
                     result = parseQuestMLExpression(statement);
@@ -100,8 +105,8 @@ var parseQuestML = function(html) {
                     result = parseQuestMLSequence(statement);
                     break;
             }
-            return result;
         }
+        return result;
     }
 
     function parseQuestMLExpression(statement) {
@@ -123,10 +128,11 @@ var parseQuestML = function(html) {
         var params = statement.command.params; // optional
         var body = statement.body; // may be array
         var result = "";
-        if (Array.isArray(body))
+        if (Array.isArray(body)) {
             for (var i=0; i<body.length; i++)
                 result += parseStatement(body[i]);
-        else
+            return result;
+        } else
             return executeCommand(commandName, params, body);
     }
 

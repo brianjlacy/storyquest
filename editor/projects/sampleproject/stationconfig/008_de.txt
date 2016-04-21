@@ -1,6 +1,12 @@
 {image(center):border-floral.png} 
 
+{when(isApp):
 Während du zügig durch die Dunkelheit eilst, geradewegs den Weg, den du gegangen bist zurück, hörst du plötzlich eine deutlich vernehmbare, aber irgendwie seltsame Stimme. Wie ein Windhauch, der direkt in dein Ohr bläst ruft eine Frauenstimme „{heroname}, komm her, hier ist es sicher...“. 
+}
+
+{when(isEbook):
+Während du zügig durch die Dunkelheit eilst, geradewegs den Weg, den du gegangen bist zurück, hörst du plötzlich eine deutlich vernehmbare, aber irgendwie seltsame Stimme. Wie ein Windhauch, der direkt in dein Ohr bläst ruft eine Frauenstimme „Zwerg, komm her, hier ist es sicher...“.
+}
 
 {link(009):Du willst wissen, was es mit der Stimme auf sich hat und folgst ihr.}
 
