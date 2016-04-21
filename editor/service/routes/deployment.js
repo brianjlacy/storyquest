@@ -132,49 +132,72 @@ var finishBuildJob = function(buildId, projectId, exitCode, signal, tempDirOrFil
     }
 };
 
-var createEPub = function(epubStream, projectId) {
+var createEPub = function(epubStream, projectId, buildId) {
     var outputDir = path.join(Utils.getProjectDir(projectId), "stationconfig");
     var files = fs.readdirSync(outputDir);
     var grammar = fs.readFileSync(path.join("template", "resources", "questml.peg")).toString();
     var pegjsParser = PEG.buildParser(grammar);
-    if (files)
+
+    // FIXME: do not use just the file list here, but the sequence.json sequence!
+    if (files) {
+        var nodes = [];
+        // step 1 - read all node data into array
         for (var i=0; i<files.length; i++)
             if (files[i].indexOf(".json")!=-1 && files[i].indexOf("~")==-1) {
-                var node = JSON.parse(fs.readFileSync(outputDir + "/" + files[i], "utf8"));
-                var texts = [];
-                for (var language in node.text) {
-                    if (node.text.hasOwnProperty(language)) {
-                        var text = fs.readFileSync(path.join(outputDir, node.text[language]), "utf8");
-                        texts.push({ lang: language, text: text });
-                    }
-                }
-                // TODO: the following code only works for DE texts, make this more flexible with i18n
-                var title = "Title not defined";
-                if (node.title)
-                    title = node.title;
-                else if (node.headerText)
-                    title = node.headerText.de;
-                // preparse with pegjs
-                var parsedText = [];
-                for (var j=0; j<texts.length; j++)
-                    if (texts[j].lang == "de") {
-                        // markdown parsing
-                        var htmlText = markdown.toHTML(texts[j].text, "Gruber");
-                        // pegjs parsing
-                        var rawText = htmlText.replace(/&amp;/g, "&");
-                        parsedText = pegjsParser.parse(rawText);
-                    }
-                // postparse
-                var html = '<?xml version="1.0" encoding="utf-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>' + title + '</title><link rel="stylesheet" href="css/epub.css"/></head><body>';
-                for (var k=0; k<parsedText.length; k++) {
-                    html += parseQuestMLStatement(parsedText[k]);
-                }
-                html+= '</body></html>';
-                epubStream.add(node.id + '.xhtml', html, {
-                    title: title,
-                    toc: true
-                });
+                nodes.push(JSON.parse(fs.readFileSync(outputDir + "/" + files[i], "utf8")));
             }
+        // step 2 - search for starting node and reorder array
+        builds[buildId].log.push({
+            timestamp: new Date().getTime(),
+            progress: 5,
+            chunk: "Searching for starting chapter..\n"
+        });
+        for (i=0; i<nodes.length; i++)
+            if (nodes[i].isStartNode===true)
+                nodes.splice(0, 0, nodes.splice(i, 1)[0]); // js wizard says: this removes the ith element and adds it back to the front
+        // step 3 - add to epub
+        for (i=0; i<nodes.length; i++) {
+            var node = nodes[i];
+            var texts = [];
+            builds[buildId].log.push({
+                timestamp: new Date().getTime(),
+                progress: 5,
+                chunk: "Creating chapter '" + node.title + "'..\n"
+            });
+            for (var language in node.text) {
+                if (node.text.hasOwnProperty(language)) {
+                    var text = fs.readFileSync(path.join(outputDir, node.text[language]), "utf8");
+                    texts.push({ lang: language, text: text });
+                }
+            }
+            // TODO: the following code only works for DE texts, make this more flexible with i18n
+            var title = "Title not defined";
+            if (node.title)
+                title = node.title;
+            else if (node.headerText)
+                title = node.headerText.de;
+            // preparse with pegjs
+            var parsedText = [];
+            for (var j=0; j<texts.length; j++)
+                if (texts[j].lang == "de") {
+                    // markdown parsing
+                    var htmlText = markdown.toHTML(texts[j].text, "Gruber");
+                    // pegjs parsing
+                    var rawText = htmlText.replace(/&amp;/g, "&");
+                    parsedText = pegjsParser.parse(rawText);
+                }
+            // postparse
+            var html = '<?xml version="1.0" encoding="utf-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>' + title + '</title><link rel="stylesheet" href="css/epub.css"/></head><body>';
+            for (var k=0; k<parsedText.length; k++) {
+                html += parseQuestMLStatement(parsedText[k]);
+            }
+            html+= '</body></html>';
+            epubStream.add(node.id + '.xhtml', html, {
+                title: title,
+                toc: true
+            });
+        }
+    }
 };
 
 var parseQuestMLStatement = function(statement) {
@@ -185,13 +208,11 @@ var parseQuestMLStatement = function(statement) {
         var result;
         switch(statement.type) {
             case "expression":
-                console.log(statement);
                 if (typeof statement.body == "object" && statement.body.type == "sequence")
                     // for epubs, always return first element in sequence
                     result = statement.body.content[0];
                 else
                     result = "<p><b>EXPRESSIONS NOT SUPPORTED BY EPUB EXPORT</b></p>";
-                console.log("STATEMENT DONE" + result);
                 break;
             case "command":
                 var commandName = statement.command.name;
@@ -437,6 +458,11 @@ exports.deployEPub = function(req, res) {
                                 toc: false
                             });
                 // add project resources
+                builds[buildId].log.push({
+                    timestamp: new Date().getTime(),
+                    progress: 5,
+                    chunk: "Adding media resources..\n"
+                });
                 if (files)
                     for (i=0; i<files.length; i++)
                         if (files[i].toLowerCase().endsWith(".jpg") || files[i].toLowerCase().endsWith(".png") || files[i].toLowerCase().endsWith(".ttf"))
@@ -444,17 +470,58 @@ exports.deployEPub = function(req, res) {
                                 toc: false
                             });
                 // add epub css
+                builds[buildId].log.push({
+                    timestamp: new Date().getTime(),
+                    progress: 5,
+                    chunk: "Adding epub css styles..\n"
+                });
                 epubStream.add("css/epub.css", fs.readFileSync("template/css/epub.css"), {
                     toc: false
                 });
+                if (fs.existsSync(path.join(Utils.getProjectDir(projectId), "css", "epub.css")))
+                    epubStream.add("css/epub.css", fs.readFileSync(path.join(Utils.getProjectDir(projectId), "epub.css")), {
+                        toc: false
+                    });
+                // add coverpage
+                builds[buildId].log.push({
+                    timestamp: new Date().getTime(),
+                    progress: 5,
+                    chunk: "Creating and adding cover page..\n"
+                });
+                epubStream.add("bookcover.jpg", fs.readFileSync("template/bookcover.jpg"), {
+                    toc: false
+                });
+                if (fs.existsSync(path.join(Utils.getProjectDir(projectId), "bookcover.jpg")))
+                    epubStream.add("bookcover.jpg", fs.readFileSync(path.join(Utils.getProjectDir(projectId), "bookcover.jpg")), {
+                        toc: false
+                    });
+                epubStream.add("bookcover.html", fs.readFileSync("template/bookcover.html"), {
+                    toc: true,
+                    title: "Cover"
+                });
+                if (fs.existsSync(path.join(Utils.getProjectDir(projectId), "bookcover.html")))
+                    epubStream.add("bookcover.html", fs.readFileSync(path.join(Utils.getProjectDir(projectId), "bookcover.html")), {
+                        toc: true,
+                        title: "Cover"
+                    });
                 // add parsed HTML
-                createEPub(epubStream, projectId);
+                builds[buildId].log.push({
+                    timestamp: new Date().getTime(),
+                    progress: 5,
+                    chunk: "Now starting to add content chapters..\n"
+                });
+                createEPub(epubStream, projectId, buildId);
+                builds[buildId].log.push({
+                    timestamp: new Date().getTime(),
+                    progress: 5,
+                    chunk: "Finishing build..\n"
+                });
                 epubStream.end(function() {
                     var timestamp = new Date().getTime();
                     builds[buildId].log.push({
                         timestamp: timestamp,
                         progress: 5,
-                        chunk: "Archive created."
+                        chunk: "Archive created.\n"
                     });
                 });
                 var writeStream = fs.createWriteStream(epubFile);
