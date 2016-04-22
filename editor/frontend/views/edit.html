@@ -15,7 +15,7 @@
             </div>
             <div style="height:95%" class="box-body">
                 <div style="width:100%;overflow-y:scroll;height:100%;overflow-x:hidden">
-                    <ul id="nodelist" style="height:95%;white-space:nowrap" class="list-group">
+                    <ul ui-sortable="sortableOptions" ng-model="nodelist" id="nodelist" style="height:95%;white-space:nowrap" class="list-group">
                         <span ng-repeat="thisNode in nodelist track by thisNode.id | filter:filterText"
                               ng-click="loadNode(thisNode.id)"
                               data-id="{{thisNode.id}}"

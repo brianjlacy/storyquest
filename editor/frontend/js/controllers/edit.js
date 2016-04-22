@@ -69,12 +69,13 @@ editorModule.controller("editCoreController", ["$scope", "$http", "$timeout", "$
 
         // options for the list sortable
         $scope.sortableOptions = {
-            update: function(e, ui) {
+            stop: function(e, ui) {
+                console.log("Updating sort order for project..");
                 var sequence = [];
                 $("#nodelist > span").each(function(idx) {
                     var id = $(this).attr("data-id");
                     if (id)
-                        sequence.push(id);
+                        sequence.push(id + ".json");
                 });
                 $http.post("/api/sequence/" + $scope.project.data.id, sequence)
                     .success(function(data, status, headers, config) {
@@ -179,7 +180,7 @@ editorModule.controller("editCoreController", ["$scope", "$http", "$timeout", "$
                                 else
                                     for (var i=0; i<sequence.length; i++)
                                         for (var j=0; j<nodes.length; j++)
-                                            if (nodes[j].id===sequence[i])
+                                            if (nodes[j].id===sequence[i].replace(".json", ""))
                                                 $scope.nodelist.push(nodes[j]);
                                 if ($scope.nodelist.length>0)
                                     $scope.loadNode(nodes[nodes.length-1].id);

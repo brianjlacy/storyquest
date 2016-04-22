@@ -47,8 +47,15 @@ exports.createIndexHTML = function(outputDir, type, nodeId) {
 
 exports.retrieveNodeList = function(projectId) {
     var outputDir = path.join(Utils.getProjectDir(projectId), "stationconfig");
-    var files = fs.readdirSync(outputDir);
     var nodeList = [];
+    var files = null;
+    // if a sequence.json is available, use it
+    var sequenceFile = path.join(Utils.getProjectDir(req.param("projectId")), "sequence.json");
+    if (fs.existsSync(sequenceFile)) {
+        files = JSON.parse(fs.readFileSync(sequenceFile, "utf8"));
+    } else {
+        files = fs.readdirSync(outputDir);
+    }
     if (files)
         for (var i=0; i<files.length; i++)
             if (files[i].indexOf(".json")!=-1 && files[i].indexOf("~")==-1) {
@@ -147,7 +154,7 @@ exports.createNode = function(req, res){
         var sequenceFile = path.join(Utils.getProjectDir(req.param("projectId")), "sequence.json");
         if (fs.existsSync(sequenceFile)) {
             sequence = JSON.parse(fs.readFileSync(sequenceFile, "utf8"));
-            sequence.push(newNodeSkeleton.id);
+            sequence.push(newNodeSkeleton.id + ".json");
         }
         else {
             var nList = exports.retrieveNodeList(req.param("projectId"));
@@ -179,7 +186,7 @@ exports.deleteNode = function(req, res) {
             var sequenceFile = path.join(Utils.getProjectDir(req.param("projectId")), "sequence.json");
             if (fs.existsSync(sequenceFile))
                 sequence = JSON.parse(fs.readFileSync(sequenceFile, "utf8"));
-            var seqPos = sequence.indexOf(nodeId);
+            var seqPos = sequence.indexOf(nodeId + ".json");
             if (seqPos > -1)
                 sequence.splice(seqPos, 1);
             fs.writeFileSync(sequenceFile, JSON.stringify(sequence));

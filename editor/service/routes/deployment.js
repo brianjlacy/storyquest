@@ -134,7 +134,14 @@ var finishBuildJob = function(buildId, projectId, exitCode, signal, tempDirOrFil
 
 var createEPub = function(epubStream, projectId, buildId) {
     var outputDir = path.join(Utils.getProjectDir(projectId), "stationconfig");
-    var files = fs.readdirSync(outputDir);
+    var sequenceFile = path.join(Utils.getProjectDir(req.param("projectId")), "sequence.json");
+    var files = null;
+    // if a sequence.json exists, use this, else use the directory listing
+    if (fs.existsSync(sequenceFile)) {
+        files = JSON.parse(fs.readFileSync(sequenceFile, "utf8"));
+    } else {
+        files = fs.readdirSync(outputDir);
+    }
     var grammar = fs.readFileSync(path.join("template", "resources", "questml.peg")).toString();
     var pegjsParser = PEG.buildParser(grammar);
     var imageList = [];
