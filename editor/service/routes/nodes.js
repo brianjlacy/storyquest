@@ -50,7 +50,7 @@ exports.retrieveNodeList = function(projectId) {
     var nodeList = [];
     var files = null;
     // if a sequence.json is available, use it
-    var sequenceFile = path.join(Utils.getProjectDir(req.param("projectId")), "sequence.json");
+    var sequenceFile = path.join(Utils.getProjectDir(projectId), "sequence.json");
     if (fs.existsSync(sequenceFile)) {
         files = JSON.parse(fs.readFileSync(sequenceFile, "utf8"));
     } else {

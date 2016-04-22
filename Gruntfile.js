@@ -409,6 +409,7 @@ module.exports = function (grunt) {
               'template/**/*',
               'node_modules/**/*',
               'storyquest.js',
+              'createUser.js',
               'package.json'
           ],
           dest: '<%= appConfig.distNode %>'
