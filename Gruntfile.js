@@ -145,7 +145,8 @@ module.exports = function (grunt) {
             './node_modules',
             './editor/node_modules',
             './editor/template/bower_components',
-            './editor/frontend/bower_components'
+            './editor/frontend/bower_components',
+            './client-android/app/src/main/res/raw/*.mp4'
           ]
         }]
       },
