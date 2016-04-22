@@ -59,7 +59,6 @@ User.prototype.transactions = null;
 User.authtoken = null;
 User.passwordResetToken = null;
 User.confirmationToken = null;
-User.context = null;
 
 User.prototype.updateData = function(updatedUser, done) {
     this.projects = updatedUser.projects;
@@ -258,7 +257,6 @@ User.fromJSON = function(dbDoc) {
     user.authtoken = dbDoc.authtoken;
     user.passwordResetToken = dbDoc.passwordResetToken;
     user.transactions = dbDoc.transactions;
-    user.context = dbDoc.context;
     return user;
 };
 
@@ -281,11 +279,10 @@ User.toJSON = function(user) {
     dbDoc.confirmationToken = user.confirmationToken;
     dbDoc.passwordResetToken = user.passwordResetToken;
     dbDoc.transactions = user.transactions;
-    dbDoc.context = user.context;
     return dbDoc;
 };
 
-User.createInDatabase = function(name, username, password, context, confirmNeeded, done) {
+User.createInDatabase = function(name, username, password, confirmNeeded, done) {
     if (username && password && name) {
         User.exists(username, function(userExists) {
             if (userExists)
@@ -293,10 +290,6 @@ User.createInDatabase = function(name, username, password, context, confirmNeede
             else {
                 var newUser = new User();
                 newUser.name = name;
-                if (config.allowedNewUserContexts.indexOf(context)!=-1) {
-                    newUser.tags.push(context);
-                    newUser.context = context;
-                }
                 newUser.username = username;
                 newUser.password = crypt.SHA256(password).toString();
                 newUser.confirmationToken = Utils.uuid();
