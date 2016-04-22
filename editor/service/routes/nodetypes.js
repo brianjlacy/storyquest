@@ -77,13 +77,6 @@ var editableFiles = [
         title: "EPub CSS",
         description: "CSS rules for EPub exports.",
         type: "css"
-    },
-    {
-        id: "epubcover",
-        path: "bookcover.html",
-        title: "EPub Cover",
-        description: "Cover page for EPub exports.",
-        type: "html"
     }
 ];
 
