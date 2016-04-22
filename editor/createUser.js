@@ -64,6 +64,7 @@ if (program.username && program.password && program.projectid) {
                     var templateProjectDir = Utils.getProjectDir(program.projectid);
                     var projectDir = Utils.getProjectDir(projectId);
                     fs.mkdirSync(projectDir);
+                    console.log("Created project dir: " + projectDir);
                     ncp(templateProjectDir + "/", projectDir, function (err) {
                         if (err) {
                             console.log("Error writing to disk: " + err);
