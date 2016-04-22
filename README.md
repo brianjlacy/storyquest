@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/michaelkleinhenz/storyquest.svg)](https://travis-ci.org/michaelkleinhenz/storyquest)
 
 This is StoryQuest, A game book development platform complete with a web 
-based editor and a mobile client.
+based editor, a mobile client and an e-reader export.
 
 ![Story Editor](/screenshots/combined.jpg?raw=true "Story Editor")
 
@@ -11,8 +11,8 @@ It is a feature-rich web based development suite and mobile client for
 mobile augmented books. With StoryQuest, you can create adventure e-books and interactive 
 fiction that contain branching storylines, audio, images, illustrations, video, and 
 interactive JavaScript-based content. StoryQuest delivers ready-to-deploy app archives 
-for various platforms, including iOS, Android, FirefoxOS, Chrome, and can export
-builds for e-readers like Kindle or Kobo.
+for various platforms, including iOS, Android, ChromeOS, and can export
+books for e-readers like Kindle or Kobo.
 
 ![Story Client](/screenshots/client-combined.jpg?raw=true "Story Client")
 
