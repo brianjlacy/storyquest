@@ -188,7 +188,7 @@ var createEPub = function(epubStream, projectId, buildId) {
                     parsedText = pegjsParser.parse(rawText);
                 }
             // postparse
-            var html = '<?xml version="1.0" encoding="utf-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>' + title + '</title><link rel="stylesheet" href="epub.css"/></head><body>';
+            var html = '<?xml version="1.0" encoding="utf-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>' + title + '</title><link rel="stylesheet" href="epub.css" type="text/css"/></head><body>';
             for (var k=0; k<parsedText.length; k++) {
                 html += parseQuestMLStatement(parsedText[k], imageList);
             }
@@ -223,7 +223,7 @@ var parseQuestMLStatement = function(statement, imageList) {
                 var body = statement.body; // may be array
                 switch (commandName) {
                     case "image":
-                        result = "<div class='image " + params[0] + "'><img src='" + body + "'/></div>";
+                        result = "<div class='image " + params[0] + "'><img src='" + body + "' alt=''/></div>";
                         if (imageList.indexOf(body)==-1)
                             imageList.push(body);
                         break;
@@ -239,12 +239,12 @@ var parseQuestMLStatement = function(statement, imageList) {
                     case "link":
                         // links have an 'a' prefix to comply to epub standard (no numbers at start)
                         var target = params[0];
-                        result = "<a class='choice' href='a" + target + ".xhtml'>" + body + "</a>";
+                        result = "<a class='choice' style='text-decoration:none!important' href='a" + target + ".xhtml'>" + body + "</a>";
                         break;
                     case "ilink":
                         // links have an 'a' prefix to comply to epub standard (no numbers at start)
                         var itarget = params[0];
-                        result = "<a class='choice href='a" + itarget + ".xhtml'>" + body + "</a>";
+                        result = "<a class='choice' style='text-decoration:none!important' href='a" + itarget + ".xhtml'>" + body + "</a>";
                         break;
                     case "when":
                         if (params[0]==="isEbook")
@@ -469,6 +469,18 @@ exports.deployEPub = function(req, res) {
                     rights: jsonConfig.publisher,
                     cover: "splash.jpg"
                 });
+                // add cover page
+                epubStream.add("cover.xhtml", '<?xml version="1.0" encoding="utf-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>Cover</title><link rel="stylesheet" href="epub.css" type="text/css"/></head><body style="width:100%;height:100%;text-align:center"><img alt="" style="display:inline!important" src="splash.jpg"/></body></html>', {
+                    toc: true,
+                    title: "Cover"
+                });
+                // add parsed HTML
+                builds[buildId].log.push({
+                    timestamp: new Date().getTime(),
+                    progress: 5,
+                    chunk: "Now starting to add content chapters..\n"
+                });
+                var imageList = createEPub(epubStream, projectId, buildId);
                 // add epub css
                 builds[buildId].log.push({
                     timestamp: new Date().getTime(),
@@ -492,30 +504,6 @@ exports.deployEPub = function(req, res) {
                     epubStream.add("splash.jpg", fs.readFileSync(path.join("template", "splash.jpg")), {
                         toc: false
                     });
-                /*
-                builds[buildId].log.push({
-                    timestamp: new Date().getTime(),
-                    progress: 5,
-                    chunk: "Creating and adding cover page..\n"
-                });
-                if (fs.existsSync(path.join(Utils.getProjectDir(projectId), "bookcover.html")))
-                    epubStream.add("bookcover.html", fs.readFileSync(path.join(Utils.getProjectDir(projectId), "bookcover.html")), {
-                        toc: true,
-                        title: "Cover"
-                    });
-                else
-                    epubStream.add("bookcover.html", fs.readFileSync(path.join("template", "bookcover.html")), {
-                        toc: true,
-                        title: "Cover"
-                    });
-                */
-                // add parsed HTML
-                builds[buildId].log.push({
-                    timestamp: new Date().getTime(),
-                    progress: 5,
-                    chunk: "Now starting to add content chapters..\n"
-                });
-                var imageList = createEPub(epubStream, projectId, buildId);
                 // add resources, only jpg, png are supported, using the imageList returned above
                 var imagesDir = path.join(Utils.getProjectDir(projectId), "images");
                 var files = imageList;
