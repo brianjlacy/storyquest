@@ -52,6 +52,7 @@ Examples:
                 $("#" + dropinId + " ._dropin_diceroller_roll").hide();
                 $("#" + dropinId + " ._dropin_diceroller_result").show();
                 model.setValue(_dropinParams[dropinId][0], randomResult);
+                $("#" + dropinId).addClass("diceroller-rolled");
             }
         };
         $("#" + dropinId + " ._dropin_diceroller_label").html(labelString);

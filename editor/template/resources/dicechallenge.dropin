@@ -1,0 +1,51 @@
+<!--
+%NAME:Dicechallenge Dropin
+%DESCRIPTION:Visually rolls one w6 dice calls a function with the result.
+
+    {dropin(dicechallenge,someFunction):Label Text}
+
+someFunction is a function defined in globals that gets the dice roll and returns a text that is displayed.
+
+Examples:
+    {dropin(dicechallenge,checkSuccess):Roll for success!}
+-->
+
+<div class="_dropin_dicechallenge">
+    <div id="_dropin_dicechallenge_dice" style="text-align:center;margin-bottom:0.5em;height:6em;background:rgba(0,0,0,0.5);margin:0;padding:0.5em;border-radius:0.5em">
+        <div class="_dropin_dicechallenge_label" style="font-weight:bold;line-height:1em;color:lightgrey"></div>
+        <div style="height:4em;margin:0;padding:0">
+            <img src="images/dice.gif" class="dice0" style="height:100%;">
+        </div>
+        <div class="_dropin_dicechallenge_roll" style="height:1em;margin:0;padding:0;line-height:1em;color:lightgrey">
+            Würfel antippen zum stoppen!
+        </div>
+        <div class="_dropin_dicechallenge_result" style="height:1em;margin:0;padding:0;line-height:1em;display:none;color:lightgrey">
+            Du hast gewürfelt!
+        </div>
+    </div>
+    <script>
+        // body can be an expression or a string
+        var labelString = null;
+        try {
+            labelString = eval(_dropinBody[dropinId].replace(/&#39;/g, "'").replace(/&quot;/g, '"'));
+        } catch (e) {
+            labelString = _dropinBody[dropinId];
+        }
+        $("#" + dropinId + " ._dropin_dicechallenge_label").html(labelString);
+
+        $("#" + dropinId + " .dice0").click(function() {
+            $(this).off("click");
+            var random0 = random(6, 1);
+            $(this).attr("src", "images/dice" + random0 + ".gif");
+            $("#" + dropinId + " ._dropin_dicechallenge_roll").hide();
+            var result = "";
+            var fn = window[_dropinParams[dropinId][0]];
+            if(typeof fn === 'function') {
+                result = fn(random0);
+            }
+            $("#" + dropinId + " ._dropin_dicechallenge_result").html(result);
+            $("#" + dropinId + " ._dropin_dicechallenge_result").show();
+            $("#" + dropinId).addClass("diceroller-rolled");
+        });
+    </script>
+</div>

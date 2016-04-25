@@ -84,6 +84,11 @@ function getQuestMLParser(callback) {
         callback(questMLParser);
 }
 
+// service method
+function localDiceRolled() {
+    return $(".diceroller-rolled").length >= 1;
+}
+
 var parseQuestML = function(html) {
 
     console.log("Starting QuestML parsing..");
