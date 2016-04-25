@@ -71,7 +71,7 @@
     - name: start storyquest-docker
       docker: 
         docker_api_version: 1.18
-        image: kleinhenz/storyquest:3.0.4-beta
+        image: kleinhenz/storyquest:3.0.5-beta
         name: storyquest
         restart_policy: always
         pull: always
