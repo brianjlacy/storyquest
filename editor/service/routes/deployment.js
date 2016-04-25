@@ -381,59 +381,70 @@ exports.deployAndroid = function(req, res) {
         settings = propertiesParser.parse(fs.readFileSync(propertiesFile, "utf8"));
     else
         return res.json(500, {type:"REQUEST_FAILED", "message":"Fatal error while accessing temp build directory."});
-    builds[buildId] = {
-        buildId: buildId,
-        type: "android",
-        state: "building",
-        lastStateQuery: 0,
-        label: settings.APP_LABEL,
-        versionName: settings.APP_VERSION_NAME,
-        versionCode: settings.APP_VERSION_CODE,
-        appId: settings.APP_ID,
-        log: []
-    };
-    fs.mkdirSync(tempDir);
-    ncp(config.androidBuildDir + "/", tempDir, function (err) {
-        if (err) {
-            return res.json(500, {type:"REQUEST_FAILED", "message":err});
-        } else {
-            try {
-                // initiate build
-                var child = spawn("./gradlew", [ "-b", "build.gradle" ], { cwd: tempDir });
-                builds[buildId].process = child;
-                child.stdout.on("data", function(chunk) {
-                    var timestamp = new Date().getTime();
-                    builds[buildId].log.push({
-                        timestamp: timestamp,
-                        progress: 5,
-                        chunk: chunk
-                    });
-                });
-                child.stdout.on("exit", function(exitCode, signal) {
-                    finishBuildJob(buildId, projectId, exitCode, signal, config.tempDir);
-                });
-                child.stdout.on("error", function(error) {
-                    builds[buildId].state = "failedError";
-                    builds[buildId].exitcode = -1;
-                    builds[buildId].error = error;
-                    builds[buildId].artifactPath = null;
-                    cleanupBuildJob(buildId, tempDir, null, res);
-                });
-                child.stdout.on("close", function(exitCode, signal) {
-                    finishBuildJob(buildId, projectId, exitCode, signal, config.tempDir);
-                });
-            } catch (err) {
-                builds[buildId].state = "failedException";
-                builds[buildId].exitcode = -1;
-                builds[buildId].error = err;
-                builds[buildId].artifactPath = null;
-                cleanupBuildJob(buildId, tempDir, null, res);
-            }
-        }
-    });
-    return res.json(200, {
-        buildId: buildId
-    });
+    // rewriting the properties file, making sure the paths to the projects and template directory are up-to-date
+    var propEditor = propertiesParser.createEditor();
+    propEditor.set("STORYQUEST_TEMPLATE_PATH", config.templateDirFromAndroidContext);
+    propEditor.set("STORYQUEST_PROJECT_PATH", path.join(config.projectsDirFromAndroidContext, projectId));
+    propEditor.set("STORYQUEST_ICON_PATH", path.join(config.projectsDirFromAndroidContext, projectId, "icon.png"));
+    try {
+        propEditor.save(propertiesFile, function() {
+            builds[buildId] = {
+                buildId: buildId,
+                type: "android",
+                state: "building",
+                lastStateQuery: 0,
+                label: settings.APP_LABEL,
+                versionName: settings.APP_VERSION_NAME,
+                versionCode: settings.APP_VERSION_CODE,
+                appId: settings.APP_ID,
+                log: []
+            };
+            fs.mkdirSync(tempDir);
+            ncp(config.androidBuildDir + "/", tempDir, function (err) {
+                if (err) {
+                    return res.json(500, {type:"REQUEST_FAILED", "message":err});
+                } else {
+                    try {
+                        // initiate build
+                        var child = spawn("./gradlew", [ "-b", "build.gradle" ], { cwd: tempDir, env: { ANDROID_HOME: "/opt/android-sdk-linux" } });
+                        builds[buildId].process = child;
+                        child.stdout.on("data", function(chunk) {
+                            var timestamp = new Date().getTime();
+                            builds[buildId].log.push({
+                                timestamp: timestamp,
+                                progress: 5,
+                                chunk: chunk
+                            });
+                        });
+                        child.stdout.on("exit", function(exitCode, signal) {
+                            finishBuildJob(buildId, projectId, exitCode, signal, config.tempDir);
+                        });
+                        child.stdout.on("error", function(error) {
+                            builds[buildId].state = "failedError";
+                            builds[buildId].exitcode = -1;
+                            builds[buildId].error = error;
+                            builds[buildId].artifactPath = null;
+                            cleanupBuildJob(buildId, tempDir, null, res);
+                        });
+                        child.stdout.on("close", function(exitCode, signal) {
+                            finishBuildJob(buildId, projectId, exitCode, signal, config.tempDir);
+                        });
+                    } catch (err) {
+                        builds[buildId].state = "failedException";
+                        builds[buildId].exitcode = -1;
+                        builds[buildId].error = err;
+                        builds[buildId].artifactPath = null;
+                        cleanupBuildJob(buildId, tempDir, null, res);
+                    }
+                }
+            });
+            return res.json(200, {
+                buildId: buildId
+            });
+        })
+    } catch (err) {
+        return res.json(500, {type: "REQUEST_FAILED", "message":err});
+    }
 };
 
 exports.deployEPub = function(req, res) {

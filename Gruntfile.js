@@ -426,7 +426,7 @@ module.exports = function (grunt) {
             expand: true,
             cwd: './',
             src: [
-              'client-android/**/*', '!**/build/**'
+              'client-android/**/*', '!**/build/**', '!client-android/local.properties'
             ],
             dest: '<%= appConfig.distNode %>'
           }]

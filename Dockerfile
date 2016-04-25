@@ -20,10 +20,15 @@ RUN \
   rm -rf /var/lib/apt/lists/*
 ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64
 
-# install android sdk to /opt/android
+# install android sdk to /opt/android and installing the needed 32bit dependencies
+RUN DEBIAN_FRONTEND=noninteractive dpkg --add-architecture i386
+RUN DEBIAN_FRONTEND=noninteractive apt-get -qqy update
+RUN DEBIAN_FRONTEND=noninteractive apt-get -qqy install libncurses5:i386 libstdc++6:i386 zlib1g:i386
 RUN curl -o /tmp/android.tgz http://dl.google.com/android/android-sdk_r24.4.1-linux.tgz
 RUN tar xfz /tmp/android.tgz -C /opt
-RUN ( sleep 5 && while [ 1 ]; do sleep 1; echo y; done ) | /opt/android-sdk-linux/tools/android update sdk -u -t 1,4,27,49,50,52,53
+# use identifiers here: "build-tools-23.0.3" etc returned from android list sdk --extended --all instead of numbers (BECAUSE THEY CHANGE!)
+#RUN ( sleep 5 && while [ 1 ]; do sleep 1; echo y; done ) | /opt/android-sdk-linux/tools/android update sdk -u -a -t 1,4,6,27,49,50,52,53
+RUN ( sleep 5 && while [ 1 ]; do sleep 1; echo y; done ) | /opt/android-sdk-linux/tools/android update sdk -u -a -t "tools","build-tools-23.0.3","platform-tools","android-23","addon-google_apis-google-23","extra-android-m2repository","extra-android-support","extra-google-google_play_services","extra-google-m2repository","extra-google-market_licensing","extra-google-market_apk_expansion","extra-google-play_billing"
 
 # From here we load our application's code in, therefore the previous docker
 # "layer" thats been cached will be used if possible
