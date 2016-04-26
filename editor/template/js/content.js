@@ -111,16 +111,7 @@ function sideloadContent(stationIdx, config, configAsset, callback) {
                 toStation($(event.target).attr("data-target"));
             });
         });
-
-        // register hooks for enabled switches
-        $(".switch").each(function(idx, elem) {
-            $(elem).hammer().on("tap", function(event) {
-                playButtonSound();
-                model.setFlag($(event.target).attr("data-flag"));
-                $(event.target).addClass("disabled");
-            });
-        });
-
+        
         // call callback
         if (callback)
             callback();

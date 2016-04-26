@@ -5,6 +5,8 @@
     {dropin(dicechallenge,someFunction):Label Text}
 
 someFunction is a function defined in globals that gets the dice roll and returns a text that is displayed.
+if someFunction is not defined, a variable with the name someFunction is created and the value is set. In this case,
+the message text is empty.
 
 Examples:
     {dropin(dicechallenge,checkSuccess):Roll for success!}
@@ -42,6 +44,9 @@ Examples:
             var fn = window[_dropinParams[dropinId][0]];
             if(typeof fn === 'function') {
                 result = fn(random0);
+            } else {
+                model.setValue(_dropinParams[dropinId][0], random0);
+                result = "";
             }
             $("#" + dropinId + " ._dropin_dicechallenge_result").html(result);
             $("#" + dropinId + " ._dropin_dicechallenge_result").show();

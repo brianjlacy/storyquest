@@ -208,8 +208,14 @@ var parseQuestML = function(html) {
                 var action = params[0];
                 var buttonEnabledExpression = params[1] || "true";
                 var buttonEnabled = evalExpression(buttonEnabledExpression);
-                // FIXME implement
-                return "<div data-checkfail='disabled' data-check='" + buttonEnabledExpression + "' class='switch " + (!buttonEnabled?"disabled":"") + "'><i class='fa fa-external-gears'></i>&nbsp;&nbsp;" + body + "</div>";
+                var callbackName = "callback" + uuid();
+                window[callbackName] = function() {
+                    playButtonSound();
+                    console.log("Button callback " + callbackName + " called, evaluating action '" + action + "'.");
+                    $("#" + callbackName).addClass("disabled");
+                    evalExpression(action);
+                };
+                return "<div id='" + callbackName + "' onclick='" + callbackName + "()' data-checkfail='disabled' data-check='" + buttonEnabledExpression + "' class='switch " + (!buttonEnabled?"disabled":"") + "'><i class='fa fa-external-gears'></i>&nbsp;&nbsp;" + body + "</div>";
                 break;
             case "link":
                 var target = params[0];
