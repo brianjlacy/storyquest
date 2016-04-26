@@ -58,8 +58,8 @@ function evalExpression(expression) {
         return false;
     else if (expression=="isApp")
         return true;
-    // eliminate quoting and expression substitution of () with []
-    expression = expression.replace(/\[/g, "(").replace(/]/g, ")").replace(/&#39;/g, "\"").replace(/&quot;/g, '"').replace(/&lt;/, "<").replace(/&gt;/, ">");
+    // eliminate quoting and expression substitution of () with [], % to ,
+    expression = expression.replace(/\[/g, "(").replace(/]/g, ")").replace(/&#39;/g, "\"").replace(/&quot;/g, '"').replace(/&lt;/, "<").replace(/&gt;/, ">").replace(/%/, ",");
     var evalResult = false;
     try {
         // check if this is a common js expression
@@ -84,9 +84,19 @@ function getQuestMLParser(callback) {
         callback(questMLParser);
 }
 
-// service method
+// service method that returns true when a dropin dice roller has been rolled
 function localDiceRolled() {
     return $(".diceroller-rolled").length >= 1;
+}
+
+// service method that returns true when a dropin battle has been successful
+function battleWon() {
+    return $(".battle-won").length >= 1;
+}
+
+// service method that returns true when a dropin battle has been failed
+function battleLost() {
+    return $(".battle-lost").length >= 1;
 }
 
 var parseQuestML = function(html) {
@@ -195,13 +205,11 @@ var parseQuestML = function(html) {
                 return "<div class='box " + params[0] + "'>" + body + "</div>";
                 break;
             case "button":
-                var btarget = params[0];
-                var blinkFlag;
-                if (params[1])
-                    blinkFlag = params[1].trim();
-                var bisEnabledExpression = params[2] || "true";
-                var bisEnabled = evalExpression(bisEnabledExpression);
-                return "<div data-checkfail='disabled' data-check='" + bisEnabledExpression + "' class='switch " + (!bisEnabled?"disabled":"") + "' data-flag='" + blinkFlag + "' data-target='" + btarget + "' href='#'><i class='fa fa-external-link'></i>&nbsp;&nbsp;" + body + "</div>";
+                var action = params[0];
+                var buttonEnabledExpression = params[1] || "true";
+                var buttonEnabled = evalExpression(buttonEnabledExpression);
+                // FIXME implement
+                return "<div data-checkfail='disabled' data-check='" + buttonEnabledExpression + "' class='switch " + (!buttonEnabled?"disabled":"") + "'><i class='fa fa-external-gears'></i>&nbsp;&nbsp;" + body + "</div>";
                 break;
             case "link":
                 var target = params[0];
@@ -246,7 +254,11 @@ var parseQuestML = function(html) {
                 return "";
                 break;
             case "script":
-                return eval(body);
+                var result = eval(body.replace(/&#39;/g, "\"").replace(/&quot;/g, '"').replace(/&lt;/, "<").replace(/&gt;/, ">"));
+                if (result)
+                    return result;
+                else
+                    return "";
                 break;
             case "dropin":
                 var dropinName = params[0];

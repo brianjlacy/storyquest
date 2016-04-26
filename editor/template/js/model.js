@@ -35,6 +35,8 @@ var mapping = {
                 value = true;
             if (!this.flags)
                 this.flags = {};
+            if (Array.isArray(value))
+                this.flags[key] = ko.observableArray(value);
             if (typeof this.flags[key] === "function")
                 this.flags[key](value);
             else

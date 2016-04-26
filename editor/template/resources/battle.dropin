@@ -1,0 +1,181 @@
+<!--
+%NAME:Battle Dropin
+%DESCRIPTION:Visually battles an opponent.
+
+    {dropin(battle,monsterName,monsterAttack,monsterDamage,monsterDefense,monsterLife):Label Text}
+
+This uses a simple rules system. Customize for more complexity. Expects the hero stats in
+"heroname", "attack", "damage", "defense" and "life" model variables.
+
+Examples:
+    {dropin(battle,Troll,32,15,1,42):The Troll attacks you!}
+-->
+
+<div class="_dropin_battle">
+    <div id="_dropin_battle_dice" style="text-align:center;margin-bottom:0.5em;background:rgba(0,0,0,0.5);margin:0;padding:0.5em;border-radius:0.5em">
+        <div class="_dropin_battle_label" style="font-weight:bold;line-height:1em;color:lightgrey"></div>
+        <div style="height:4em;margin:0;padding:0">
+            <img src="images/dice.gif" class="dice0" style="height:100%;margin-right:1em">
+            <img src="images/dice.gif" class="dice1" style="height:100%;margin-left:1em">
+        </div>
+        <div class="_dropin_battle_roll" style="margin:0;padding:0;line-height:1em;color:lightgrey;font-size:0.7em">
+            <span class="_dropin_battle_rolldice">Würfel antippen zum stoppen!</span>
+            <span class="_dropin_battle_continue" style="display:none">Antippen für nächste Kampfrunde!</span>
+            <span class="_dropin_battle_end" style="display:none">Kampf beendet!</span>
+        </div>
+        <div class="_dropin_battle_inbattle">
+            <div class="_dropin_battle_battlelog" style="margin-top:0.5em;margin-bottom:0;padding:0;line-height:1em;color:lightgrey">
+                <br>Greif an!<br><br>
+            </div>
+            <div class="_dropin_battle_monsterstats" style="margin-top:0.5em;margin-bottom:0;padding:0;line-height:1em;color:lightgrey">
+                <span class="_dropin_battle_monstername" style="font-weight:bold"></span><br>Kampfkraft:&nbsp;<span class="_dropin_battle_monsterattack"></span> &middot; Schaden:&nbsp;<span class="_dropin_battle_monsterdamage"></span> &middot; Rüstung:&nbsp;<span class="_dropin_battle_monsterdefense"></span> &middot; Leben:&nbsp;<span class="_dropin_battle_monsterlife"></span>
+            </div>
+            <div class="_dropin_battle_herostats" style="margin-top:0.5em;margin-bottom:0;padding:0;line-height:1em;color:lightgrey">
+                <span class="_dropin_battle_heroname" style="font-weight:bold"></span><br>Gewandtheit:&nbsp;<span class="_dropin_battle_herodexterity"></span> &middot; Schaden:&nbsp;<span class="_dropin_battle_herodamage"></span> &middot; Rüstung:&nbsp;<span class="_dropin_battle_herodefense"></span> &middot; Leben:&nbsp;<span class="_dropin_battle_herolife"></span>
+            </div>
+        </div>
+        <div class="_dropin_battle_result" style="height:1em;margin:0;padding:0;line-height:1em;display:none;color:lightgrey">
+            Du hast gewürfelt!
+        </div>
+    </div>
+    <script>
+        // get base values
+        var monsterName = _dropinParams[dropinId][0];
+        var monsterAttack = parseInt(_dropinParams[dropinId][1]);
+        var monsterDamage = parseInt(_dropinParams[dropinId][2]);
+        var monsterDefense = parseInt(_dropinParams[dropinId][3]);
+        var monsterLife = parseInt(_dropinParams[dropinId][4]);
+        var heroName = model.getValue("heroname");
+        var heroDamage = model.getValue("damage");
+        var heroDefense = model.getValue("defense");
+        var heroLife = model.getValue("life");
+        var heroDexterity = model.getValue("dexterity");
+
+        // DEBUG
+        var heroDamage = 7;
+        var heroDefense = 2;
+        var heroLife = 35;
+        var heroDexterity = 20;
+
+        var heroAttack = 0;
+        var randomResult = 0;
+        var random0 = -1;
+        var random1 = -1;
+
+        // body can be an expression or a string
+        var labelString = null;
+        try {
+            labelString = eval(_dropinBody[dropinId].replace(/&#39;/g, "'").replace(/&quot;/g, '"'));
+        } catch (e) {
+            labelString = _dropinBody[dropinId];
+        }
+        $("#" + dropinId + " ._dropin_battle_label").html(labelString);
+
+        // name labels
+        $("#" + dropinId + " ._dropin_battle_monstername").html(_dropinParams[dropinId][0]);
+        $("#" + dropinId + " ._dropin_battle_heroname").html(model.getValue("heroname")||"Du");
+
+        // value labels
+        $("#" + dropinId + " ._dropin_battle_monsterattack").html(monsterAttack);
+        $("#" + dropinId + " ._dropin_battle_monsterdamage").html(monsterDamage);
+        $("#" + dropinId + " ._dropin_battle_monsterdefense").html(monsterDefense);
+        $("#" + dropinId + " ._dropin_battle_monsterlife").html(monsterLife);
+        $("#" + dropinId + " ._dropin_battle_herodexterity").html(heroDexterity);
+        $("#" + dropinId + " ._dropin_battle_herodamage").html(heroDamage);
+        $("#" + dropinId + " ._dropin_battle_herodefense").html(heroDefense);
+        $("#" + dropinId + " ._dropin_battle_herolife").html(heroLife);
+
+        // reset dice rollers
+        var resetDiceroller = function() {
+            randomResult = 0;
+            random0 = -1;
+            random1 = -1;
+            $(".dice0").attr("src", "images/dice.gif");
+            $(".dice1").attr("src", "images/dice.gif");
+            $("#" + dropinId + " .dice0").click(function() {
+                $(this).off("click");
+                random0 = random(6, 1);
+                $(this).attr("src", "images/dice" + random0 + ".gif");
+                randomResult += random0;
+                checkRound();
+            });
+            $("#" + dropinId + " .dice1").click(function() {
+                $(this).off("click");
+                random1 = random(6, 1);
+                $(this).attr("src", "images/dice" + random1 + ".gif");
+                randomResult += random1;
+                checkRound();
+            });
+        };
+
+        // battle round
+        var checkRound = function() {
+            if (random0!=-1 && random1!=-1) {
+                // user has rolled both dice, results in randomResult
+                var heroAttack = heroDexterity + randomResult;
+                var message = null;
+
+                if (heroAttack>monsterAttack) {
+                    // hero hits
+                    monsterLife -= (heroDamage-monsterDefense);
+                    message = "Deine Kampfkraft ist höher (Gewandtheit " + heroDexterity + " + Würfelwurf = " + heroAttack + "). Der Gegner erhält Schaden von " + (heroDamage-monsterDefense) + " (Schadenswert - Rüstung).";
+                } else if (monsterAttack>heroAttack) {
+                    // monster hits
+                    heroLife -= (monsterDamage-heroDefense);
+                    message = "Die Kampfkraft des Gegners ist höher (" + monsterAttack + " gegen Gewandtheit " + heroDexterity + " + Würfelwurf = " + heroAttack + "). Du erhälst Schaden von " + (monsterDamage-heroDefense) + " (Schadenswert - Rüstung).";
+                } else {
+                    // both hit
+                    monsterLife -= (heroDamage-monsterDefense);
+                    heroLife -= (monsterDamage-heroDefense);
+                    message = "Eure Kampfkraft ist gleich hoch, ihr nehmt beide Schaden (du: " + (heroDamage-monsterDefense) + ", der Gegner: " + (monsterDamage-heroDefense) + ".";
+                }
+
+                // update batte status display
+                $("#" + dropinId + " ._dropin_battle_battlelog").html(message);
+                if (monsterLife>0)
+                    $("#" + dropinId + " ._dropin_battle_monsterlife").html(monsterLife);
+                else
+                    $("#" + dropinId + " ._dropin_battle_monsterlife").html("0");
+                if (heroLife>0)
+                    $("#" + dropinId + " ._dropin_battle_herolife").html(heroLife);
+                else
+                    $("#" + dropinId + " ._dropin_battle_herolife").html("0");
+
+                if (monsterLife<=0) {
+                    // monster dead
+                    $("#" + dropinId + " ._dropin_battle_rolldice").hide();
+                    $("#" + dropinId + " ._dropin_battle_continue").hide();
+                    $("#" + dropinId + " ._dropin_battle_end").show();
+                    $("#" + dropinId).addClass("battle-won");
+                    $("#" + dropinId + " ._dropin_battle_battlelog").html("<br>Der Gegner ist besiegt!<br><br>").show();
+                    // store to model
+                    model.setValue("life", heroLife);
+                } else if (heroLife<=0) {
+                    // hero dead
+                    $("#" + dropinId + " ._dropin_battle_rolldice").hide();
+                    $("#" + dropinId + " ._dropin_battle_continue").hide();
+                    $("#" + dropinId + " ._dropin_battle_end").show();
+                    $("#" + dropinId).addClass("battle-lost");
+                    $("#" + dropinId + " ._dropin_battle_battlelog").html("<br>Du bist besiegt!<br><br>").show();
+                    // store to model
+                    model.setValue("life", 0);
+                } else {
+                    // next round
+                    $("#" + dropinId + " ._dropin_battle_rolldice").hide();
+                    $("#" + dropinId + " ._dropin_battle_continue").show();
+                    setTimeout(function() {
+                        $("#" + dropinId).click(function() {
+                            console.log("NEXT");
+                            $(this).off("click");
+                            $("._dropin_battle_battlelog").html("<br>Greif an!<br><br>");
+                            resetDiceroller();
+                            $("#" + dropinId + " ._dropin_battle_battlelog").show();
+                        });
+                    }, 500);
+                }
+            }
+        };
+        // start first round
+        resetDiceroller();
+    </script>
+</div>
