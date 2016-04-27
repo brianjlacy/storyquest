@@ -59,7 +59,16 @@ function evalExpression(expression) {
     else if (expression=="isApp")
         return true;
     // eliminate quoting and expression substitution of () with [], % to ,
-    expression = expression.replace(/\[/g, "(").replace(/]/g, ")").replace(/&#39;/g, "\"").replace(/&quot;/g, '"').replace(/&lt;/, "<").replace(/&gt;/, ">").replace(/%/, ",");
+    expression = expression
+        .replace("<em>", "_")
+        .replace("</em>", "_")
+        .replace(/\[/g, "(")
+        .replace(/]/g, ")")
+        .replace(/&#39;/g, "\"")
+        .replace(/&quot;/g, '"')
+        .replace(/&lt;/, "<")
+        .replace(/&gt;/, ">")
+        .replace(/%/, ",");
     var evalResult = false;
     try {
         // check if this is a common js expression
@@ -146,7 +155,7 @@ var parseQuestML = function(html) {
         if (Array.isArray(body)) {
             for (var i=0; i<body.length; i++)
                 result += parseStatement(body[i]);
-            return result;
+            return executeCommand(commandName, params, result);
         } else
             return executeCommand(commandName, params, body);
     }

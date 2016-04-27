@@ -80,6 +80,10 @@ var mapping = {
             this.setValue(flagName, true);
         };
 
+        innerModel.removeFlag = function(flagName) {
+            this.setValue(flagName, false);
+        };
+
         innerModel.hasFlag = function(flagName) {
             return this.getValue(flagName);
         };
