@@ -22,6 +22,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+var modelValueInterceptors = [];
 var model = undefined;
 
 var mapping = {
@@ -33,6 +34,12 @@ var mapping = {
             console.log("Setting model value: " + key + " = " + value);
             if (typeof value == "undefined")
                 value = true;
+            // iterate over interceptors to enable value changes like max values from global.js code
+            if (modelValueInterceptors)
+                for (var i=0;i<modelValueInterceptors.length;i++) {
+                    value = modelValueInterceptors[i](key, value);
+                    console.log("Found model value interceptor: key: " + key + ", result value: " + value);
+                }
             if (!this.flags)
                 this.flags = {};
             if (Array.isArray(value))
@@ -99,6 +106,12 @@ var mapping = {
         return innerModel;
     }
 };
+
+function addValueInterceptor(interceptor) {
+    if (!modelValueInterceptors)
+        modelValueInterceptors = [];
+    modelValueInterceptors.push(interceptor);
+}
 
 function setModelFromJS(jsObject) {
     model = ko.mapping.fromJS(jsObject, mapping);

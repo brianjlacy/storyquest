@@ -260,13 +260,25 @@ var parseQuestML = function(html) {
                 return "";
                 break;
             case "increase":
-                if (params)
-                    model.setValue(body, parseInt(model.getValue(body))+parseInt(params[0]));
+                if (params) {
+                    var currentValue = model.getValue(body);
+                    if (!currentValue)
+                        currentValue = 0;
+                    else
+                        currentValue = parseInt(currentValue);
+                    model.setValue(body, currentValue+parseInt(params[0]));
+                }
                 return "";
                 break;
             case "decrease":
-                if (params)
-                    model.setValue(body, parseInt(model.getValue(body))-parseInt(params[0]));
+                if (params) {
+                    currentValue = model.getValue(body);
+                    if (!currentValue)
+                        currentValue = 0;
+                    else
+                        currentValue = parseInt(currentValue);
+                    model.setValue(body, currentValue-parseInt(params[0]));
+                }
                 return "";
                 break;
             case "script":
