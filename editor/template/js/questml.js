@@ -217,11 +217,12 @@ var parseQuestML = function(html) {
                 var action = params[0];
                 var buttonEnabledExpression = params[1] || "true";
                 var buttonEnabled = evalExpression(buttonEnabledExpression);
+                console.log(buttonEnabledExpression + " -> " + buttonEnabled);
                 var callbackName = "callback" + uuid();
                 window[callbackName] = function() {
                     playButtonSound();
                     console.log("Button callback " + callbackName + " called, evaluating action '" + action + "'.");
-                    $("#" + callbackName).addClass("disabled");
+                    $("#" + callbackName).attr("data-check", "false").addClass("disabled");
                     evalExpression(action);
                 };
                 return "<div id='" + callbackName + "' onclick='" + callbackName + "()' data-checkfail='disabled' data-check='" + buttonEnabledExpression + "' class='switch " + (!buttonEnabled?"disabled":"") + "'><i class='fa fa-external-gears'></i>&nbsp;&nbsp;" + body + "</div>";

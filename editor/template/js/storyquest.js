@@ -212,13 +212,13 @@ function hashNumber(text) {
 /**
  * Generates a random number between start and the given range.
  *
- * @param start
  * @param range
+ * @param start
  * @returns {number}
  */
 function random(range, start) {
-    if (start)
-        return Math.floor((Math.random() * range)) + start;
+    if (typeof start != "undefined") 
+        return (Math.floor((Math.random() * range)) + start);
     else
         return Math.floor((Math.random() * range + 1));
 }
