@@ -108,6 +108,9 @@ function sideloadContent(stationIdx, config, configAsset, callback) {
         $(".choice").each(function(idx, elem) {
             $(elem).hammer().on("tap", function(event) {
                 playButtonSound();
+                var linkFlag = $(this).attr("data-flag");
+                console.log("Setting link-attached flag \"" + linkFlag + "\" to true.");
+                model.setFlag(linkFlag);
                 toStation($(event.target).attr("data-target"));
             });
         });

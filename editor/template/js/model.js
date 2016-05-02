@@ -83,8 +83,10 @@ var mapping = {
             }
         };
 
-        innerModel.setFlag = function(flagName) {
-            this.setValue(flagName, true);
+        innerModel.setFlag = function(flagName, value) {
+            if (value=="undefined")
+                value = true;
+            this.setValue(flagName, value);
         };
 
         innerModel.removeFlag = function(flagName) {

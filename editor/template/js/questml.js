@@ -35,17 +35,32 @@ setInterval(function() {
     $("[data-check]").each(function(index, element) {
         var expression = $(element).attr("data-check");
         var classIfFailed = $(element).attr("data-checkfail");
-        var evalResult = evalExpression(expression);
-        if (!evalResult) {
-            if (classIfFailed=="dropshow")
-                $(element).hide("drop", {}, 1000);
-            else
-                $(element).addClass(classIfFailed);
+        var whenFlag = $(element).attr("data-type");
+        if (whenFlag==="when") {
+            // when element with deferred execution
+            var deferredText = $(element).html().replace("<!--</p>", "").replace("<p>-->", "");
+            var evalResult = evalExpression(expression);
+            if (evalResult) {
+                // parse the deferred text
+                var id = "when" + uuid();
+                var parsed = parseQuestML(deferredText);
+                $(element).replaceWith("<div id='" + id + "' style='display:none'>" + parsed + "</div>");
+                $("#" + id).show("drop", {}, 1000);
+            }
         } else {
-            if (classIfFailed=="dropshow")
-                $(element).show("drop", {}, 1000);
-            else
-                $(element).removeClass(classIfFailed);
+            // any other element
+            var evalResult = evalExpression(expression);
+            if (!evalResult) {
+                if (classIfFailed=="dropshow")
+                    $(element).hide("drop", {}, 1000);
+                else
+                    $(element).addClass(classIfFailed);
+            } else {
+                if (classIfFailed=="dropshow")
+                    $(element).show("drop", {}, 1000);
+                else
+                    $(element).removeClass(classIfFailed);
+            }
         }
         refreshStyles();
     });
@@ -72,10 +87,15 @@ function evalExpression(expression) {
     var evalResult = false;
     try {
         // check if this is a common js expression
-        evalResult = eval(expression)
+        evalResult = eval(expression);
     } catch(e) {
         // does not seems so, try to interpret as model variable name
-        evalResult = model.getValue(expression);
+        // special case - inverse value: if the variable name starts with "!", return negated result
+        evalResult = false;
+        if (expression.startsWith("!"))
+            evalResult = !model.getValue(expression.substring(1, expression.length));
+        else
+            evalResult = model.getValue(expression);
     }
     return evalResult;
 }
@@ -112,7 +132,9 @@ var parseQuestML = function(html) {
 
     console.log("Starting QuestML parsing..");
 
-    function parseStatement(statement) {
+    var self = this;
+
+    self.parseStatement = function(statement) {
         var result;
         if (typeof statement==="string") {
             result = statement;
@@ -120,47 +142,100 @@ var parseQuestML = function(html) {
         else {
             switch(statement.type) {
                 case "expression":
-                    result = parseQuestMLExpression(statement);
+                    result = self.parseQuestMLExpression(statement);
                     break;
                 case "command":
-                    result = parseQuestMLCommand(statement);
+                    result = self.parseQuestMLCommand(statement);
                     break;
                 case "sequence":
-                    result = parseQuestMLSequence(statement);
+                    result = self.parseQuestMLSequence(statement);
                     break;
             }
         }
         return result;
-    }
+    };
 
-    function parseQuestMLExpression(statement) {
+    self.parseQuestMLExpression = function(statement) {
         var body = statement.body; // may be array
         var result = "";
         if (Array.isArray(body)) {
             for (var i=0; i<body.length; i++)
-                result += parseStatement(body[i]);
+                result += self.parseStatement(body[i]);
             return result;
         }
         else if (typeof body === "object")
-            return parseStatement(body);
+            return self.parseStatement(body);
         else
-            return executeStatement(body);
-    }
+            return self.executeStatement(body);
+    };
 
-    function parseQuestMLCommand(statement) {
+    // serializes the parser output model back to QuestML.
+    self.serialize = function(commandArray) {
+        var result = "";
+        for (var x=0; x<commandArray.length; x++) {
+            if (typeof commandArray[x] == "string") {
+                result += commandArray[x];
+            } else if (typeof commandArray[x] == "object") {
+                switch (commandArray[x].type) {
+                    case "expression":
+                        result += "{";
+                        if (Array.isArray(commandArray[x].body))
+                            result += self.serialize(commandArray[x].body);
+                        else if (typeof commandArray[x].body == "object" && commandArray[x].body.type === "sequence") {
+                            switch (commandArray[x].body.mode) {
+                                case "once": result+="!"; break;
+                                case "cycle": result+="&"; break;
+                                case "random": result+="~"; break;
+                            }
+                            result += "|";
+                            result += commandArray[x].body.content.join("|");
+                            result += "|"
+                        } else
+                            result += commandArray[x].body;
+                        result += "}";
+                        break;
+                    case "command":
+                        result += "{";
+                        result += commandArray[x].command.name;
+                        result += "(" + commandArray[x].command.params.join(",") + "):";
+                        if (Array.isArray(commandArray[x].body))
+                            result += self.serialize(commandArray[x].body);
+                        else
+                            result += commandArray[x].body;
+                        result += "}";
+                        break;
+                }
+            }
+        }
+        return result;
+    };
+
+    self.parseQuestMLCommand = function(statement) {
         var commandName = statement.command.name;
         var params = statement.command.params; // optional
         var body = statement.body; // may be array
         var result = "";
-        if (Array.isArray(body)) {
-            for (var i=0; i<body.length; i++)
-                result += parseStatement(body[i]);
-            return executeCommand(commandName, params, result);
-        } else
-            return executeCommand(commandName, params, body);
-    }
 
-    function parseQuestMLSequence(statement) {
+        if (commandName=="when" && Array.isArray(body)) {
+            // when and a statement body:
+            // hold the execution of the body until the when expression is true
+            console.log("Encountered a \"when\" command with an expression body. Holding execution until preconditions are true..");
+            result += "<div class='when' data-check='" + params[0] + "' data-type='when'>";
+            result += "<!--";
+            // serialize the body back to QuestML
+            result += self.serialize(body);
+            result += "-->";
+            result += "</div>";
+            return result;
+        } else if (Array.isArray(body)) {
+            for (var i=0; i<body.length; i++)
+                result += self.parseStatement(body[i]);
+            return self.executeCommand(commandName, params, result);
+        } else
+            return self.executeCommand(commandName, params, body);
+    };
+
+    self.parseQuestMLSequence = function(statement) {
         var mode = statement.mode;
         var sequenceParts = statement.content;
         // note: this results in equal value lists being tracked as same list
@@ -199,13 +274,13 @@ var parseQuestML = function(html) {
                 }
                 return sequenceParts[currentSequenceIndex];
         }
-    }
+    };
 
-    function executeStatement(body) {
+    self.executeStatement = function(body) {
         return model.getValue(body);
-    }
+    };
 
-    function executeCommand(name, params, body) {
+    self.executeCommand = function(name, params, body) {
         switch (name) {
             case "image":
                 return "<div class='image " + params[0] + "'><img src='images/" + body + "'></div>";
@@ -223,7 +298,7 @@ var parseQuestML = function(html) {
                     playButtonSound();
                     console.log("Button callback " + callbackName + " called, evaluating action '" + action + "'.");
                     $("#" + callbackName).attr("data-check", "false").addClass("disabled");
-                    evalExpression(action);
+                    self.evalExpression(action);
                 };
                 return "<div id='" + callbackName + "' onclick='" + callbackName + "()' data-checkfail='disabled' data-check='" + buttonEnabledExpression + "' class='switch " + (!buttonEnabled?"disabled":"") + "'><i class='fa fa-external-gears'></i>&nbsp;&nbsp;" + body + "</div>";
                 break;
@@ -233,7 +308,7 @@ var parseQuestML = function(html) {
                 if (params[1])
                     linkFlag = params[1].trim();
                 var isEnabledExpression = params[2] || "true";
-                var isEnabled = evalExpression(isEnabledExpression);
+                var isEnabled = self.evalExpression(isEnabledExpression);
                 return "<div data-checkfail='disabled' data-check='" + isEnabledExpression + "' class='choice " + (!isEnabled?"disabled":"") + "' data-flag='" + linkFlag + "' data-target='" + target + "' href='#'><i class='fa fa-external-link'></i>&nbsp;&nbsp;" + body + "</div>";
                 break;
             case "ilink":
@@ -242,12 +317,12 @@ var parseQuestML = function(html) {
                 if (params[1])
                     ilinkFlag = params[1].trim();
                 var iisEnabledExpression = params[2] || "true";
-                var iisEnabled = evalExpression(iisEnabledExpression);
+                var iisEnabled = self.evalExpression(iisEnabledExpression);
                 return "<span data-checkfail='disabled' data-check='" + iisEnabledExpression + "' class='choice " + (!iisEnabled?"disabled":"") + "' data-flag='" + ilinkFlag + "' data-target='" + itarget + "' href='#'><i class='fa fa-external-link'></i>&nbsp;&nbsp;" + body + "</span>";
                 break;
             case "when":
                 var hidden = "hidden";
-                if (evalExpression(params[0]))
+                if (self.evalExpression(params[0]))
                     hidden = "";
                 // "dropshow" is a special keyword that animates the show/hide
                 return "<div class='when " + hidden + "' data-checkfail='dropshow' data-check='" + params[0] + "'>" + body + "</div>";
@@ -306,14 +381,14 @@ var parseQuestML = function(html) {
                 console.log("Unknown QuestML command " + name);
                 return "";
         }
-    }
+    };
 
     // remove possibly problematic quotes prior to parsing
     html = html.replace(/&amp;/g, "&");
-    var parsedArray = this.parse(html);
+    var parsedArray = questMLParser.parse(html);
     var result = "";
     for (var i=0; i<parsedArray.length; i++) {
-        result += parseStatement(parsedArray[i]);
+        result += self.parseStatement(parsedArray[i]);
     }
     return result;
 };

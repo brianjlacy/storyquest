@@ -50,13 +50,7 @@ Examples:
         var heroDefense = model.getValue("defense");
         var heroLife = model.getValue("life");
         var heroDexterity = model.getValue("dexterity");
-
-        // DEBUG
-        var heroDamage = 7;
-        var heroDefense = 2;
-        var heroLife = 35;
-        var heroDexterity = 20;
-
+        
         var heroAttack = 0;
         var randomResult = 0;
         var random0 = -1;
@@ -165,7 +159,6 @@ Examples:
                     $("#" + dropinId + " ._dropin_battle_continue").show();
                     setTimeout(function() {
                         $("#" + dropinId).click(function() {
-                            console.log("NEXT");
                             $(this).off("click");
                             $("._dropin_battle_battlelog").html("<br>Greif an!<br><br>");
                             resetDiceroller();
