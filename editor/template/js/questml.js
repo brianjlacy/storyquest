@@ -38,7 +38,7 @@ setInterval(function() {
         var whenFlag = $(element).attr("data-type");
         if (whenFlag==="when") {
             // when element with deferred execution
-            var deferredText = $(element).html().replace("<!--</p>", "").replace("<p>-->", "");
+            var deferredText = $(element).html().replace("<!--</p>", "").replace("<p>-->", "").replace("<!--", "").replace("-->", "");
             var evalResult = evalExpression(expression);
             if (evalResult) {
                 // parse the deferred text
@@ -298,7 +298,7 @@ var parseQuestML = function(html) {
                     playButtonSound();
                     console.log("Button callback " + callbackName + " called, evaluating action '" + action + "'.");
                     $("#" + callbackName).attr("data-check", "false").addClass("disabled");
-                    self.evalExpression(action);
+                    evalExpression(action);
                 };
                 return "<div id='" + callbackName + "' onclick='" + callbackName + "()' data-checkfail='disabled' data-check='" + buttonEnabledExpression + "' class='switch " + (!buttonEnabled?"disabled":"") + "'><i class='fa fa-external-gears'></i>&nbsp;&nbsp;" + body + "</div>";
                 break;
@@ -308,7 +308,7 @@ var parseQuestML = function(html) {
                 if (params[1])
                     linkFlag = params[1].trim();
                 var isEnabledExpression = params[2] || "true";
-                var isEnabled = self.evalExpression(isEnabledExpression);
+                var isEnabled = evalExpression(isEnabledExpression);
                 return "<div data-checkfail='disabled' data-check='" + isEnabledExpression + "' class='choice " + (!isEnabled?"disabled":"") + "' data-flag='" + linkFlag + "' data-target='" + target + "' href='#'><i class='fa fa-external-link'></i>&nbsp;&nbsp;" + body + "</div>";
                 break;
             case "ilink":
@@ -317,12 +317,12 @@ var parseQuestML = function(html) {
                 if (params[1])
                     ilinkFlag = params[1].trim();
                 var iisEnabledExpression = params[2] || "true";
-                var iisEnabled = self.evalExpression(iisEnabledExpression);
+                var iisEnabled = evalExpression(iisEnabledExpression);
                 return "<span data-checkfail='disabled' data-check='" + iisEnabledExpression + "' class='choice " + (!iisEnabled?"disabled":"") + "' data-flag='" + ilinkFlag + "' data-target='" + itarget + "' href='#'><i class='fa fa-external-link'></i>&nbsp;&nbsp;" + body + "</span>";
                 break;
             case "when":
                 var hidden = "hidden";
-                if (self.evalExpression(params[0]))
+                if (evalExpression(params[0]))
                     hidden = "";
                 // "dropshow" is a special keyword that animates the show/hide
                 return "<div class='when " + hidden + "' data-checkfail='dropshow' data-check='" + params[0] + "'>" + body + "</div>";
