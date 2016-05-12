@@ -1,7 +1,5 @@
 # StoryQuest
 
-[![Build Status](https://travis-ci.org/michaelkleinhenz/storyquest.svg)](https://travis-ci.org/michaelkleinhenz/storyquest)
-
 This is StoryQuest, A game book development platform complete with a web 
 based editor, a mobile client and an e-reader export.
 
